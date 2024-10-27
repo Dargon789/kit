@@ -1,10 +1,10 @@
-const __vite__fileDeps=["./index-DZ1ZGSnd.js","./index-CTXfWtVt.js","./index-B7cGsFOk.css"],__vite__mapDeps=i=>i.map(i=>__vite__fileDeps[i]);
-import { _ as __vitePreload } from "./index-CTXfWtVt.js";
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["./index-BKdLvT6T.js","./index-BO2rmE20.js","./index-g_cLYwVj.css"])))=>i.map(i=>d[i]);
+import { _ as __vitePreload } from "./index-BO2rmE20.js";
 const t = Symbol();
 const s = Object.getPrototypeOf, c$1 = /* @__PURE__ */ new WeakMap(), l = (e) => e && (c$1.has(e) ? c$1.get(e) : s(e) === Object.prototype || s(e) === Array.prototype), y$1 = (e) => l(e) && e[t] || null, h = (e, t2 = true) => {
   c$1.set(e, t2);
 };
-var define_import_meta_env_default = { BASE_URL: "./", MODE: "production", DEV: false, PROD: true, SSR: false };
+const __vite_import_meta_env__ = { "BASE_URL": "./", "DEV": false, "MODE": "production", "PROD": true, "SSR": false };
 const isObject = (x) => typeof x === "object" && x !== null;
 const proxyStateMap = /* @__PURE__ */ new WeakMap();
 const refSet = /* @__PURE__ */ new WeakSet();
@@ -91,7 +91,7 @@ const buildProxyFunction = (objectIs = Object.is, newProxy = (target, handler) =
   };
   const propProxyStates = /* @__PURE__ */ new Map();
   const addPropListener = (prop, propProxyState) => {
-    if ((define_import_meta_env_default ? "production" : void 0) !== "production" && propProxyStates.has(prop)) {
+    if ((__vite_import_meta_env__ ? "production" : void 0) !== "production" && propProxyStates.has(prop)) {
       throw new Error("prop listener already exists");
     }
     if (listeners.size) {
@@ -113,7 +113,7 @@ const buildProxyFunction = (objectIs = Object.is, newProxy = (target, handler) =
     listeners.add(listener);
     if (listeners.size === 1) {
       propProxyStates.forEach(([propProxyState, prevRemove], prop) => {
-        if ((define_import_meta_env_default ? "production" : void 0) !== "production" && prevRemove) {
+        if ((__vite_import_meta_env__ ? "production" : void 0) !== "production" && prevRemove) {
           throw new Error("remove already exists");
         }
         const remove = propProxyState[3](createPropListener(prop));
@@ -223,7 +223,7 @@ function proxy(initialObject = {}) {
 }
 function subscribe(proxyObject, callback, notifyInSync) {
   const proxyState = proxyStateMap.get(proxyObject);
-  if ((define_import_meta_env_default ? "production" : void 0) !== "production" && !proxyState) {
+  if ((__vite_import_meta_env__ ? "production" : void 0) !== "production" && !proxyState) {
     console.warn("Please use proxy object");
   }
   let promise;
@@ -250,7 +250,7 @@ function subscribe(proxyObject, callback, notifyInSync) {
 }
 function snapshot(proxyObject, handlePromise) {
   const proxyState = proxyStateMap.get(proxyObject);
-  if ((define_import_meta_env_default ? "production" : void 0) !== "production" && !proxyState) {
+  if ((__vite_import_meta_env__ ? "production" : void 0) !== "production" && !proxyState) {
     console.warn("Please use proxy object");
   }
   const [target, ensureVersion, createSnapshot] = proxyState;
@@ -284,15 +284,13 @@ const o = proxy({ history: ["ConnectWallet"], view: "ConnectWallet", data: void 
 }, isArray(e) {
   return Array.isArray(e) && e.length > 0;
 }, formatNativeUrl(e, t2, s2) {
-  if (a.isHttpUrl(e))
-    return this.formatUniversalUrl(e, t2, s2);
+  if (a.isHttpUrl(e)) return this.formatUniversalUrl(e, t2, s2);
   let n = e;
   n.includes("://") || (n = e.replaceAll("/", "").replaceAll(":", ""), n = `${n}://`), n.endsWith("/") || (n = `${n}/`), this.setWalletConnectDeepLink(n, s2);
   const i = encodeURIComponent(t2);
   return `${n}wc?uri=${i}`;
 }, formatUniversalUrl(e, t2, s2) {
-  if (!a.isHttpUrl(e))
-    return this.formatNativeUrl(e, t2, s2);
+  if (!a.isHttpUrl(e)) return this.formatNativeUrl(e, t2, s2);
   let n = e;
   n.endsWith("/") || (n = `${n}/`), this.setWalletConnectDeepLink(n, s2);
   const i = encodeURIComponent(t2);
@@ -331,8 +329,7 @@ const o = proxy({ history: ["ConnectWallet"], view: "ConnectWallet", data: void 
 }, getWalletRouterData() {
   var e;
   const t2 = (e = T.state.data) == null ? void 0 : e.Wallet;
-  if (!t2)
-    throw new Error('Missing "Wallet" view data');
+  if (!t2) throw new Error('Missing "Wallet" view data');
   return t2;
 } }, _ = typeof location < "u" && (location.hostname.includes("localhost") || location.protocol.includes("https")), r = proxy({ enabled: _, userSessionId: "", events: [], connectedWalletId: void 0 }), R = { state: r, subscribe(e) {
   return subscribe(r.events, () => e(snapshot(r.events[r.events.length - 1])));
@@ -378,11 +375,8 @@ const o = proxy({ history: ["ConnectWallet"], view: "ConnectWallet", data: void 
   R.initialize(), p.setChains(e.chains), p.setIsAuth(Boolean(e.enableAuthMode)), p.setIsCustomMobile(Boolean((t2 = e.mobileWallets) == null ? void 0 : t2.length)), p.setIsCustomDesktop(Boolean((s2 = e.desktopWallets) == null ? void 0 : s2.length)), a.setModalVersionInStorage(), Object.assign(W, e);
 } };
 var V = Object.defineProperty, D = Object.getOwnPropertySymbols, H = Object.prototype.hasOwnProperty, B = Object.prototype.propertyIsEnumerable, M = (e, t2, s2) => t2 in e ? V(e, t2, { enumerable: true, configurable: true, writable: true, value: s2 }) : e[t2] = s2, K = (e, t2) => {
-  for (var s2 in t2 || (t2 = {}))
-    H.call(t2, s2) && M(e, s2, t2[s2]);
-  if (D)
-    for (var s2 of D(t2))
-      B.call(t2, s2) && M(e, s2, t2[s2]);
+  for (var s2 in t2 || (t2 = {})) H.call(t2, s2) && M(e, s2, t2[s2]);
+  if (D) for (var s2 of D(t2)) B.call(t2, s2) && M(e, s2, t2[s2]);
   return e;
 };
 const L = "https://explorer-api.walletconnect.com", E = "wcm", O = "js-2.6.2";
@@ -406,17 +400,13 @@ const m = { async getDesktopListings(e) {
   return `${L}/w3m/v1/getAssetImage/${e}?projectId=${y.state.projectId}&sdkType=${E}&sdkVersion=${O}`;
 } };
 var z = Object.defineProperty, j = Object.getOwnPropertySymbols, J = Object.prototype.hasOwnProperty, q = Object.prototype.propertyIsEnumerable, k = (e, t2, s2) => t2 in e ? z(e, t2, { enumerable: true, configurable: true, writable: true, value: s2 }) : e[t2] = s2, F = (e, t2) => {
-  for (var s2 in t2 || (t2 = {}))
-    J.call(t2, s2) && k(e, s2, t2[s2]);
-  if (j)
-    for (var s2 of j(t2))
-      q.call(t2, s2) && k(e, s2, t2[s2]);
+  for (var s2 in t2 || (t2 = {})) J.call(t2, s2) && k(e, s2, t2[s2]);
+  if (j) for (var s2 of j(t2)) q.call(t2, s2) && k(e, s2, t2[s2]);
   return e;
 };
 const N = a.isMobile(), d$1 = proxy({ wallets: { listings: [], total: 0, page: 1 }, search: { listings: [], total: 0, page: 1 }, recomendedWallets: [] }), te = { state: d$1, async getRecomendedWallets() {
   const { explorerRecommendedWalletIds: e, explorerExcludedWalletIds: t2 } = y.state;
-  if (e === "NONE" || t2 === "ALL" && !e)
-    return d$1.recomendedWallets;
+  if (e === "NONE" || t2 === "ALL" && !e) return d$1.recomendedWallets;
   if (a.isArray(e)) {
     const s2 = { recommendedIds: e.join(",") }, { listings: n } = await m.getAllListings(s2), i = Object.values(n);
     i.sort((l2, v) => {
@@ -430,8 +420,7 @@ const N = a.isMobile(), d$1 = proxy({ wallets: { listings: [], total: 0, page: 1
   return d$1.recomendedWallets;
 }, async getWallets(e) {
   const t2 = F({}, e), { explorerRecommendedWalletIds: s2, explorerExcludedWalletIds: n } = y.state, { recomendedWallets: i } = d$1;
-  if (n === "ALL")
-    return d$1.wallets;
+  if (n === "ALL") return d$1.wallets;
   i.length ? t2.excludedIds = i.map((x) => x.id).join(",") : a.isArray(s2) && (t2.excludedIds = s2.join(",")), a.isArray(n) && (t2.excludedIds = [t2.excludedIds, n].filter(Boolean).join(",")), p.state.isAuth && (t2.sdks = "auth_v1");
   const { page: l2, search: v } = e, { listings: b, total: f } = N ? await m.getMobileListings(t2) : await m.getDesktopListings(t2), A = Object.values(b), U = v ? "search" : "wallets";
   return d$1[U] = { listings: [...d$1[U].listings, ...A], total: f, page: l2 ?? 1 }, { listings: A, total: f };
@@ -446,8 +435,7 @@ const N = a.isMobile(), d$1 = proxy({ wallets: { listings: [], total: 0, page: 1
 }, async open(e) {
   return new Promise((t2) => {
     const { isUiLoaded: s2, isDataLoaded: n } = p.state;
-    if (a.removeWalletConnectDeepLink(), p.setWalletConnectUri(e == null ? void 0 : e.uri), p.setChains(e == null ? void 0 : e.chains), T.reset("ConnectWallet"), s2 && n)
-      I.open = true, t2();
+    if (a.removeWalletConnectDeepLink(), p.setWalletConnectUri(e == null ? void 0 : e.uri), p.setChains(e == null ? void 0 : e.chains), T.reset("ConnectWallet"), s2 && n) I.open = true, t2();
     else {
       const i = setInterval(() => {
         const l2 = p.state;
@@ -459,11 +447,8 @@ const N = a.isMobile(), d$1 = proxy({ wallets: { listings: [], total: 0, page: 1
   I.open = false;
 } };
 var G = Object.defineProperty, $ = Object.getOwnPropertySymbols, Q = Object.prototype.hasOwnProperty, X = Object.prototype.propertyIsEnumerable, S = (e, t2, s2) => t2 in e ? G(e, t2, { enumerable: true, configurable: true, writable: true, value: s2 }) : e[t2] = s2, Y = (e, t2) => {
-  for (var s2 in t2 || (t2 = {}))
-    Q.call(t2, s2) && S(e, s2, t2[s2]);
-  if ($)
-    for (var s2 of $(t2))
-      X.call(t2, s2) && S(e, s2, t2[s2]);
+  for (var s2 in t2 || (t2 = {})) Q.call(t2, s2) && S(e, s2, t2[s2]);
+  if ($) for (var s2 of $(t2)) X.call(t2, s2) && S(e, s2, t2[s2]);
   return e;
 };
 function Z() {
@@ -487,7 +472,7 @@ class d {
   }
   async initUi() {
     if (typeof window < "u") {
-      await __vitePreload(() => import("./index-DZ1ZGSnd.js"), true ? __vite__mapDeps([0,1,2]) : void 0, import.meta.url);
+      await __vitePreload(() => import("./index-BKdLvT6T.js"), true ? __vite__mapDeps([0,1,2]) : void 0, import.meta.url);
       const e = document.createElement("wcm-modal");
       document.body.insertAdjacentElement("beforeend", e), p.setIsUiLoaded(true);
     }

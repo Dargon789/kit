@@ -1,4 +1,4 @@
-import { g as getDefaultExportFromCjs, a as getAugmentedNamespace } from "./index-CTXfWtVt.js";
+import { g as getDefaultExportFromCjs, a as getAugmentedNamespace, d as dist } from "./index-BO2rmE20.js";
 var events = { exports: {} };
 var R = typeof Reflect === "object" ? Reflect : null;
 var ReflectApply = R && typeof R.apply === "function" ? R.apply : function ReflectApply2(target, receiver, args) {
@@ -17,8 +17,7 @@ if (R && typeof R.ownKeys === "function") {
   };
 }
 function ProcessEmitWarning(warning) {
-  if (console && console.warn)
-    console.warn(warning);
+  if (console && console.warn) console.warn(warning);
 }
 var NumberIsNaN = Number.isNaN || function NumberIsNaN2(value) {
   return value !== value;
@@ -74,8 +73,7 @@ EventEmitter.prototype.getMaxListeners = function getMaxListeners() {
 };
 EventEmitter.prototype.emit = function emit(type) {
   var args = [];
-  for (var i = 1; i < arguments.length; i++)
-    args.push(arguments[i]);
+  for (var i = 1; i < arguments.length; i++) args.push(arguments[i]);
   var doError = type === "error";
   var events2 = this._events;
   if (events2 !== void 0)
@@ -246,8 +244,7 @@ EventEmitter.prototype.removeAllListeners = function removeAllListeners(type) {
     var key;
     for (i = 0; i < keys.length; ++i) {
       key = keys[i];
-      if (key === "removeListener")
-        continue;
+      if (key === "removeListener") continue;
       this.removeAllListeners(key);
     }
     this.removeAllListeners("removeListener");
@@ -365,15 +362,46 @@ function eventTargetAgnosticAddListener(emitter, name, listener, flags) {
   }
 }
 var eventsExports = events.exports;
-const Wg = /* @__PURE__ */ getDefaultExportFromCjs(eventsExports);
+const Gg = /* @__PURE__ */ getDefaultExportFromCjs(eventsExports);
+const require$$0$1 = /* @__PURE__ */ getAugmentedNamespace(dist);
 const __viteBrowserExternal = {};
 const __viteBrowserExternal$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: __viteBrowserExternal
 }, Symbol.toStringTag, { value: "Module" }));
-const require$$3 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1);
+const require$$0 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal$1);
+var inherits_browser = { exports: {} };
+if (typeof Object.create === "function") {
+  inherits_browser.exports = function inherits(ctor, superCtor) {
+    if (superCtor) {
+      ctor.super_ = superCtor;
+      ctor.prototype = Object.create(superCtor.prototype, {
+        constructor: {
+          value: ctor,
+          enumerable: false,
+          writable: true,
+          configurable: true
+        }
+      });
+    }
+  };
+} else {
+  inherits_browser.exports = function inherits(ctor, superCtor) {
+    if (superCtor) {
+      ctor.super_ = superCtor;
+      var TempCtor = function() {
+      };
+      TempCtor.prototype = superCtor.prototype;
+      ctor.prototype = new TempCtor();
+      ctor.prototype.constructor = ctor;
+    }
+  };
+}
+var inherits_browserExports = inherits_browser.exports;
 export {
-  Wg as W,
+  Gg as G,
+  require$$0 as a,
   eventsExports as e,
-  require$$3 as r
+  inherits_browserExports as i,
+  require$$0$1 as r
 };

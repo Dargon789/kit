@@ -1,24 +1,5 @@
-import { B as Buffer, c as commonjsGlobal, e as eventemitter3Exports, g as getDefaultExportFromCjs } from "./index-CTXfWtVt.js";
-import { j as js, s as sha_jsExports, r as require$$0, a as require$$1, b as require$$2 } from "./hooks.module-BV5SarIK.js";
-function _mergeNamespaces(n, m) {
-  for (var i = 0; i < m.length; i++) {
-    const e = m[i];
-    if (typeof e !== "string" && !Array.isArray(e)) {
-      for (const k in e) {
-        if (k !== "default" && !(k in n)) {
-          const d = Object.getOwnPropertyDescriptor(e, k);
-          if (d) {
-            Object.defineProperty(n, k, d.get ? d : {
-              enumerable: true,
-              get: () => e[k]
-            });
-          }
-        }
-      }
-    }
-  }
-  return Object.freeze(Object.defineProperty(n, Symbol.toStringTag, { value: "Module" }));
-}
+import { B as Buffer, c as commonjsGlobal, e as eventemitter3Exports, g as getDefaultExportFromCjs } from "./index-BO2rmE20.js";
+import { j as js, s as sha_jsExports, r as require$$0, a as require$$1, b as require$$2 } from "./hooks.module-DvUpvWJ_.js";
 var dist = {};
 var CoinbaseWalletSDK$1 = {};
 var walletLogo$1 = {};
@@ -372,7 +353,7 @@ Web3Response.isErrorResponse = isErrorResponse;
 var version = {};
 Object.defineProperty(version, "__esModule", { value: true });
 version.LIB_VERSION = void 0;
-version.LIB_VERSION = "4.0.2";
+version.LIB_VERSION = "4.0.4";
 Object.defineProperty(serialize, "__esModule", { value: true });
 serialize.serializeError = void 0;
 const Web3Response_1$2 = Web3Response;
@@ -1068,8 +1049,7 @@ function bitLengthFromBigInt(num) {
 }
 function bufferBEFromBigInt(num, length) {
   let hex = num.toString(16);
-  if (hex.length % 2 !== 0)
-    hex = "0" + hex;
+  if (hex.length % 2 !== 0) hex = "0" + hex;
   const byteArray = hex.match(/.{1,2}/g).map((byte) => parseInt(byte, 16));
   while (byteArray.length < length) {
     byteArray.unshift(0);
@@ -1138,8 +1118,7 @@ function bufferToHex(buf) {
 }
 function keccak(a, bits) {
   a = toBuffer(a);
-  if (!bits)
-    bits = 256;
+  if (!bits) bits = 256;
   return createKeccakHash("keccak" + bits).update(a).digest();
 }
 function padToEven(str) {
@@ -1584,8 +1563,7 @@ var ethEip712Util = {
 };
 function typedSignatureHashLegacy(typedData) {
   const error2 = new Error("Expect argument to be non-empty array");
-  if (typeof typedData !== "object" || !typedData.length)
-    throw error2;
+  if (typeof typedData !== "object" || !typedData.length) throw error2;
   const data = typedData.map(function(e) {
     return e.type === "bytes" ? util$2.toBuffer(e.value) : e.value;
   });
@@ -1593,8 +1571,7 @@ function typedSignatureHashLegacy(typedData) {
     return e.type;
   });
   const schema = typedData.map(function(e) {
-    if (!e.name)
-      throw error2;
+    if (!e.name) throw error2;
     return e.type + " " + e.name;
   });
   return abi.soliditySHA3(
@@ -3652,21 +3629,33 @@ function getCoinbaseInjectedSigner() {
   return window2.coinbaseWalletSigner;
 }
 provider.getCoinbaseInjectedSigner = getCoinbaseInjectedSigner;
-function getCoinbaseInjectedProvider({ metadata, preference }) {
-  var _a, _b, _c;
+function getCoinbaseInjectedLegacyProvider() {
   const window2 = globalThis;
+  return window2.coinbaseWalletExtension;
+}
+function getInjectedEthereum() {
+  var _a, _b;
+  try {
+    const window2 = globalThis;
+    return (_a = window2.ethereum) !== null && _a !== void 0 ? _a : (_b = window2.top) === null || _b === void 0 ? void 0 : _b.ethereum;
+  } catch (_c) {
+    return void 0;
+  }
+}
+function getCoinbaseInjectedProvider({ metadata, preference }) {
+  var _a;
   if (preference.options !== "smartWalletOnly") {
     const signer = getCoinbaseInjectedSigner();
     if (signer)
       return void 0;
-    const extension = window2.coinbaseWalletExtension;
+    const extension = getCoinbaseInjectedLegacyProvider();
     if (extension) {
       const { appName, appLogoUrl, appChainIds } = metadata;
       (_a = extension.setAppInfo) === null || _a === void 0 ? void 0 : _a.call(extension, appName, appLogoUrl, appChainIds);
       return extension;
     }
   }
-  const ethereum = (_b = window2.ethereum) !== null && _b !== void 0 ? _b : (_c = window2.top) === null || _c === void 0 ? void 0 : _c.ethereum;
+  const ethereum = getInjectedEthereum();
   if (ethereum === null || ethereum === void 0 ? void 0 : ethereum.isCoinbaseBrowser) {
     return ethereum;
   }
@@ -3834,8 +3823,10 @@ class Communicator {
       this.listeners.clear();
     };
     this.waitForPopupLoaded = async () => {
-      if (this.popup && !this.popup.closed)
+      if (this.popup && !this.popup.closed) {
+        this.popup.focus();
         return this.popup;
+      }
       this.popup = (0, util_1$2.openPopup)(this.url);
       this.onMessage(({ event }) => event === "PopupUnload").then(this.disconnect).catch(() => {
       });
@@ -3899,9 +3890,8 @@ function determineMethodCategory(method2) {
 method.determineMethodCategory = determineMethodCategory;
 var __rest = commonjsGlobal && commonjsGlobal.__rest || function(s, e) {
   var t = {};
-  for (var p in s)
-    if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-      t[p] = s[p];
+  for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+    t[p] = s[p];
   if (s != null && typeof Object.getOwnPropertySymbols === "function")
     for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
       if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
@@ -3970,6 +3960,7 @@ class CoinbaseWalletProvider extends eventemitter3_1.default {
         };
         switch (request.method) {
           case "eth_chainId":
+            return (0, util_1$1.hexStringFromIntNumber)((0, type_1.IntNumber)(this.chain.id));
           case "net_version":
             return this.chain.id;
           case "eth_accounts":
@@ -4113,10 +4104,10 @@ CoinbaseWalletSDK$1.CoinbaseWalletSDK = CoinbaseWalletSDK;
   } });
 })(dist);
 const index = /* @__PURE__ */ getDefaultExportFromCjs(dist);
-const index$1 = /* @__PURE__ */ _mergeNamespaces({
+const index$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: index
-}, [dist]);
+}, Symbol.toStringTag, { value: "Module" }));
 export {
   index$1 as i
 };

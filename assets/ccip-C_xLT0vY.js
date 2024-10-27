@@ -1,4 +1,4 @@
-import { f as BaseError, h as getUrl, s as stringify, i as decodeErrorResult, j as isAddressEqual, k as call, l as concat, m as encodeAbiParameters, H as HttpRequestError, n as isHex } from "./index-CTXfWtVt.js";
+import { f as BaseError, h as getUrl, s as stringify, i as decodeErrorResult, j as isAddressEqual, k as call, l as concat, m as encodeAbiParameters, H as HttpRequestError, n as isHex } from "./index-BO2rmE20.js";
 class OffchainLookupError extends BaseError {
   constructor({ callbackSelector, cause, data, extraData, sender, urls }) {
     var _a;
@@ -16,13 +16,8 @@ class OffchainLookupError extends BaseError {
         `  Data: ${data}`,
         `  Callback selector: ${callbackSelector}`,
         `  Extra data: ${extraData}`
-      ].flat()
-    });
-    Object.defineProperty(this, "name", {
-      enumerable: true,
-      configurable: true,
-      writable: true,
-      value: "OffchainLookupError"
+      ].flat(),
+      name: "OffchainLookupError"
     });
   }
 }
@@ -32,13 +27,8 @@ class OffchainLookupResponseMalformedError extends BaseError {
       metaMessages: [
         `Gateway URL: ${getUrl(url)}`,
         `Response: ${stringify(result)}`
-      ]
-    });
-    Object.defineProperty(this, "name", {
-      enumerable: true,
-      configurable: true,
-      writable: true,
-      value: "OffchainLookupResponseMalformedError"
+      ],
+      name: "OffchainLookupResponseMalformedError"
     });
   }
 }
@@ -48,13 +38,8 @@ class OffchainLookupSenderMismatchError extends BaseError {
       metaMessages: [
         `Contract address: ${to}`,
         `OffchainLookup sender address: ${sender}`
-      ]
-    });
-    Object.defineProperty(this, "name", {
-      enumerable: true,
-      configurable: true,
-      writable: true,
-      value: "OffchainLookupSenderMismatchError"
+      ],
+      name: "OffchainLookupSenderMismatchError"
     });
   }
 }
