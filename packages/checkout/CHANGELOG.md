@@ -1,5 +1,32 @@
 # @0xsequence/kit-connectors
 
+## 4.4.3
+
+### Patch Changes
+
+- Fixing sequence logo svg linear gradient in Safari
+
+- Updated dependencies []:
+  - @0xsequence/kit@4.4.3
+
+## 4.4.2
+
+### Patch Changes
+
+- Allow useSignInEmail to get email for waas and universal wallets
+
+- Updated dependencies []:
+  - @0xsequence/kit@4.4.2
+
+## 4.4.1
+
+### Patch Changes
+
+- fix for payment selection modal
+
+- Updated dependencies []:
+  - @0xsequence/kit@4.4.1
+
 ## 4.4.0
 
 ### Minor Changes

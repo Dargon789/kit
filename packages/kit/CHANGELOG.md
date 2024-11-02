@@ -1,5 +1,23 @@
 # @0xsequence/kit
 
+## 4.4.3
+
+### Patch Changes
+
+- Fixing sequence logo svg linear gradient in Safari
+
+## 4.4.2
+
+### Patch Changes
+
+- Allow useSignInEmail to get email for waas and universal wallets
+
+## 4.4.1
+
+### Patch Changes
+
+- fix for payment selection modal
+
 ## 4.4.0
 
 ### Minor Changes

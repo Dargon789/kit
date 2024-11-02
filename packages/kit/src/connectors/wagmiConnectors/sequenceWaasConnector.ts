@@ -156,6 +156,7 @@ export function sequenceWaasWallet(params: BaseSequenceWaasConnectorOptions) {
       }
 
       await config.storage?.removeItem(LocalStorageKey.WaasActiveLoginType)
+      await config.storage?.removeItem(LocalStorageKey.WaasSignInEmail)
 
       config.emitter.emit('disconnect')
     },
