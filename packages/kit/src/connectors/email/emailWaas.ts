@@ -3,16 +3,15 @@ import { sequenceWaasWallet, BaseSequenceWaasConnectorOptions } from '../wagmiCo
 
 import { getEmailLogo } from './EmailLogo'
 
-export type EmailWaasOptions = { legacyEmailAuth?: boolean } & Omit<BaseSequenceWaasConnectorOptions, 'loginType'>
+export type EmailWaasOptions = Omit<BaseSequenceWaasConnectorOptions, 'loginType'>
 
-export const emailWaas = ({ legacyEmailAuth = false, ...rest }: EmailWaasOptions): Wallet => ({
+export const emailWaas = (options: EmailWaasOptions): Wallet => ({
   id: 'email-waas',
   logoDark: getEmailLogo({ isDarkMode: true }),
   logoLight: getEmailLogo({ isDarkMode: false }),
   name: 'Email',
   type: 'social',
   createConnector: () => {
-    const options = { legacyEmailAuth, ...rest }
     const connector = sequenceWaasWallet({
       ...options,
       loginType: 'email'
