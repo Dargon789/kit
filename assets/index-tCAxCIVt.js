@@ -1,4 +1,4 @@
-const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["./index-MyjowWZh.js","./hooks.module-DPzEJ52B.js","./inherits_browser-t9QkQ61g.js","./index-B3T-uGXM.js","./index.es-Dlw4NEqf.js"])))=>i.map(i=>d[i]);
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["./index-BO-mjXlQ.js","./hooks.module-D9eabFie.js","./inherits_browser-CcXPmW2n.js","./index-B72_PWQl.js","./index.es-BHW6ZHth.js"])))=>i.map(i=>d[i]);
 var __defProp = Object.defineProperty;
 var __typeError = (msg) => {
   throw TypeError(msg);
@@ -32949,7 +32949,7 @@ async function call(client2, args) {
   } catch (err) {
     const data2 = getRevertErrorData(err);
     const { offchainLookup, offchainLookupSignature } = await __vitePreload(async () => {
-      const { offchainLookup: offchainLookup2, offchainLookupSignature: offchainLookupSignature2 } = await import("./ccip-qiuaLxdS.js");
+      const { offchainLookup: offchainLookup2, offchainLookupSignature: offchainLookupSignature2 } = await import("./ccip-Ds9-DMpq.js");
       return { offchainLookup: offchainLookup2, offchainLookupSignature: offchainLookupSignature2 };
     }, true ? [] : void 0, import.meta.url);
     if (client2.ccipRead !== false && (data2 == null ? void 0 : data2.slice(0, 10)) === offchainLookupSignature && to)
@@ -99314,7 +99314,7 @@ function version4(parameters) {
       if (!walletProvider) {
         const CoinbaseWalletSDK = await (async () => {
           const { default: SDK } = await __vitePreload(async () => {
-            const { default: SDK2 } = await import("./index-MyjowWZh.js").then((n2) => n2.i);
+            const { default: SDK2 } = await import("./index-BO-mjXlQ.js").then((n2) => n2.i);
             return { default: SDK2 };
           }, true ? __vite__mapDeps([0,1,2]) : void 0, import.meta.url);
           if (typeof SDK !== "function" && typeof SDK.default === "function")
@@ -99496,7 +99496,7 @@ function version3(parameters) {
       if (!walletProvider) {
         const CoinbaseWalletSDK = await (async () => {
           const { default: SDK } = await __vitePreload(async () => {
-            const { default: SDK2 } = await import("./index-B3T-uGXM.js").then((n2) => n2.i);
+            const { default: SDK2 } = await import("./index-B72_PWQl.js").then((n2) => n2.i);
             return { default: SDK2 };
           }, true ? __vite__mapDeps([3,2,1]) : void 0, import.meta.url);
           if (typeof SDK !== "function" && typeof SDK.default === "function")
@@ -99732,7 +99732,7 @@ function walletConnect$1(parameters) {
         if (!optionalChains.length)
           return;
         const { EthereumProvider } = await __vitePreload(async () => {
-          const { EthereumProvider: EthereumProvider2 } = await import("./index.es-Dlw4NEqf.js");
+          const { EthereumProvider: EthereumProvider2 } = await import("./index.es-BHW6ZHth.js");
           return { EthereumProvider: EthereumProvider2 };
         }, true ? __vite__mapDeps([4,2]) : void 0, import.meta.url);
         return await EthereumProvider.init({
@@ -103186,7 +103186,7 @@ const TransactionStatusHeader = ({ status, noItemsToDisplay }) => {
 const TransactionStatus = () => {
   var _a2;
   const { transactionStatusSettings } = useTransactionStatusModal();
-  const { collectionAddress, chainId, items, txHash, currencyAddress, blockConfirmations = TRANSACTION_CONFIRMATIONS_DEFAULT } = transactionStatusSettings;
+  const { collectionAddress, chainId, items, txHash, currencyAddress, blockConfirmations = TRANSACTION_CONFIRMATIONS_DEFAULT, onSuccess, onError } = transactionStatusSettings;
   const networkConfig = findSupportedNetwork(chainId);
   const blockExplorerUrl = `${(_a2 = networkConfig == null ? void 0 : networkConfig.blockExplorer) == null ? void 0 : _a2.rootUrl}/tx/${txHash}`;
   const [startTime] = reactExports.useState(/* @__PURE__ */ new Date());
@@ -103203,9 +103203,11 @@ const TransactionStatus = () => {
         confirmations: blockConfirmations
       });
       setStatus("success");
+      onSuccess && onSuccess(txnHash);
     } catch (e2) {
       console.error("An error occurred while waiting for transaction confirmation", e2);
       setStatus("error");
+      onError && onError(e2);
     }
   };
   reactExports.useEffect(() => {
