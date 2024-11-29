@@ -1,4 +1,4 @@
-const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["./index-CAqnVBvl.js","./hooks.module-CRPIWSeq.js","./inherits_browser-gft0_vxm.js","./index-GjKY_ZWz.js","./index.es-BkW29cbf.js"])))=>i.map(i=>d[i]);
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["./index-CP9tCgLP.js","./hooks.module-DULpY-k7.js","./inherits_browser-eMI9J2Zh.js","./index-Dt8GhP-t.js","./index.es-FI6n73Yf.js"])))=>i.map(i=>d[i]);
 var __defProp = Object.defineProperty;
 var __typeError = (msg) => {
   throw TypeError(msg);
@@ -32949,7 +32949,7 @@ async function call(client2, args) {
   } catch (err) {
     const data2 = getRevertErrorData(err);
     const { offchainLookup, offchainLookupSignature } = await __vitePreload(async () => {
-      const { offchainLookup: offchainLookup2, offchainLookupSignature: offchainLookupSignature2 } = await import("./ccip-BodB4tnx.js");
+      const { offchainLookup: offchainLookup2, offchainLookupSignature: offchainLookupSignature2 } = await import("./ccip-c733fvMn.js");
       return { offchainLookup: offchainLookup2, offchainLookupSignature: offchainLookupSignature2 };
     }, true ? [] : void 0, import.meta.url);
     if (client2.ccipRead !== false && (data2 == null ? void 0 : data2.slice(0, 10)) === offchainLookupSignature && to)
@@ -96926,1153 +96926,6 @@ const getModalPositionCss = (position) => {
       return {};
   }
 };
-var dist = {};
-var AppleSigninButton$1 = {};
-var useScript$1 = {};
-Object.defineProperty(useScript$1, "__esModule", {
-  value: true
-});
-useScript$1.default = void 0;
-var _react$2 = reactExports;
-function useScript(src) {
-  (0, _react$2.useEffect)(
-    function() {
-      if (!src) {
-        return;
-      }
-      var script = document.querySelectorAll('script[src="'.concat(src, '"]'))[0];
-      if (!script) {
-        script = document.createElement("script");
-        script.src = src;
-        script.async = true;
-        document.body.appendChild(script);
-      }
-    },
-    [src]
-    // Only re-run effect if script src changes
-  );
-}
-var _default$3 = useScript;
-useScript$1.default = _default$3;
-var appleAuthHelpers = {};
-var waitForVar$1 = {};
-Object.defineProperty(waitForVar$1, "__esModule", {
-  value: true
-});
-waitForVar$1.default = void 0;
-var waitForVar = function waitForVar2(name2) {
-  var _ref = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {
-    pollFrequency: 1e3,
-    retries: 100,
-    parent: window
-  }, _ref$pollFrequency = _ref.pollFrequency, pollFrequency = _ref$pollFrequency === void 0 ? 1e3 : _ref$pollFrequency, _ref$retries = _ref.retries, inRetries = _ref$retries === void 0 ? 100 : _ref$retries, _ref$parent = _ref.parent, parent2 = _ref$parent === void 0 ? window : _ref$parent;
-  if (parent2 && parent2.hasOwnProperty(name2)) {
-    return Promise.resolve(parent2[name2]);
-  }
-  if (!inRetries) {
-    return Promise.resolve(void 0);
-  }
-  var retries = inRetries - 1;
-  return new Promise(function(resolve) {
-    return setTimeout(resolve, typeof pollFrequency === "function" ? pollFrequency({
-      retries
-    }) : pollFrequency);
-  }).then(function() {
-    return waitForVar2(name2, {
-      pollFrequency,
-      parent: parent2,
-      retries
-    });
-  });
-};
-var _default$2 = waitForVar;
-waitForVar$1.default = _default$2;
-Object.defineProperty(appleAuthHelpers, "__esModule", {
-  value: true
-});
-appleAuthHelpers.default = void 0;
-var _waitForVar = _interopRequireDefault$2(waitForVar$1);
-function _interopRequireDefault$2(obj) {
-  return obj && obj.__esModule ? obj : { default: obj };
-}
-var APPLE_SCRIPT_SRC = "https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js";
-var signIn = function signIn2(_ref) {
-  var authOptions = _ref.authOptions, onSuccess = _ref.onSuccess, onError = _ref.onError;
-  return (
-    /** wait for apple sript to load */
-    (0, _waitForVar.default)("AppleID").then(function() {
-      if (!window.AppleID) {
-        console.error(new Error("Error loading apple script"));
-      }
-      window.AppleID.auth.init(authOptions);
-      return window.AppleID.auth.signIn().then(function(response) {
-        if (onSuccess) {
-          onSuccess(response);
-        }
-        return response;
-      }).catch(function(err) {
-        if (onError) {
-          onError(err);
-        } else {
-          console.error(err);
-        }
-        return null;
-      });
-    }).catch(function(err) {
-      if (onError) {
-        onError(err);
-      } else {
-        console.error(err);
-      }
-      return null;
-    })
-  );
-};
-var _default$1 = {
-  APPLE_SCRIPT_SRC,
-  signIn
-};
-appleAuthHelpers.default = _default$1;
-Object.defineProperty(AppleSigninButton$1, "__esModule", {
-  value: true
-});
-AppleSigninButton$1.default = void 0;
-var _react$1 = _interopRequireDefault$1(reactExports);
-var _useScript = _interopRequireDefault$1(useScript$1);
-var _appleAuthHelpers = _interopRequireDefault$1(appleAuthHelpers);
-var _excluded$1 = ["onSuccess", "onError", "skipScript", "authOptions", "iconProps", "render", "uiType", "className", "noDefaultStyle", "buttonExtraChildren"];
-function _interopRequireDefault$1(obj) {
-  return obj && obj.__esModule ? obj : { default: obj };
-}
-function _extends() {
-  _extends = Object.assign || function(target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i];
-      for (var key in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
-          target[key] = source[key];
-        }
-      }
-    }
-    return target;
-  };
-  return _extends.apply(this, arguments);
-}
-function ownKeys$1(object2, enumerableOnly) {
-  var keys = Object.keys(object2);
-  if (Object.getOwnPropertySymbols) {
-    var symbols = Object.getOwnPropertySymbols(object2);
-    if (enumerableOnly) {
-      symbols = symbols.filter(function(sym) {
-        return Object.getOwnPropertyDescriptor(object2, sym).enumerable;
-      });
-    }
-    keys.push.apply(keys, symbols);
-  }
-  return keys;
-}
-function _objectSpread$1(target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i] != null ? arguments[i] : {};
-    if (i % 2) {
-      ownKeys$1(Object(source), true).forEach(function(key) {
-        _defineProperty$1(target, key, source[key]);
-      });
-    } else if (Object.getOwnPropertyDescriptors) {
-      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-    } else {
-      ownKeys$1(Object(source)).forEach(function(key) {
-        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-      });
-    }
-  }
-  return target;
-}
-function _defineProperty$1(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, { value, enumerable: true, configurable: true, writable: true });
-  } else {
-    obj[key] = value;
-  }
-  return obj;
-}
-function _objectWithoutProperties$1(source, excluded) {
-  if (source == null) return {};
-  var target = _objectWithoutPropertiesLoose$1(source, excluded);
-  var key, i;
-  if (Object.getOwnPropertySymbols) {
-    var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
-    for (i = 0; i < sourceSymbolKeys.length; i++) {
-      key = sourceSymbolKeys[i];
-      if (excluded.indexOf(key) >= 0) continue;
-      if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
-      target[key] = source[key];
-    }
-  }
-  return target;
-}
-function _objectWithoutPropertiesLoose$1(source, excluded) {
-  if (source == null) return {};
-  var target = {};
-  var sourceKeys = Object.keys(source);
-  var key, i;
-  for (i = 0; i < sourceKeys.length; i++) {
-    key = sourceKeys[i];
-    if (excluded.indexOf(key) >= 0) continue;
-    target[key] = source[key];
-  }
-  return target;
-}
-var _style = "\n.react-apple-signin-auth-btn {\n  background-color: transparent;\n  border: none;\n  padding: 0;\n  cursor: pointer;\n  border-radius: 4px;\n  padding: 0 8px 0 2px;\n  font-size: 14px;\n  font-size: 1em;\n  line-height: 1;\n  border: 1px solid #000;\n  overflow: hidden;\n  display: inline-flex;\n  justify-content: center;\n  align-items: center;\n}\n.react-apple-signin-auth-btn-light {\n  background-color: #FFF;\n  color: #000;\n  border-color: #000;\n}\n.react-apple-signin-auth-btn-dark {\n  background-color: #000;\n  color: #FFF;\n  border-color: #FFF;\n}".replace(/ {2}|\n/g, "");
-var AppleSigninButton = function AppleSigninButton2(_ref) {
-  var onSuccess = _ref.onSuccess, onError = _ref.onError, _ref$skipScript = _ref.skipScript, skipScript = _ref$skipScript === void 0 ? false : _ref$skipScript, authOptions = _ref.authOptions, iconProps = _ref.iconProps, render2 = _ref.render, _ref$uiType = _ref.uiType, uiType = _ref$uiType === void 0 ? "dark" : _ref$uiType, className = _ref.className, _ref$noDefaultStyle = _ref.noDefaultStyle, noDefaultStyle = _ref$noDefaultStyle === void 0 ? false : _ref$noDefaultStyle, _ref$buttonExtraChild = _ref.buttonExtraChildren, buttonExtraChildren = _ref$buttonExtraChild === void 0 ? "Continue with Apple" : _ref$buttonExtraChild, rest = _objectWithoutProperties$1(_ref, _excluded$1);
-  (0, _useScript.default)(skipScript ? null : _appleAuthHelpers.default.APPLE_SCRIPT_SRC);
-  var handleClick = function handleClick2(e2) {
-    if (e2) {
-      e2.preventDefault();
-      e2.stopPropagation();
-    }
-    _appleAuthHelpers.default.signIn({
-      authOptions,
-      onSuccess,
-      onError
-    });
-  };
-  var props = _objectSpread$1({
-    children: /* @__PURE__ */ _react$1.default.createElement(_react$1.default.Fragment, null, /* @__PURE__ */ _react$1.default.createElement("svg", _extends({
-      width: "24px",
-      height: "44px",
-      viewBox: "0 0 24 44"
-    }, iconProps), /* @__PURE__ */ _react$1.default.createElement("g", {
-      stroke: "none",
-      strokeWidth: "1",
-      fill: "none",
-      fillRule: "evenodd"
-    }, /* @__PURE__ */ _react$1.default.createElement("rect", {
-      fill: uiType === "light" ? "#FFF" : "#000",
-      x: "0",
-      y: "0",
-      width: "24",
-      height: "44"
-    }), /* @__PURE__ */ _react$1.default.createElement("path", {
-      d: "M12.2337427,16.9879688 C12.8896607,16.9879688 13.7118677,16.5445313 14.2014966,15.9532812 C14.6449341,15.4174609 14.968274,14.6691602 14.968274,13.9208594 C14.968274,13.8192383 14.9590357,13.7176172 14.9405591,13.6344727 C14.2107349,13.6621875 13.3330982,14.1241016 12.8065162,14.7430664 C12.3907935,15.2142188 12.012024,15.9532812 12.012024,16.7108203 C12.012024,16.8216797 12.0305005,16.9325391 12.0397388,16.9694922 C12.0859302,16.9787305 12.1598365,16.9879688 12.2337427,16.9879688 Z M9.92417241,28.1662891 C10.8202857,28.1662891 11.2175318,27.5658008 12.3353638,27.5658008 C13.4716724,27.5658008 13.721106,28.1478125 14.7188404,28.1478125 C15.6980982,28.1478125 16.3540162,27.2424609 16.972981,26.3555859 C17.6658521,25.339375 17.9522388,24.3416406 17.9707154,24.2954492 C17.9060474,24.2769727 16.0306763,23.5101953 16.0306763,21.3576758 C16.0306763,19.491543 17.5088013,18.6508594 17.5919459,18.5861914 C16.612688,17.1819727 15.1253248,17.1450195 14.7188404,17.1450195 C13.6194849,17.1450195 12.7233716,17.8101758 12.1598365,17.8101758 C11.5501099,17.8101758 10.7463794,17.1819727 9.79483648,17.1819727 C7.98413335,17.1819727 6.14571538,18.6785742 6.14571538,21.5054883 C6.14571538,23.2607617 6.8293482,25.1176563 7.67003179,26.3186328 C8.39061773,27.3348438 9.01882085,28.1662891 9.92417241,28.1662891 Z",
-      fill: uiType === "light" ? "#000" : "#FFF",
-      fillRule: "nonzero"
-    }))), buttonExtraChildren),
-    onClick: handleClick
-  }, rest);
-  if (render2) {
-    return render2(props);
-  }
-  return /* @__PURE__ */ _react$1.default.createElement(_react$1.default.Fragment, null, /* @__PURE__ */ _react$1.default.createElement("button", _extends({
-    className: "".concat(noDefaultStyle ? "" : "react-apple-signin-auth-btn react-apple-signin-auth-btn-".concat(uiType)).concat(className ? " ".concat(className) : ""),
-    type: "button",
-    "aria-label": "Signin with apple ID"
-  }, props)), noDefaultStyle ? null : /* @__PURE__ */ _react$1.default.createElement("style", null, _style));
-};
-var _default = AppleSigninButton;
-AppleSigninButton$1.default = _default;
-(function(exports) {
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  Object.defineProperty(exports, "appleAuthHelpers", {
-    enumerable: true,
-    get: function get2() {
-      return _appleAuthHelpers2.default;
-    }
-  });
-  Object.defineProperty(exports, "useScript", {
-    enumerable: true,
-    get: function get2() {
-      return _useScript2.default;
-    }
-  });
-  exports.default = void 0;
-  var _AppleSigninButton = _interopRequireDefault2(AppleSigninButton$1);
-  var _appleAuthHelpers2 = _interopRequireDefault2(appleAuthHelpers);
-  var _useScript2 = _interopRequireDefault2(useScript$1);
-  function _interopRequireDefault2(obj) {
-    return obj && obj.__esModule ? obj : { default: obj };
-  }
-  var _default2 = _AppleSigninButton.default;
-  exports.default = _default2;
-})(dist);
-sequenceWallet.type = "sequence";
-function sequenceWallet(params) {
-  const { defaultNetwork, connect: connect2, walletAppURL } = params;
-  const { projectAccessKey: projectAccessKey2 } = connect2;
-  return createConnector((config2) => ({
-    id: "sequence",
-    name: "Sequence",
-    type: sequenceWallet.type,
-    params,
-    setEmail(email2) {
-      if (params.connect.settings) {
-        params.connect.settings.signInWithEmail = email2;
-      }
-    },
-    async setup() {
-      const provider2 = await this.getProvider();
-      provider2.on("chainChanged", (chainIdHex) => {
-        config2.emitter.emit("change", { chainId: normalizeChainId$1(chainIdHex) });
-      });
-      provider2.on("disconnect", () => {
-        this.onDisconnect();
-      });
-    },
-    async connect() {
-      var _a2, _b2, _c2, _d2, _e2, _f2;
-      const provider2 = await this.getProvider();
-      if (!provider2.isConnected()) {
-        const localStorageTheme = await ((_a2 = config2.storage) == null ? void 0 : _a2.getItem(LocalStorageKey.Theme));
-        const ethAuthSettings = await ((_b2 = config2.storage) == null ? void 0 : _b2.getItem(LocalStorageKey.EthAuthSettings)) ?? {};
-        const connectOptionsWithTheme = {
-          authorize: true,
-          askForEmail: true,
-          ...ethAuthSettings,
-          ...connect2,
-          settings: {
-            theme: localStorageTheme || "dark",
-            ...connect2 == null ? void 0 : connect2.settings
-          }
-        };
-        const e2 = await provider2.connect(connectOptionsWithTheme);
-        if (e2.error) {
-          throw new UserRejectedRequestError(new Error(e2.error));
-        }
-        if (!e2.connected) {
-          throw new UserRejectedRequestError(new Error("Wallet connection rejected"));
-        }
-        const proofString = (_c2 = e2.proof) == null ? void 0 : _c2.proofString;
-        const proofTypedData = (_d2 = e2.proof) == null ? void 0 : _d2.typedData;
-        if (proofString && proofTypedData) {
-          const jsonEthAuthProof = {
-            proofString,
-            typedData: proofTypedData
-          };
-          await ((_e2 = config2.storage) == null ? void 0 : _e2.setItem(LocalStorageKey.EthAuthProof, jsonEthAuthProof));
-        }
-        await ((_f2 = config2.storage) == null ? void 0 : _f2.setItem(LocalStorageKey.WaasSignInEmail, e2.email || null));
-      }
-      const accounts = await this.getAccounts();
-      return {
-        accounts: [...accounts],
-        chainId: provider2.getChainId()
-      };
-    },
-    async disconnect() {
-      var _a2;
-      const provider2 = await this.getProvider();
-      provider2.disconnect();
-      await ((_a2 = config2.storage) == null ? void 0 : _a2.removeItem(LocalStorageKey.WaasSignInEmail));
-    },
-    async getAccounts() {
-      const provider2 = await this.getProvider();
-      const signer2 = provider2.getSigner();
-      const account2 = getAddress$1(await signer2.getAddress());
-      return [account2];
-    },
-    async getProvider() {
-      try {
-        const provider2 = sequence$1.getWallet();
-        return provider2;
-      } catch (err) {
-        if (!projectAccessKey2) {
-          throw "projectAccessKey not found";
-        }
-        const provider2 = sequence$1.initWallet(projectAccessKey2, {
-          defaultNetwork,
-          transports: {
-            walletAppURL: walletAppURL || "https://sequence.app"
-          },
-          defaultEIP6492: true,
-          analytics: false
-        });
-        const chainId = provider2.getChainId();
-        config2.emitter.emit("change", { chainId: normalizeChainId$1(chainId) });
-        return provider2;
-      }
-    },
-    async isAuthorized() {
-      try {
-        const account2 = await this.getAccounts();
-        return !!account2;
-      } catch (e2) {
-        return false;
-      }
-    },
-    async switchChain({ chainId }) {
-      const provider2 = await this.getProvider();
-      const chain = config2.chains.find((c2) => c2.id === chainId) || config2.chains[0];
-      provider2.setDefaultChainId(normalizeChainId$1(chainId));
-      config2.emitter.emit("change", { chainId });
-      return chain;
-    },
-    async getChainId() {
-      const provider2 = await this.getProvider();
-      const chainId = provider2.getChainId();
-      return chainId;
-    },
-    async onAccountsChanged(accounts) {
-      return { account: accounts[0] };
-    },
-    async onChainChanged(chain) {
-      const provider2 = await this.getProvider();
-      config2.emitter.emit("change", { chainId: normalizeChainId$1(chain) });
-      provider2.setDefaultChainId(normalizeChainId$1(chain));
-    },
-    async onConnect(_connectinfo) {
-    },
-    async onDisconnect() {
-      var _a2;
-      await ((_a2 = config2.storage) == null ? void 0 : _a2.removeItem(LocalStorageKey.EthAuthProof));
-      config2.emitter.emit("disconnect");
-    }
-  }));
-}
-function normalizeChainId$1(chainId) {
-  if (typeof chainId === "object")
-    return normalizeChainId$1(chainId.chainId);
-  if (typeof chainId === "string")
-    return Number.parseInt(chainId, chainId.trim().substring(0, 2) === "0x" ? 16 : 10);
-  if (typeof chainId === "bigint")
-    return Number(chainId);
-  return chainId;
-}
-var byteToHex = [];
-for (var i = 0; i < 256; ++i) {
-  byteToHex.push((i + 256).toString(16).slice(1));
-}
-function unsafeStringify(arr, offset2 = 0) {
-  return (byteToHex[arr[offset2 + 0]] + byteToHex[arr[offset2 + 1]] + byteToHex[arr[offset2 + 2]] + byteToHex[arr[offset2 + 3]] + "-" + byteToHex[arr[offset2 + 4]] + byteToHex[arr[offset2 + 5]] + "-" + byteToHex[arr[offset2 + 6]] + byteToHex[arr[offset2 + 7]] + "-" + byteToHex[arr[offset2 + 8]] + byteToHex[arr[offset2 + 9]] + "-" + byteToHex[arr[offset2 + 10]] + byteToHex[arr[offset2 + 11]] + byteToHex[arr[offset2 + 12]] + byteToHex[arr[offset2 + 13]] + byteToHex[arr[offset2 + 14]] + byteToHex[arr[offset2 + 15]]).toLowerCase();
-}
-var getRandomValues;
-var rnds8 = new Uint8Array(16);
-function rng() {
-  if (!getRandomValues) {
-    getRandomValues = typeof crypto !== "undefined" && crypto.getRandomValues && crypto.getRandomValues.bind(crypto);
-    if (!getRandomValues) {
-      throw new Error("crypto.getRandomValues() not supported. See https://github.com/uuidjs/uuid#getrandomvalues-not-supported");
-    }
-  }
-  return getRandomValues(rnds8);
-}
-var randomUUID = typeof crypto !== "undefined" && crypto.randomUUID && crypto.randomUUID.bind(crypto);
-const native = {
-  randomUUID
-};
-function v4(options, buf, offset2) {
-  if (native.randomUUID && !buf && !options) {
-    return native.randomUUID();
-  }
-  options = options || {};
-  var rnds = options.random || (options.rng || rng)();
-  rnds[6] = rnds[6] & 15 | 64;
-  rnds[8] = rnds[8] & 63 | 128;
-  return unsafeStringify(rnds);
-}
-sequenceWaasWallet.type = "sequence-waas";
-function sequenceWaasWallet(params) {
-  const isDev = !!(params == null ? void 0 : params.isDev);
-  const nodesUrl = isDev ? "https://dev-nodes.sequence.app" : "https://nodes.sequence.app";
-  const showConfirmationModal = params.enableConfirmationModal ?? false;
-  const sequenceWaas = new SequenceWaaS({
-    waasConfigKey: params.waasConfigKey,
-    projectAccessKey: params.projectAccessKey,
-    network: params.network ?? 137
-  });
-  const sequenceWaasProvider = new SequenceWaasProvider(sequenceWaas, showConfirmationModal, nodesUrl);
-  return createConnector((config2) => ({
-    id: `sequence-waas`,
-    name: "Sequence WaaS",
-    type: sequenceWaasWallet.type,
-    sequenceWaas,
-    sequenceWaasProvider,
-    params,
-    async setup() {
-      var _a2, _b2, _c2;
-      if (typeof window !== "object") {
-        return;
-      }
-      if (params.googleClientId) {
-        await ((_a2 = config2.storage) == null ? void 0 : _a2.setItem(LocalStorageKey.WaasGoogleClientID, params.googleClientId));
-      }
-      if (params.appleClientId) {
-        await ((_b2 = config2.storage) == null ? void 0 : _b2.setItem(LocalStorageKey.WaasAppleClientID, params.appleClientId));
-      }
-      if (params.appleRedirectURI) {
-        await ((_c2 = config2.storage) == null ? void 0 : _c2.setItem(LocalStorageKey.WaasAppleRedirectURI, params.appleRedirectURI));
-      }
-      sequenceWaasProvider.on("error", (error) => {
-        if (isSessionInvalidOrNotFoundError(error)) {
-          this.disconnect();
-        }
-      });
-    },
-    async connect(_connectInfo) {
-      var _a2, _b2, _c2, _d2, _e2, _f2, _g2, _h2;
-      const provider2 = await this.getProvider();
-      const isSignedIn = await provider2.sequenceWaas.isSignedIn();
-      if (!isSignedIn) {
-        const googleIdToken = await ((_a2 = config2.storage) == null ? void 0 : _a2.getItem(LocalStorageKey.WaasGoogleIdToken));
-        const emailIdToken = await ((_b2 = config2.storage) == null ? void 0 : _b2.getItem(LocalStorageKey.WaasEmailIdToken));
-        const appleIdToken = await ((_c2 = config2.storage) == null ? void 0 : _c2.getItem(LocalStorageKey.WaasAppleIdToken));
-        let idToken;
-        if (params.loginType === "google" && googleIdToken) {
-          idToken = googleIdToken;
-        } else if (params.loginType === "email" && emailIdToken) {
-          idToken = emailIdToken;
-        } else if (params.loginType === "apple" && appleIdToken) {
-          idToken = appleIdToken;
-        }
-        await ((_d2 = config2.storage) == null ? void 0 : _d2.removeItem(LocalStorageKey.WaasGoogleIdToken));
-        await ((_e2 = config2.storage) == null ? void 0 : _e2.removeItem(LocalStorageKey.WaasEmailIdToken));
-        await ((_f2 = config2.storage) == null ? void 0 : _f2.removeItem(LocalStorageKey.WaasAppleIdToken));
-        if (idToken) {
-          try {
-            const signInResponse = await provider2.sequenceWaas.signIn({ idToken }, randomName());
-            if (signInResponse == null ? void 0 : signInResponse.email) {
-              await ((_g2 = config2.storage) == null ? void 0 : _g2.setItem(LocalStorageKey.WaasSignInEmail, signInResponse.email));
-            }
-          } catch (e2) {
-            console.log(e2);
-            await this.disconnect();
-            throw e2;
-          }
-        }
-      }
-      const accounts = await this.getAccounts();
-      if (accounts.length) {
-        await ((_h2 = config2.storage) == null ? void 0 : _h2.setItem(LocalStorageKey.WaasActiveLoginType, params.loginType));
-      } else {
-        throw new Error("No accounts found");
-      }
-      return {
-        accounts,
-        chainId: await this.getChainId()
-      };
-    },
-    async disconnect() {
-      var _a2, _b2;
-      const provider2 = await this.getProvider();
-      try {
-        await provider2.sequenceWaas.dropSession({ sessionId: await provider2.sequenceWaas.getSessionId(), strict: false });
-      } catch (e2) {
-        console.log(e2);
-      }
-      await ((_a2 = config2.storage) == null ? void 0 : _a2.removeItem(LocalStorageKey.WaasActiveLoginType));
-      await ((_b2 = config2.storage) == null ? void 0 : _b2.removeItem(LocalStorageKey.WaasSignInEmail));
-      config2.emitter.emit("disconnect");
-    },
-    async getAccounts() {
-      const provider2 = await this.getProvider();
-      try {
-        const isSignedIn = await provider2.sequenceWaas.isSignedIn();
-        if (isSignedIn) {
-          const address = await provider2.sequenceWaas.getAddress();
-          return [getAddress$1(address)];
-        }
-      } catch (err) {
-        return [];
-      }
-      return [];
-    },
-    async getProvider() {
-      return sequenceWaasProvider;
-    },
-    async isAuthorized() {
-      var _a2;
-      const provider2 = await this.getProvider();
-      const activeWaasOption = await ((_a2 = config2.storage) == null ? void 0 : _a2.getItem(LocalStorageKey.WaasActiveLoginType));
-      if (params.loginType !== activeWaasOption) {
-        return false;
-      }
-      try {
-        return await provider2.sequenceWaas.isSignedIn();
-      } catch (e2) {
-        return false;
-      }
-    },
-    async switchChain({ chainId }) {
-      const provider2 = await this.getProvider();
-      const chain = config2.chains.find((c2) => c2.id === chainId) || config2.chains[0];
-      await provider2.request({
-        method: "wallet_switchEthereumChain",
-        params: [{ chainId: toQuantity(chainId) }]
-      });
-      config2.emitter.emit("change", { chainId });
-      return chain;
-    },
-    async getChainId() {
-      const provider2 = await this.getProvider();
-      return Number(provider2.getChainId());
-    },
-    async onAccountsChanged(accounts) {
-      return { account: accounts[0] };
-    },
-    async onChainChanged(chain) {
-      config2.emitter.emit("change", { chainId: normalizeChainId(chain) });
-    },
-    async onConnect(_connectInfo) {
-    },
-    async onDisconnect() {
-      await this.disconnect();
-    }
-  }));
-}
-class SequenceWaasProvider extends AbstractProvider {
-  constructor(sequenceWaas, showConfirmation, nodesUrl) {
-    var _a2;
-    super(sequenceWaas.config.network);
-    __publicField(this, "sequenceWaas");
-    __publicField(this, "showConfirmation");
-    __publicField(this, "nodesUrl");
-    __publicField(this, "jsonRpcProvider");
-    __publicField(this, "requestConfirmationHandler");
-    __publicField(this, "feeConfirmationHandler");
-    __publicField(this, "currentNetwork");
-    this.sequenceWaas = sequenceWaas;
-    this.showConfirmation = showConfirmation;
-    this.nodesUrl = nodesUrl;
-    const initialChain = sequenceWaas.config.network;
-    const initialChainName = (_a2 = allNetworks.find((n2) => n2.chainId === initialChain || n2.name === initialChain)) == null ? void 0 : _a2.name;
-    const initialJsonRpcProvider = new JsonRpcProvider$1(`${nodesUrl}/${initialChainName}/${sequenceWaas.config.projectAccessKey}`);
-    this.jsonRpcProvider = initialJsonRpcProvider;
-    this.currentNetwork = Network.from(sequenceWaas.config.network);
-  }
-  async request({ method, params }) {
-    var _a2;
-    if (method === "wallet_switchEthereumChain") {
-      const chainId = normalizeChainId(params == null ? void 0 : params[0].chainId);
-      const networkName = (_a2 = allNetworks.find((n2) => n2.chainId === chainId)) == null ? void 0 : _a2.name;
-      const jsonRpcProvider = new JsonRpcProvider$1(`${this.nodesUrl}/${networkName}/${this.sequenceWaas.config.projectAccessKey}`);
-      this.jsonRpcProvider = jsonRpcProvider;
-      this.currentNetwork = Network.from(chainId);
-      return null;
-    }
-    if (method === "eth_chainId") {
-      return toQuantity(this.currentNetwork.chainId);
-    }
-    if (method === "eth_accounts") {
-      const address = await this.sequenceWaas.getAddress();
-      const account2 = getAddress$1(address);
-      return [account2];
-    }
-    if (method === "eth_sendTransaction") {
-      const txns = await resolveProperties$1(params == null ? void 0 : params[0]);
-      const chainId = this.getChainId();
-      let feeOptionsResponse;
-      try {
-        feeOptionsResponse = await this.checkTransactionFeeOptions({ transactions: [txns], chainId });
-      } catch (error) {
-        if (isSessionInvalidOrNotFoundError(error)) {
-          await this.emit("error", error);
-          throw new ProviderDisconnectedError(new Error("Provider is not connected"));
-        } else {
-          const message = typeof error === "object" && error !== null && "cause" in error ? String(error.cause) ?? "Failed to check transaction fee options" : "Failed to check transaction fee options";
-          throw new InternalRpcError(new Error(message));
-        }
-      }
-      const feeOptions2 = feeOptionsResponse == null ? void 0 : feeOptionsResponse.feeOptions;
-      let selectedFeeOption;
-      if (!(feeOptionsResponse == null ? void 0 : feeOptionsResponse.isSponsored) && feeOptions2 && feeOptions2.length > 0) {
-        if (!this.feeConfirmationHandler) {
-          throw new TransactionRejectedRpcError(new Error("Unable to send transaction: please use useWaasFeeOptions hook and pick a fee option"));
-        }
-        const id2 = v4();
-        const confirmation = await this.feeConfirmationHandler.confirmFeeOption(id2, feeOptions2, txns, chainId);
-        if (!confirmation.confirmed) {
-          throw new UserRejectedRequestError(new Error("User rejected send transaction request"));
-        }
-        if (id2 !== confirmation.id) {
-          throw new UserRejectedRequestError(new Error("User confirmation ids do not match"));
-        }
-        selectedFeeOption = feeOptions2.find((feeOption) => feeOption.token.contractAddress === confirmation.feeTokenAddress);
-      }
-      if (this.requestConfirmationHandler && this.showConfirmation) {
-        const id2 = v4();
-        const confirmation = await this.requestConfirmationHandler.confirmSignTransactionRequest(id2, txns, chainId);
-        if (!confirmation.confirmed) {
-          throw new UserRejectedRequestError(new Error("User rejected send transaction request"));
-        }
-        if (id2 !== confirmation.id) {
-          throw new UserRejectedRequestError(new Error("User confirmation ids do not match"));
-        }
-      }
-      let response;
-      try {
-        response = await this.sequenceWaas.sendTransaction({
-          transactions: [await resolveProperties$1(params == null ? void 0 : params[0])],
-          network: chainId,
-          transactionsFeeOption: selectedFeeOption,
-          transactionsFeeQuote: feeOptionsResponse == null ? void 0 : feeOptionsResponse.feeQuote
-        });
-      } catch (error) {
-        if (isSessionInvalidOrNotFoundError(error)) {
-          await this.emit("error", error);
-          throw new ProviderDisconnectedError(new Error("Provider is not connected"));
-        } else {
-          const message = typeof error === "object" && error !== null && "cause" in error ? String(error.cause) ?? "Failed to send transaction" : "Failed to send transaction";
-          throw new InternalRpcError(new Error(message));
-        }
-      }
-      if (response.code === "transactionFailed") {
-        throw new TransactionRejectedRpcError(new Error(`Unable to send transaction: ${response.data.error}`));
-      }
-      if (response.code === "transactionReceipt") {
-        const { txHash } = response.data;
-        return txHash;
-      }
-    }
-    if (method === "eth_sign" || method === "eth_signTypedData" || method === "eth_signTypedData_v4" || method === "personal_sign") {
-      if (this.requestConfirmationHandler && this.showConfirmation) {
-        const id2 = v4();
-        const confirmation = await this.requestConfirmationHandler.confirmSignMessageRequest(id2, params == null ? void 0 : params[0], Number(this.currentNetwork.chainId));
-        if (!confirmation.confirmed) {
-          throw new UserRejectedRequestError(new Error("User rejected sign message request"));
-        }
-        if (id2 !== confirmation.id) {
-          throw new UserRejectedRequestError(new Error("User confirmation ids do not match"));
-        }
-      }
-      let sig;
-      try {
-        sig = await this.sequenceWaas.signMessage({ message: params == null ? void 0 : params[0], network: Number(this.currentNetwork.chainId) });
-      } catch (error) {
-        if (isSessionInvalidOrNotFoundError(error)) {
-          await this.emit("error", error);
-          throw new ProviderDisconnectedError(new Error("Provider is not connected"));
-        } else {
-          const message = typeof error === "object" && error !== null && "cause" in error ? String(error.cause) ?? "Failed to sign message" : "Failed to sign message";
-          throw new InternalRpcError(new Error(message));
-        }
-      }
-      return sig.data.signature;
-    }
-    return await this.jsonRpcProvider.send(method, params ?? []);
-  }
-  async getTransaction(txHash) {
-    return await this.jsonRpcProvider.getTransaction(txHash);
-  }
-  detectNetwork() {
-    return Promise.resolve(this.currentNetwork);
-  }
-  getChainId() {
-    return Number(this.currentNetwork.chainId);
-  }
-  async checkTransactionFeeOptions({ transactions: transactions2, chainId }) {
-    const resp = await this.sequenceWaas.feeOptions({
-      transactions: transactions2,
-      network: chainId
-    });
-    if (resp.data.feeQuote && resp.data.feeOptions) {
-      return { feeQuote: resp.data.feeQuote, feeOptions: resp.data.feeOptions, isSponsored: false };
-    }
-    return { feeQuote: resp.data.feeQuote, feeOptions: resp.data.feeOptions, isSponsored: true };
-  }
-}
-const DEVICE_EMOJIS = [
-  // 256 emojis for unsigned byte range 0 - 255
-  ..."🐶🐱🐭🐹🐰🦊🐻🐼🐨🐯🦁🐮🐷🐽🐸🐵🙈🙉🙊🐒🐔🐧🐦🐤🐣🐥🦆🦅🦉🦇🐺🐗🐴🦄🐝🐛🦋🐌🐞🐜🦟🦗🕷🕸🦂🐢🐍🦎🦖🦕🐙🦑🦐🦞🦀🐡🐠🐟🐬🐳🐋🦈🐊🐅🐆🦓🦍🦧🐘🦛🦏🐪🐫🦒🦘🐃🐂🐄🐎🐖🐏🐑🦙🐐🦌🐕🐩🦮🐈🐓🦃🦚🦜🦢🦩🕊🐇🦝🦨🦡🦦🦥🐁🐀🐿🦔🐾🐉🐲🌵🎄🌲🌳🌴🌱🌿🍀🎍🎋🍃👣🍂🍁🍄🐚🌾💐🌷🌹🥀🌺🌸🌼🌻🌞🌝🍏🍎🍐🍊🍋🍌🍉🍇🍓🍈🥭🍍🥥🥝🍅🥑🥦🥬🥒🌶🌽🥕🧄🧅🥔🍠🥐🥯🍞🥖🥨🧀🥚🍳🧈🥞🧇🥓🥩🍗🍖🦴🌭🍔🍟🍕🥪🥙🧆🌮🌯🥗🥘🥫🍝🍜🍲🍛🍣🍱🥟🦪🍤🍙🍚🍘🍥🥠🥮🍢🍡🍧🍨🍦🥧🧁🍰🎂🍮🍭🍬🍫🍿🍩🍪🌰🥜👀👂👃👄👅👆👇👈👉👊👋👌👍👎👏👐👑👒👓🎯🎰🎱🎲🎳👾👯👺👻👽🏂🏃🏄"
-];
-function randomName() {
-  const wordlistSize = 2048;
-  const words2 = wordlists.en;
-  const randomEmoji = DEVICE_EMOJIS[Math.floor(Math.random() * DEVICE_EMOJIS.length)];
-  const randomWord1 = words2.getWord(Math.floor(Math.random() * wordlistSize));
-  const randomWord2 = words2.getWord(Math.floor(Math.random() * wordlistSize));
-  return `${randomEmoji} ${randomWord1} ${randomWord2}`;
-}
-function normalizeChainId(chainId) {
-  if (typeof chainId === "object")
-    return normalizeChainId(chainId.chainId);
-  if (typeof chainId === "string")
-    return Number.parseInt(chainId, chainId.trim().substring(0, 2) === "0x" ? 16 : 10);
-  if (typeof chainId === "bigint")
-    return Number(chainId);
-  return chainId;
-}
-function isSessionInvalidOrNotFoundError(error) {
-  return error instanceof WebrpcEndpointError7 && error.cause === "session invalid or not found";
-}
-function useEmailAuth({ connector, onSuccess }) {
-  if (!connector) {
-    return {
-      inProgress: false,
-      loading: false,
-      error: void 0,
-      initiateAuth: async (_email) => {
-      },
-      sendChallengeAnswer: async (_answer) => {
-      }
-    };
-  }
-  const [email2, setEmail] = reactExports.useState("");
-  const [error, setError] = reactExports.useState();
-  const [loading, setLoading] = reactExports.useState(false);
-  const [instance, setInstance] = reactExports.useState("");
-  const [respondWithCode, setRespondWithCode] = reactExports.useState();
-  const getSequenceWaas = () => {
-    if (!connector) {
-      throw new Error("Connector is not defined");
-    }
-    const sequenceWaas = connector.sequenceWaas;
-    if (!sequenceWaas) {
-      throw new Error("Connector does not support SequenceWaaS");
-    }
-    return sequenceWaas;
-  };
-  const initiateAuth2 = async (email3) => {
-    connector.params;
-    const waas = getSequenceWaas();
-    setLoading(true);
-    setError(void 0);
-    waas.onEmailAuthCodeRequired(async (respondWithCode2) => {
-      setRespondWithCode(() => respondWithCode2);
-    });
-    waas.signIn({ email: email3 }, randomName()).then((signInResponse) => {
-      onSuccess({ version: 2, signInResponse });
-      if (signInResponse.email) {
-        setEmail(signInResponse.email);
-      }
-    }).catch((err) => {
-      setError(err);
-    });
-    setLoading(false);
-  };
-  const sendChallengeAnswer = async (answer) => {
-    connector.params;
-    getSequenceWaas();
-    setLoading(true);
-    setError(void 0);
-    if (!respondWithCode) {
-      throw new Error("Email v2 auth, respondWithCode is not defined");
-    }
-    try {
-      await respondWithCode(answer);
-    } catch (err) {
-      setError(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-  const cancel2 = () => {
-    setLoading(false);
-    setRespondWithCode(null);
-    setError(void 0);
-  };
-  return {
-    inProgress: loading || !!instance,
-    loading,
-    error,
-    initiateAuth: initiateAuth2,
-    sendChallengeAnswer,
-    cancel: cancel2
-  };
-}
-const isEmailValid = (email2) => {
-  return /^\S+@\S+\.\S{2,}$/.test(email2);
-};
-const compareAddress$2 = (a2, b2) => {
-  return a2.toLowerCase() === b2.toLowerCase();
-};
-var ValueType$2;
-(function(ValueType2) {
-  ValueType2[ValueType2["VERY_LARGE"] = 0] = "VERY_LARGE";
-  ValueType2[ValueType2["FRACTION"] = 1] = "FRACTION";
-  ValueType2[ValueType2["VERY_TINY"] = 2] = "VERY_TINY";
-  ValueType2[ValueType2["MIXED"] = 3] = "MIXED";
-})(ValueType$2 || (ValueType$2 = {}));
-const formatDisplay$2 = (_val2) => {
-  if (isNaN(Number(_val2))) {
-    console.error(`display format error ${_val2} is not a number`);
-    return "NaN";
-  }
-  const val = Number(_val2);
-  if (val === 0) {
-    return "0";
-  }
-  let valMode;
-  if (val > 1e8) {
-    valMode = ValueType$2.VERY_LARGE;
-  } else if (val < 1e-10) {
-    valMode = ValueType$2.VERY_TINY;
-  } else if (val < 1) {
-    valMode = ValueType$2.FRACTION;
-  } else {
-    valMode = ValueType$2.MIXED;
-  }
-  let notation = void 0;
-  let config2;
-  switch (valMode) {
-    case ValueType$2.VERY_LARGE:
-      notation = "compact";
-      config2 = {
-        maximumFractionDigits: 4
-      };
-      break;
-    case ValueType$2.VERY_TINY:
-      notation = "scientific";
-      config2 = {
-        maximumFractionDigits: 4
-      };
-      break;
-    case ValueType$2.FRACTION:
-      notation = "standard";
-      config2 = {
-        maximumSignificantDigits: 4
-      };
-      break;
-    default:
-      notation = "standard";
-      config2 = {
-        maximumFractionDigits: 2
-      };
-  }
-  return Intl.NumberFormat("en-US", {
-    notation,
-    ...config2
-  }).format(val);
-};
-const capitalize = (word) => {
-  return word.charAt(0).toUpperCase() + word.slice(1);
-};
-const BUTTON_SIZE = "14";
-const ICON_SIZE = "10";
-const getLogo = (theme, walletProps) => theme === "dark" ? walletProps.logoDark || walletProps.monochromeLogoDark : walletProps.logoLight || walletProps.monochromeLogoLight;
-const ConnectButton = (props) => {
-  const { connector, label, onConnect } = props;
-  const { theme } = useTheme$1();
-  const walletProps = connector._wallet;
-  const Logo = getLogo(theme, walletProps);
-  return jsxRuntimeExports$1.jsx(Tooltip, { message: label || walletProps.name, children: jsxRuntimeExports$1.jsx(Card, { clickable: true, width: BUTTON_SIZE, height: BUTTON_SIZE, padding: "2", borderRadius: "xs", justifyContent: "center", alignItems: "center", onClick: () => onConnect(connector), children: jsxRuntimeExports$1.jsx(Box, { as: Logo, width: ICON_SIZE, height: ICON_SIZE }) }) });
-};
-const GoogleWaasConnectButton = (props) => {
-  const { connector, onConnect } = props;
-  const storage = useStorage();
-  const [enableGoogleTooltip, setEnableGoogleTooltip] = reactExports.useState(false);
-  const { theme } = useTheme$1();
-  const walletProps = connector._wallet;
-  const Logo = getLogo(theme, walletProps);
-  reactExports.useEffect(() => {
-    setTimeout(() => {
-      setEnableGoogleTooltip(true);
-    }, 300);
-  });
-  return jsxRuntimeExports$1.jsx(Tooltip, { message: "Google", disabled: !enableGoogleTooltip, children: jsxRuntimeExports$1.jsxs(Card, { clickable: true, background: "transparent", borderRadius: "xs", padding: "0", width: BUTTON_SIZE, height: BUTTON_SIZE, position: "relative", children: [jsxRuntimeExports$1.jsx(Box, { width: "full", height: "full", overflow: "hidden", borderRadius: "sm", alignItems: "center", justifyContent: "center", style: { opacity: 1e-7, transform: "scale(1.4)" }, children: jsxRuntimeExports$1.jsx(GoogleLogin, { type: "icon", size: "large", width: "56", onSuccess: (credentialResponse) => {
-    if (credentialResponse.credential) {
-      storage == null ? void 0 : storage.setItem(LocalStorageKey.WaasGoogleIdToken, credentialResponse.credential);
-      onConnect(connector);
-    }
-  }, onError: () => {
-    console.log("Login Failed");
-  } }) }), jsxRuntimeExports$1.jsx(Box, { background: "backgroundSecondary", borderRadius: "xs", display: "flex", justifyContent: "center", alignItems: "center", position: "absolute", pointerEvents: "none", width: "full", height: "full", top: "0", right: "0", children: jsxRuntimeExports$1.jsx(Box, { as: Logo, width: ICON_SIZE, height: ICON_SIZE }) })] }) });
-};
-const AppleWaasConnectButton = (props) => {
-  const { connector, onConnect } = props;
-  const storage = useStorage();
-  const { data: appleClientId } = useStorageItem(LocalStorageKey.WaasAppleClientID);
-  const { data: appleRedirectUri } = useStorageItem(LocalStorageKey.WaasAppleRedirectURI);
-  return appleClientId && appleRedirectUri ? jsxRuntimeExports$1.jsx(ConnectButton, { connector, onConnect: () => {
-    dist.appleAuthHelpers.signIn({
-      authOptions: {
-        clientId: appleClientId,
-        redirectURI: appleRedirectUri,
-        scope: "openid email",
-        usePopup: true
-      },
-      onSuccess: (response) => {
-        var _a2;
-        if ((_a2 = response.authorization) == null ? void 0 : _a2.id_token) {
-          storage == null ? void 0 : storage.setItem(LocalStorageKey.WaasAppleIdToken, response.authorization.id_token);
-          onConnect(connector);
-        } else {
-          console.log("Apple login error: No id_token found");
-        }
-      },
-      onError: (error) => console.error(error)
-    });
-  } }) : null;
-};
-const EmailConnectButton = (props) => {
-  const { onClick } = props;
-  return jsxRuntimeExports$1.jsx(Tooltip, { message: "Email", children: jsxRuntimeExports$1.jsx(Card, { clickable: true, width: BUTTON_SIZE, height: BUTTON_SIZE, padding: "2", borderRadius: "xs", justifyContent: "center", alignItems: "center", onClick, children: jsxRuntimeExports$1.jsx(SvgEmailIcon, { size: "xl", color: "text100" }) }) });
-};
-const SequenceLogo$1 = ({ ...props }) => {
-  return jsxRuntimeExports$1.jsx(React.Fragment, { children: jsxRuntimeExports$1.jsxs("svg", { xmlns: "http://www.w3.org/2000/svg", style: { fill: "none" }, id: "svg1316", version: "1.1", viewBox: "0 0 396 396", ...props, children: [jsxRuntimeExports$1.jsx("g", { transform: "translate(0,38)", id: "g1256", clipPath: "url(#clip0_5_131)", children: jsxRuntimeExports$1.jsxs("g", { id: "g1254", clipPath: "url(#clip1_5_131)", children: [jsxRuntimeExports$1.jsx("path", { style: { fill: "#111111" }, id: "path1232", d: "M 0,67.5049 V 250.165 c 0,37.282 30.1402,67.505 67.32,67.505 h 261.36 c 37.18,0 67.32,-30.223 67.32,-67.505 V 67.5049 C 396,30.223 365.86,0 328.68,0 H 67.32 C 30.1402,0 0,30.223 0,67.5049 Z" }), jsxRuntimeExports$1.jsx("path", { style: { fill: "url(#paint0_linear_5_131" }, id: "path1234", d: "M 0,67.5049 V 250.165 c 0,37.282 30.1402,67.505 67.32,67.505 h 261.36 c 37.18,0 67.32,-30.223 67.32,-67.505 V 67.5049 C 396,30.223 365.86,0 328.68,0 H 67.32 C 30.1402,0 0,30.223 0,67.5049 Z" }), jsxRuntimeExports$1.jsx("path", { style: { fill: "url(#paint1_linear_5_131" }, id: "path1236", d: "m 98.9999,79.4176 c 0,-10.9653 -8.8648,-19.8544 -19.8,-19.8544 -10.9352,0 -19.8,8.8891 -19.8,19.8544 0,10.9652 8.8648,19.8544 19.8,19.8544 10.9352,0 19.8,-8.8892 19.8,-19.8544 z" }), jsxRuntimeExports$1.jsx("path", { style: { fill: "url(#paint2_linear_5_131)" }, id: "path1238", d: "m 98.9999,79.4176 c 0,-10.9653 -8.8648,-19.8544 -19.8,-19.8544 -10.9352,0 -19.8,8.8891 -19.8,19.8544 0,10.9652 8.8648,19.8544 19.8,19.8544 10.9352,0 19.8,-8.8892 19.8,-19.8544 z" }), jsxRuntimeExports$1.jsx("path", { style: { fill: "url(#paint3_linear_5_131)" }, id: "path1240", d: "m 98.9999,79.4176 c 0,-10.9653 -8.8648,-19.8544 -19.8,-19.8544 -10.9352,0 -19.8,8.8891 -19.8,19.8544 0,10.9652 8.8648,19.8544 19.8,19.8544 10.9352,0 19.8,-8.8892 19.8,-19.8544 z" }), jsxRuntimeExports$1.jsx("path", { style: { fill: "url(#paint4_linear_5_131)" }, id: "path1242", d: "m 98.9999,238.126 c 0,-10.965 -8.8648,-19.854 -19.8,-19.854 -10.9352,0 -19.8,8.889 -19.8,19.854 0,10.966 8.8648,19.855 19.8,19.855 10.9352,0 19.8,-8.889 19.8,-19.855 z" }), jsxRuntimeExports$1.jsx("path", { style: { fill: "url(#paint5_linear_5_131)" }, id: "path1244", d: "m 336.6,158.835 c 0,-10.965 -8.865,-19.854 -19.8,-19.854 -10.935,0 -19.8,8.889 -19.8,19.854 0,10.965 8.865,19.855 19.8,19.855 10.935,0 19.8,-8.89 19.8,-19.855 z" }), jsxRuntimeExports$1.jsx("path", { style: { fill: "url(#paint6_linear_5_131)" }, id: "path1246", d: "m 336.6,158.835 c 0,-10.965 -8.865,-19.854 -19.8,-19.854 -10.935,0 -19.8,8.889 -19.8,19.854 0,10.965 8.865,19.855 19.8,19.855 10.935,0 19.8,-8.89 19.8,-19.855 z" }), jsxRuntimeExports$1.jsx("path", { style: { fill: "url(#paint7_linear_5_131)" }, id: "path1248", d: "M 316.8,59.5632 H 158.4 c -10.935,0 -19.8,8.8891 -19.8,19.8544 0,10.9652 8.865,19.8544 19.8,19.8544 h 158.4 c 10.935,0 19.8,-8.8892 19.8,-19.8544 0,-10.9653 -8.865,-19.8544 -19.8,-19.8544 z" }), jsxRuntimeExports$1.jsx("path", { style: { fill: "url(#paint8_linear_5_131)" }, id: "path1250", d: "M 316.8,218.272 H 158.4 c -10.935,0 -19.8,8.889 -19.8,19.854 0,10.966 8.865,19.855 19.8,19.855 h 158.4 c 10.935,0 19.8,-8.889 19.8,-19.855 0,-10.965 -8.865,-19.854 -19.8,-19.854 z" }), jsxRuntimeExports$1.jsx("path", { style: { fill: "url(#paint9_linear_5_131)" }, id: "path1252", d: "M 237.6,138.981 H 79.2 c -10.9352,0 -19.8,8.889 -19.8,19.854 0,10.965 8.8648,19.855 19.8,19.855 h 158.4 c 10.935,0 19.8,-8.89 19.8,-19.855 0,-10.965 -8.865,-19.854 -19.8,-19.854 z" })] }) }), jsxRuntimeExports$1.jsxs("defs", { id: "defs1314", children: [jsxRuntimeExports$1.jsxs("linearGradient", { gradientUnits: "userSpaceOnUse", y2: "318", x2: "198", y1: "4.0585401e-05", x1: "198", id: "paint0_linear_5_131", children: [jsxRuntimeExports$1.jsx("stop", { id: "stop1258", stopColor: "#1D273D" }), jsxRuntimeExports$1.jsx("stop", { id: "stop1260", stopColor: "#0D0F13", offset: "1" })] }), jsxRuntimeExports$1.jsxs("linearGradient", { gradientUnits: "userSpaceOnUse", y2: "63", x2: "92.5", y1: "99", x1: "65.5", id: "paint1_linear_5_131", children: [jsxRuntimeExports$1.jsx("stop", { id: "stop1263", stopColor: "#4462FE" }), jsxRuntimeExports$1.jsx("stop", { id: "stop1265", stopColor: "#7D69FA", offset: "1" })] }), jsxRuntimeExports$1.jsxs("linearGradient", { gradientUnits: "userSpaceOnUse", y2: "97.591103", x2: "96.137703", y1: "99.291199", x1: "62.879902", id: "paint2_linear_5_131", children: [jsxRuntimeExports$1.jsx("stop", { id: "stop1268", stopColor: "#3757FD" }), jsxRuntimeExports$1.jsx("stop", { id: "stop1270", stopColor: "#6980FA", offset: "1" })] }), jsxRuntimeExports$1.jsxs("linearGradient", { gradientUnits: "userSpaceOnUse", y2: "97.591103", x2: "96.137703", y1: "99.291199", x1: "62.879902", id: "paint3_linear_5_131", children: [jsxRuntimeExports$1.jsx("stop", { id: "stop1273", stopColor: "#2447FF" }), jsxRuntimeExports$1.jsx("stop", { id: "stop1275", stopColor: "#6980FA", offset: "1" })] }), jsxRuntimeExports$1.jsxs("linearGradient", { gradientUnits: "userSpaceOnUse", y2: "223.5", x2: "91.5", y1: "251.5", x1: "65", id: "paint4_linear_5_131", children: [jsxRuntimeExports$1.jsx("stop", { id: "stop1278", stopColor: "#BC3EE6" }), jsxRuntimeExports$1.jsx("stop", { id: "stop1280", stopColor: "#D972F1", offset: "1" })] }), jsxRuntimeExports$1.jsxs("linearGradient", { gradientUnits: "userSpaceOnUse", y2: "146", x2: "329.5", y1: "172", x1: "305", id: "paint5_linear_5_131", children: [jsxRuntimeExports$1.jsx("stop", { id: "stop1283", stopColor: "#29BDFF" }), jsxRuntimeExports$1.jsx("stop", { id: "stop1285", stopColor: "#96E7FB", offset: "1" })] }), jsxRuntimeExports$1.jsxs("linearGradient", { gradientUnits: "userSpaceOnUse", y2: "176.772", x2: "334.56699", y1: "178.418", x1: "300.17999", id: "paint6_linear_5_131", children: [jsxRuntimeExports$1.jsx("stop", { id: "stop1288", stopColor: "#23BBFF" }), jsxRuntimeExports$1.jsx("stop", { id: "stop1290", stopColor: "#85E7FF", offset: "1" })] }), jsxRuntimeExports$1.jsxs("linearGradient", { gradientUnits: "userSpaceOnUse", y2: "60", x2: "317.5", y1: "99", x1: "154.5", id: "paint7_linear_5_131", children: [jsxRuntimeExports$1.jsx("stop", { id: "stop1293", stopColor: "#23BBFF" }), jsxRuntimeExports$1.jsx("stop", { id: "stop1295", stopColor: "#85E7FF", offset: "1" })] }), jsxRuntimeExports$1.jsxs("linearGradient", { gradientUnits: "userSpaceOnUse", y2: "218", x2: "312.5", y1: "258", x1: "156", id: "paint8_linear_5_131", children: [jsxRuntimeExports$1.jsx("stop", { id: "stop1298", stopColor: "#2447FF" }), jsxRuntimeExports$1.jsx("stop", { id: "stop1300", stopColor: "#6980FA", offset: "1" })] }), jsxRuntimeExports$1.jsxs("linearGradient", { gradientUnits: "userSpaceOnUse", y2: "139", x2: "235.5", y1: "179", x1: "86.000099", id: "paint9_linear_5_131", children: [jsxRuntimeExports$1.jsx("stop", { id: "stop1303", stopColor: "#6634FF" }), jsxRuntimeExports$1.jsx("stop", { id: "stop1305", stopColor: "#9C6DFF", offset: "1" })] }), jsxRuntimeExports$1.jsx("clipPath", { id: "clip0_5_131", children: jsxRuntimeExports$1.jsx("rect", { style: { fill: "#ffffff" }, y: "0", x: "0", id: "rect1308", height: "317.67001", width: "396" }) }), jsxRuntimeExports$1.jsx("clipPath", { id: "clip1_5_131", children: jsxRuntimeExports$1.jsx("rect", { style: { fill: "#ffffff" }, y: "0", x: "0", id: "rect1311", height: "317.67001", width: "396" }) })] })] }) });
-};
-const PoweredBySequence = () => {
-  return jsxRuntimeExports$1.jsxs(Box, { onClick: () => {
-    if (typeof window !== "undefined") {
-      window.open("https://sequence.xyz");
-    }
-  }, gap: "1", marginTop: "4", flexDirection: "row", alignItems: "center", justifyContent: "center", userSelect: "none", cursor: "pointer", opacity: { hover: "80" }, children: [jsxRuntimeExports$1.jsx(Text, { variant: "small", color: "text100", children: "Powered by Sequence" }), jsxRuntimeExports$1.jsx(Box, { height: "5", width: "5", children: jsxRuntimeExports$1.jsx(SequenceLogo$1, {}) })] });
-};
-const Banner = ({ config: config2 = {} }) => {
-  const { signIn: signIn3 = {} } = config2;
-  const { logoUrl } = signIn3;
-  return jsxRuntimeExports$1.jsx(jsxRuntimeExports$1.Fragment, { children: logoUrl && jsxRuntimeExports$1.jsx(Box, { marginTop: "5", justifyContent: "center", alignItems: "center", children: jsxRuntimeExports$1.jsx(Image$1, { src: logoUrl, style: { height: "110px" } }) }) });
-};
-const EmailWaasVerify = (props) => {
-  const { isLoading, error, onConfirm } = props;
-  const [waasEmailPinCode, setWaasEmailPinCode] = reactExports.useState([]);
-  return jsxRuntimeExports$1.jsx(jsxRuntimeExports$1.Fragment, { children: jsxRuntimeExports$1.jsxs(Box, { paddingY: "6", alignItems: "center", justifyContent: "center", flexDirection: "column", children: [jsxRuntimeExports$1.jsx(Text, { marginTop: "5", marginBottom: "4", variant: "normal", color: "text80", children: "Enter code received in email." }), jsxRuntimeExports$1.jsx(PINCodeInput, { value: waasEmailPinCode, digits: 6, group: 3, onChange: setWaasEmailPinCode, disabled: isLoading }), jsxRuntimeExports$1.jsxs(Box, { gap: "4", marginTop: "4", alignItems: "center", justifyContent: "center", flexDirection: "column", children: [jsxRuntimeExports$1.jsx(Button, { variant: "primary", disabled: waasEmailPinCode.includes("") || isLoading, label: "Confirm", onClick: () => onConfirm(waasEmailPinCode.join("")), "data-id": "verifyButton" }), isLoading && jsxRuntimeExports$1.jsx(Spinner, {}), error && jsxRuntimeExports$1.jsx(Text, { variant: "small", color: "negative", textAlign: "center", children: error.message })] })] }) });
-};
-const ExtendedWalletList = ({ onConnect, connectors }) => {
-  const { theme } = useTheme$1();
-  const { isPending } = useConnect();
-  return jsxRuntimeExports$1.jsx(Box, { flexDirection: "column", gap: "2", marginTop: "5", children: connectors.map((connector) => {
-    const Logo = theme === "dark" ? connector._wallet.logoDark : connector._wallet.logoLight;
-    const walletName = connector._wallet.name;
-    const connectorId = connector._wallet.id;
-    return jsxRuntimeExports$1.jsx(Button, { width: "full", shape: "square", leftIcon: () => jsxRuntimeExports$1.jsx(Box, { justifyContent: "center", alignItems: "center", style: { backgroundColor: connector._wallet.iconBackground }, width: "8", height: "8", overflow: "hidden", children: jsxRuntimeExports$1.jsx(Logo, { style: { width: 30 } }) }), onClick: () => onConnect(connector), label: jsxRuntimeExports$1.jsxs(Text, { children: [walletName, isPending] }) }, connectorId);
-  }) });
-};
-const Connect = (props) => {
-  dist.useScript(dist.appleAuthHelpers.APPLE_SCRIPT_SRC);
-  const { onClose, emailConflictInfo, config: config2 = {} } = props;
-  const { signIn: signIn3 = {} } = config2;
-  const { isConnected } = useAccount();
-  const storage = useStorage();
-  const [email2, setEmail] = reactExports.useState("");
-  const [showEmailInput, setShowEmailInput] = reactExports.useState(false);
-  const [showEmailWaasPinInput, setShowEmailWaasPinInput] = reactExports.useState(false);
-  const [showExtendedList, setShowExtendedList] = reactExports.useState(false);
-  const { connectors, connect: connect2 } = useConnect();
-  const hasInjectedSequenceConnector = connectors.some((c2) => c2.id === "app.sequence");
-  const baseWalletConnectors = connectors.filter((c2) => {
-    return c2._wallet && (c2._wallet.type === "wallet" || c2._wallet.type === void 0);
-  }).filter((c2) => {
-    var _a2;
-    if (((_a2 = c2._wallet) == null ? void 0 : _a2.id) === "sequence" && hasInjectedSequenceConnector) {
-      return false;
-    }
-    return true;
-  });
-  const mockConnector = baseWalletConnectors.find((connector) => {
-    return connector._wallet.id === "mock";
-  });
-  const injectedConnectors = connectors.filter((c2) => c2.type === "injected").filter((connector) => {
-    if (connector.id === "com.coinbase.wallet") {
-      return !connectors.find((connector2) => {
-        var _a2;
-        return ((_a2 = connector2 == null ? void 0 : connector2._wallet) == null ? void 0 : _a2.id) === "coinbase-wallet";
-      });
-    }
-    return true;
-  }).map((connector) => {
-    const Logo = (props2) => {
-      return jsxRuntimeExports$1.jsx(Image$1, { src: connector.icon, alt: connector.name, disableAnimation: true, ...props2 });
-    };
-    return {
-      ...connector,
-      _wallet: {
-        id: connector.id,
-        name: connector.name,
-        logoLight: Logo,
-        logoDark: Logo,
-        type: "wallet"
-      }
-    };
-  });
-  const socialAuthConnectors = connectors.filter((c2) => {
-    var _a2;
-    return ((_a2 = c2._wallet) == null ? void 0 : _a2.type) === "social";
-  });
-  const walletConnectors = [...baseWalletConnectors, ...injectedConnectors];
-  const emailConnector = socialAuthConnectors.find((c2) => c2._wallet.id.includes("email"));
-  const isEmailOnly = emailConnector && socialAuthConnectors.length === 1;
-  const displayExtendedListButton = walletConnectors.length > 7;
-  const onChangeEmail = (ev) => {
-    setEmail(ev.target.value);
-  };
-  reactExports.useEffect(() => {
-    if (isConnected) {
-      onClose();
-    }
-  }, [isConnected]);
-  const onConnect = (connector) => {
-    if (signIn3.useMock && mockConnector) {
-      connect2({ connector: mockConnector });
-      return;
-    }
-    if (connector._wallet.id === "email") {
-      const email3 = prompt("Auto-email login, please specify the email address:");
-      if ("setEmail" in connector) {
-        connector.setEmail(email3);
-      }
-    }
-    connect2({ connector });
-  };
-  const onConnectInlineEmail = async (e2) => {
-    e2.preventDefault();
-    if (signIn3.useMock && mockConnector) {
-      connect2({ connector: mockConnector });
-      return;
-    }
-    if (emailConnector) {
-      if ("setEmail" in emailConnector) {
-        emailConnector.setEmail(email2);
-      }
-      if (emailConnector._wallet.id === "email-waas") {
-        try {
-          await initiateEmailAuth(email2);
-          setShowEmailWaasPinInput(true);
-        } catch (e3) {
-          console.log(e3);
-        }
-      } else {
-        connect2({ connector: emailConnector });
-      }
-    }
-  };
-  const { inProgress: emailAuthInProgress, loading: emailAuthLoading, error: emailAuthError, initiateAuth: initiateEmailAuth, sendChallengeAnswer } = useEmailAuth({
-    connector: emailConnector,
-    onSuccess: async (result) => {
-      var _a2;
-      if ("signInResponse" in result && ((_a2 = result.signInResponse) == null ? void 0 : _a2.email)) {
-        storage == null ? void 0 : storage.setItem(LocalStorageKey.WaasSignInEmail, result.signInResponse.email);
-      }
-      if (emailConnector) {
-        if (result.version === 1) {
-          storage == null ? void 0 : storage.setItem(LocalStorageKey.WaasEmailIdToken, result.idToken);
-        }
-        connect2({ connector: emailConnector });
-      }
-    }
-  });
-  reactExports.useEffect(() => {
-    if (emailConflictInfo) {
-      setShowEmailWaasPinInput(false);
-    }
-  }, [emailConflictInfo]);
-  if (showEmailWaasPinInput) {
-    return jsxRuntimeExports$1.jsx(EmailWaasVerify, { error: emailAuthError, isLoading: emailAuthLoading, onConfirm: sendChallengeAnswer });
-  }
-  if (showExtendedList) {
-    return jsxRuntimeExports$1.jsxs(jsxRuntimeExports$1.Fragment, { children: [jsxRuntimeExports$1.jsx(Box, { position: "absolute", top: "4", children: jsxRuntimeExports$1.jsx(IconButton, { icon: SvgChevronLeftIcon, onClick: () => setShowExtendedList(false), size: "xs" }) }), jsxRuntimeExports$1.jsx(ExtendedWalletList, { connectors: walletConnectors, onConnect })] });
-  }
-  return jsxRuntimeExports$1.jsxs(jsxRuntimeExports$1.Fragment, { children: [jsxRuntimeExports$1.jsx(Banner, { config: config2 }), jsxRuntimeExports$1.jsxs(Box, { marginTop: "6", children: [emailConnector && (showEmailInput || isEmailOnly) ? jsxRuntimeExports$1.jsxs("form", { onSubmit: onConnectInlineEmail, children: [jsxRuntimeExports$1.jsx(TextInput, { onChange: onChangeEmail, value: email2, name: "email", placeholder: "Enter email", "data-1p-ignore": true }), jsxRuntimeExports$1.jsxs(Box, { alignItems: "center", justifyContent: "center", marginTop: "4", children: [!emailAuthInProgress && jsxRuntimeExports$1.jsxs(Box, { gap: "2", width: "full", children: [!isEmailOnly && jsxRuntimeExports$1.jsx(Button, { label: "Back", width: "full", onClick: () => setShowEmailInput(false) }), jsxRuntimeExports$1.jsx(Button, { type: "submit", variant: "primary", disabled: !isEmailValid(email2), width: "full", label: "Continue", rightIcon: SvgChevronRightIcon })] }), emailAuthInProgress && jsxRuntimeExports$1.jsx(Spinner, {})] })] }) : jsxRuntimeExports$1.jsx(jsxRuntimeExports$1.Fragment, { children: socialAuthConnectors.length > 0 && jsxRuntimeExports$1.jsx(Box, { marginTop: "2", gap: "2", flexDirection: "row", justifyContent: "center", alignItems: "center", flexWrap: "wrap", children: socialAuthConnectors.map((connector) => {
-    return jsxRuntimeExports$1.jsx(Box, { aspectRatio: "1/1", alignItems: "center", justifyContent: "center", children: connector._wallet.id === "google-waas" ? jsxRuntimeExports$1.jsx(GoogleWaasConnectButton, { connector, onConnect }) : connector._wallet.id === "apple-waas" ? jsxRuntimeExports$1.jsx(AppleWaasConnectButton, { connector, onConnect }) : connector._wallet.id.includes("email") ? jsxRuntimeExports$1.jsx(EmailConnectButton, { onClick: () => setShowEmailInput(true) }) : jsxRuntimeExports$1.jsx(ConnectButton, { connector, onConnect }) }, connector.uid);
-  }) }) }), walletConnectors.length > 0 && !showEmailInput && jsxRuntimeExports$1.jsxs(jsxRuntimeExports$1.Fragment, { children: [socialAuthConnectors.length > 0 && jsxRuntimeExports$1.jsxs(jsxRuntimeExports$1.Fragment, { children: [jsxRuntimeExports$1.jsx(Divider, { color: "backgroundSecondary" }), jsxRuntimeExports$1.jsx(Box, { justifyContent: "center", alignItems: "center", children: jsxRuntimeExports$1.jsx(Text, { variant: "small", color: "text50", children: "or select a wallet" }) })] }), jsxRuntimeExports$1.jsx(Box, { marginTop: "2", gap: "2", flexDirection: "row", justifyContent: "center", alignItems: "center", children: walletConnectors.slice(0, 7).map((connector) => {
-    return jsxRuntimeExports$1.jsx(ConnectButton, { connector, onConnect }, connector.uid);
-  }) }), displayExtendedListButton && jsxRuntimeExports$1.jsx(Box, { marginTop: "4", justifyContent: "center", children: jsxRuntimeExports$1.jsx(Button, { shape: "square", size: "xs", onClick: () => setShowExtendedList(true), label: "More options", rightIcon: SvgChevronRightIcon }) })] })] }), jsxRuntimeExports$1.jsx(PoweredBySequence, {})] });
-};
-const ConnectWalletContent = (props) => {
-  var _a2;
-  const { emailConflictInfo, config: config2, isPreview = false } = props;
-  const projectName = (_a2 = config2 == null ? void 0 : config2.signIn) == null ? void 0 : _a2.projectName;
-  return jsxRuntimeExports$1.jsxs(Box, { padding: "4", children: [jsxRuntimeExports$1.jsx(Box, { justifyContent: "center", color: "text100", alignItems: "center", fontWeight: "medium", style: {
-    marginTop: "4px"
-  }, children: jsxRuntimeExports$1.jsx(TitleWrapper, { isPreview, children: jsxRuntimeExports$1.jsxs(Text, { children: ["Sign in ", projectName ? `to ${projectName}` : ""] }) }) }), jsxRuntimeExports$1.jsx(Connect, { emailConflictInfo, ...props })] });
-};
-const TitleWrapper = ({ children, isPreview }) => {
-  if (isPreview) {
-    return jsxRuntimeExports$1.jsx(jsxRuntimeExports$1.Fragment, { children });
-  }
-  return jsxRuntimeExports$1.jsx(index$2$1.Title, { asChild: true, children });
-};
 const getNetworkColor = (chainId, mode = "light") => {
   switch (chainId) {
     case ChainId.MAINNET:
@@ -98143,6 +96996,83 @@ const NetworkBadge$1 = ({ chainId }) => {
 const PageHeading = (props) => {
   const { children, ...rest } = props;
   return jsxRuntimeExports$1.jsx(Text, { as: "h1", variant: "normal", fontWeight: "bold", color: "text100", textAlign: "center", marginTop: "10", marginBottom: "6", ...rest, children });
+};
+const SequenceLogo$1 = ({ ...props }) => {
+  return jsxRuntimeExports$1.jsx(React.Fragment, { children: jsxRuntimeExports$1.jsxs("svg", { xmlns: "http://www.w3.org/2000/svg", style: { fill: "none" }, id: "svg1316", version: "1.1", viewBox: "0 0 396 396", ...props, children: [jsxRuntimeExports$1.jsx("g", { transform: "translate(0,38)", id: "g1256", clipPath: "url(#clip0_5_131)", children: jsxRuntimeExports$1.jsxs("g", { id: "g1254", clipPath: "url(#clip1_5_131)", children: [jsxRuntimeExports$1.jsx("path", { style: { fill: "#111111" }, id: "path1232", d: "M 0,67.5049 V 250.165 c 0,37.282 30.1402,67.505 67.32,67.505 h 261.36 c 37.18,0 67.32,-30.223 67.32,-67.505 V 67.5049 C 396,30.223 365.86,0 328.68,0 H 67.32 C 30.1402,0 0,30.223 0,67.5049 Z" }), jsxRuntimeExports$1.jsx("path", { style: { fill: "url(#paint0_linear_5_131" }, id: "path1234", d: "M 0,67.5049 V 250.165 c 0,37.282 30.1402,67.505 67.32,67.505 h 261.36 c 37.18,0 67.32,-30.223 67.32,-67.505 V 67.5049 C 396,30.223 365.86,0 328.68,0 H 67.32 C 30.1402,0 0,30.223 0,67.5049 Z" }), jsxRuntimeExports$1.jsx("path", { style: { fill: "url(#paint1_linear_5_131" }, id: "path1236", d: "m 98.9999,79.4176 c 0,-10.9653 -8.8648,-19.8544 -19.8,-19.8544 -10.9352,0 -19.8,8.8891 -19.8,19.8544 0,10.9652 8.8648,19.8544 19.8,19.8544 10.9352,0 19.8,-8.8892 19.8,-19.8544 z" }), jsxRuntimeExports$1.jsx("path", { style: { fill: "url(#paint2_linear_5_131)" }, id: "path1238", d: "m 98.9999,79.4176 c 0,-10.9653 -8.8648,-19.8544 -19.8,-19.8544 -10.9352,0 -19.8,8.8891 -19.8,19.8544 0,10.9652 8.8648,19.8544 19.8,19.8544 10.9352,0 19.8,-8.8892 19.8,-19.8544 z" }), jsxRuntimeExports$1.jsx("path", { style: { fill: "url(#paint3_linear_5_131)" }, id: "path1240", d: "m 98.9999,79.4176 c 0,-10.9653 -8.8648,-19.8544 -19.8,-19.8544 -10.9352,0 -19.8,8.8891 -19.8,19.8544 0,10.9652 8.8648,19.8544 19.8,19.8544 10.9352,0 19.8,-8.8892 19.8,-19.8544 z" }), jsxRuntimeExports$1.jsx("path", { style: { fill: "url(#paint4_linear_5_131)" }, id: "path1242", d: "m 98.9999,238.126 c 0,-10.965 -8.8648,-19.854 -19.8,-19.854 -10.9352,0 -19.8,8.889 -19.8,19.854 0,10.966 8.8648,19.855 19.8,19.855 10.9352,0 19.8,-8.889 19.8,-19.855 z" }), jsxRuntimeExports$1.jsx("path", { style: { fill: "url(#paint5_linear_5_131)" }, id: "path1244", d: "m 336.6,158.835 c 0,-10.965 -8.865,-19.854 -19.8,-19.854 -10.935,0 -19.8,8.889 -19.8,19.854 0,10.965 8.865,19.855 19.8,19.855 10.935,0 19.8,-8.89 19.8,-19.855 z" }), jsxRuntimeExports$1.jsx("path", { style: { fill: "url(#paint6_linear_5_131)" }, id: "path1246", d: "m 336.6,158.835 c 0,-10.965 -8.865,-19.854 -19.8,-19.854 -10.935,0 -19.8,8.889 -19.8,19.854 0,10.965 8.865,19.855 19.8,19.855 10.935,0 19.8,-8.89 19.8,-19.855 z" }), jsxRuntimeExports$1.jsx("path", { style: { fill: "url(#paint7_linear_5_131)" }, id: "path1248", d: "M 316.8,59.5632 H 158.4 c -10.935,0 -19.8,8.8891 -19.8,19.8544 0,10.9652 8.865,19.8544 19.8,19.8544 h 158.4 c 10.935,0 19.8,-8.8892 19.8,-19.8544 0,-10.9653 -8.865,-19.8544 -19.8,-19.8544 z" }), jsxRuntimeExports$1.jsx("path", { style: { fill: "url(#paint8_linear_5_131)" }, id: "path1250", d: "M 316.8,218.272 H 158.4 c -10.935,0 -19.8,8.889 -19.8,19.854 0,10.966 8.865,19.855 19.8,19.855 h 158.4 c 10.935,0 19.8,-8.889 19.8,-19.855 0,-10.965 -8.865,-19.854 -19.8,-19.854 z" }), jsxRuntimeExports$1.jsx("path", { style: { fill: "url(#paint9_linear_5_131)" }, id: "path1252", d: "M 237.6,138.981 H 79.2 c -10.9352,0 -19.8,8.889 -19.8,19.854 0,10.965 8.8648,19.855 19.8,19.855 h 158.4 c 10.935,0 19.8,-8.89 19.8,-19.855 0,-10.965 -8.865,-19.854 -19.8,-19.854 z" })] }) }), jsxRuntimeExports$1.jsxs("defs", { id: "defs1314", children: [jsxRuntimeExports$1.jsxs("linearGradient", { gradientUnits: "userSpaceOnUse", y2: "318", x2: "198", y1: "4.0585401e-05", x1: "198", id: "paint0_linear_5_131", children: [jsxRuntimeExports$1.jsx("stop", { id: "stop1258", stopColor: "#1D273D" }), jsxRuntimeExports$1.jsx("stop", { id: "stop1260", stopColor: "#0D0F13", offset: "1" })] }), jsxRuntimeExports$1.jsxs("linearGradient", { gradientUnits: "userSpaceOnUse", y2: "63", x2: "92.5", y1: "99", x1: "65.5", id: "paint1_linear_5_131", children: [jsxRuntimeExports$1.jsx("stop", { id: "stop1263", stopColor: "#4462FE" }), jsxRuntimeExports$1.jsx("stop", { id: "stop1265", stopColor: "#7D69FA", offset: "1" })] }), jsxRuntimeExports$1.jsxs("linearGradient", { gradientUnits: "userSpaceOnUse", y2: "97.591103", x2: "96.137703", y1: "99.291199", x1: "62.879902", id: "paint2_linear_5_131", children: [jsxRuntimeExports$1.jsx("stop", { id: "stop1268", stopColor: "#3757FD" }), jsxRuntimeExports$1.jsx("stop", { id: "stop1270", stopColor: "#6980FA", offset: "1" })] }), jsxRuntimeExports$1.jsxs("linearGradient", { gradientUnits: "userSpaceOnUse", y2: "97.591103", x2: "96.137703", y1: "99.291199", x1: "62.879902", id: "paint3_linear_5_131", children: [jsxRuntimeExports$1.jsx("stop", { id: "stop1273", stopColor: "#2447FF" }), jsxRuntimeExports$1.jsx("stop", { id: "stop1275", stopColor: "#6980FA", offset: "1" })] }), jsxRuntimeExports$1.jsxs("linearGradient", { gradientUnits: "userSpaceOnUse", y2: "223.5", x2: "91.5", y1: "251.5", x1: "65", id: "paint4_linear_5_131", children: [jsxRuntimeExports$1.jsx("stop", { id: "stop1278", stopColor: "#BC3EE6" }), jsxRuntimeExports$1.jsx("stop", { id: "stop1280", stopColor: "#D972F1", offset: "1" })] }), jsxRuntimeExports$1.jsxs("linearGradient", { gradientUnits: "userSpaceOnUse", y2: "146", x2: "329.5", y1: "172", x1: "305", id: "paint5_linear_5_131", children: [jsxRuntimeExports$1.jsx("stop", { id: "stop1283", stopColor: "#29BDFF" }), jsxRuntimeExports$1.jsx("stop", { id: "stop1285", stopColor: "#96E7FB", offset: "1" })] }), jsxRuntimeExports$1.jsxs("linearGradient", { gradientUnits: "userSpaceOnUse", y2: "176.772", x2: "334.56699", y1: "178.418", x1: "300.17999", id: "paint6_linear_5_131", children: [jsxRuntimeExports$1.jsx("stop", { id: "stop1288", stopColor: "#23BBFF" }), jsxRuntimeExports$1.jsx("stop", { id: "stop1290", stopColor: "#85E7FF", offset: "1" })] }), jsxRuntimeExports$1.jsxs("linearGradient", { gradientUnits: "userSpaceOnUse", y2: "60", x2: "317.5", y1: "99", x1: "154.5", id: "paint7_linear_5_131", children: [jsxRuntimeExports$1.jsx("stop", { id: "stop1293", stopColor: "#23BBFF" }), jsxRuntimeExports$1.jsx("stop", { id: "stop1295", stopColor: "#85E7FF", offset: "1" })] }), jsxRuntimeExports$1.jsxs("linearGradient", { gradientUnits: "userSpaceOnUse", y2: "218", x2: "312.5", y1: "258", x1: "156", id: "paint8_linear_5_131", children: [jsxRuntimeExports$1.jsx("stop", { id: "stop1298", stopColor: "#2447FF" }), jsxRuntimeExports$1.jsx("stop", { id: "stop1300", stopColor: "#6980FA", offset: "1" })] }), jsxRuntimeExports$1.jsxs("linearGradient", { gradientUnits: "userSpaceOnUse", y2: "139", x2: "235.5", y1: "179", x1: "86.000099", id: "paint9_linear_5_131", children: [jsxRuntimeExports$1.jsx("stop", { id: "stop1303", stopColor: "#6634FF" }), jsxRuntimeExports$1.jsx("stop", { id: "stop1305", stopColor: "#9C6DFF", offset: "1" })] }), jsxRuntimeExports$1.jsx("clipPath", { id: "clip0_5_131", children: jsxRuntimeExports$1.jsx("rect", { style: { fill: "#ffffff" }, y: "0", x: "0", id: "rect1308", height: "317.67001", width: "396" }) }), jsxRuntimeExports$1.jsx("clipPath", { id: "clip1_5_131", children: jsxRuntimeExports$1.jsx("rect", { style: { fill: "#ffffff" }, y: "0", x: "0", id: "rect1311", height: "317.67001", width: "396" }) })] })] }) });
+};
+const PoweredBySequence = () => {
+  return jsxRuntimeExports$1.jsxs(Box, { onClick: () => {
+    if (typeof window !== "undefined") {
+      window.open("https://sequence.xyz");
+    }
+  }, gap: "1", marginTop: "4", flexDirection: "row", alignItems: "center", justifyContent: "center", userSelect: "none", cursor: "pointer", opacity: { hover: "80" }, children: [jsxRuntimeExports$1.jsx(Text, { variant: "small", color: "text100", children: "Powered by Sequence" }), jsxRuntimeExports$1.jsx(Box, { height: "5", width: "5", children: jsxRuntimeExports$1.jsx(SequenceLogo$1, {}) })] });
+};
+const isEmailValid = (email2) => {
+  return /^\S+@\S+\.\S{2,}$/.test(email2);
+};
+const compareAddress$2 = (a2, b2) => {
+  return a2.toLowerCase() === b2.toLowerCase();
+};
+var ValueType$2;
+(function(ValueType2) {
+  ValueType2[ValueType2["VERY_LARGE"] = 0] = "VERY_LARGE";
+  ValueType2[ValueType2["FRACTION"] = 1] = "FRACTION";
+  ValueType2[ValueType2["VERY_TINY"] = 2] = "VERY_TINY";
+  ValueType2[ValueType2["MIXED"] = 3] = "MIXED";
+})(ValueType$2 || (ValueType$2 = {}));
+const formatDisplay$2 = (_val2) => {
+  if (isNaN(Number(_val2))) {
+    console.error(`display format error ${_val2} is not a number`);
+    return "NaN";
+  }
+  const val = Number(_val2);
+  if (val === 0) {
+    return "0";
+  }
+  let valMode;
+  if (val > 1e8) {
+    valMode = ValueType$2.VERY_LARGE;
+  } else if (val < 1e-10) {
+    valMode = ValueType$2.VERY_TINY;
+  } else if (val < 1) {
+    valMode = ValueType$2.FRACTION;
+  } else {
+    valMode = ValueType$2.MIXED;
+  }
+  let notation = void 0;
+  let config2;
+  switch (valMode) {
+    case ValueType$2.VERY_LARGE:
+      notation = "compact";
+      config2 = {
+        maximumFractionDigits: 4
+      };
+      break;
+    case ValueType$2.VERY_TINY:
+      notation = "scientific";
+      config2 = {
+        maximumFractionDigits: 4
+      };
+      break;
+    case ValueType$2.FRACTION:
+      notation = "standard";
+      config2 = {
+        maximumSignificantDigits: 4
+      };
+      break;
+    default:
+      notation = "standard";
+      config2 = {
+        maximumFractionDigits: 2
+      };
+  }
+  return Intl.NumberFormat("en-US", {
+    notation,
+    ...config2
+  }).format(val);
+};
+const capitalize = (word) => {
+  return word.charAt(0).toUpperCase() + word.slice(1);
 };
 const useProjectAccessKey = () => {
   const { projectAccessKey: projectAccessKey2 } = useKitConfig();
@@ -99064,6 +97994,1070 @@ const truncateAtMiddle$1 = (text2, truncateAt) => {
   }
   return finalText;
 };
+var dist = {};
+var AppleSigninButton$1 = {};
+var useScript$1 = {};
+Object.defineProperty(useScript$1, "__esModule", {
+  value: true
+});
+useScript$1.default = void 0;
+var _react$2 = reactExports;
+function useScript(src) {
+  (0, _react$2.useEffect)(
+    function() {
+      if (!src) {
+        return;
+      }
+      var script = document.querySelectorAll('script[src="'.concat(src, '"]'))[0];
+      if (!script) {
+        script = document.createElement("script");
+        script.src = src;
+        script.async = true;
+        document.body.appendChild(script);
+      }
+    },
+    [src]
+    // Only re-run effect if script src changes
+  );
+}
+var _default$3 = useScript;
+useScript$1.default = _default$3;
+var appleAuthHelpers = {};
+var waitForVar$1 = {};
+Object.defineProperty(waitForVar$1, "__esModule", {
+  value: true
+});
+waitForVar$1.default = void 0;
+var waitForVar = function waitForVar2(name2) {
+  var _ref = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {
+    pollFrequency: 1e3,
+    retries: 100,
+    parent: window
+  }, _ref$pollFrequency = _ref.pollFrequency, pollFrequency = _ref$pollFrequency === void 0 ? 1e3 : _ref$pollFrequency, _ref$retries = _ref.retries, inRetries = _ref$retries === void 0 ? 100 : _ref$retries, _ref$parent = _ref.parent, parent2 = _ref$parent === void 0 ? window : _ref$parent;
+  if (parent2 && parent2.hasOwnProperty(name2)) {
+    return Promise.resolve(parent2[name2]);
+  }
+  if (!inRetries) {
+    return Promise.resolve(void 0);
+  }
+  var retries = inRetries - 1;
+  return new Promise(function(resolve) {
+    return setTimeout(resolve, typeof pollFrequency === "function" ? pollFrequency({
+      retries
+    }) : pollFrequency);
+  }).then(function() {
+    return waitForVar2(name2, {
+      pollFrequency,
+      parent: parent2,
+      retries
+    });
+  });
+};
+var _default$2 = waitForVar;
+waitForVar$1.default = _default$2;
+Object.defineProperty(appleAuthHelpers, "__esModule", {
+  value: true
+});
+appleAuthHelpers.default = void 0;
+var _waitForVar = _interopRequireDefault$2(waitForVar$1);
+function _interopRequireDefault$2(obj) {
+  return obj && obj.__esModule ? obj : { default: obj };
+}
+var APPLE_SCRIPT_SRC = "https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js";
+var signIn = function signIn2(_ref) {
+  var authOptions = _ref.authOptions, onSuccess = _ref.onSuccess, onError = _ref.onError;
+  return (
+    /** wait for apple sript to load */
+    (0, _waitForVar.default)("AppleID").then(function() {
+      if (!window.AppleID) {
+        console.error(new Error("Error loading apple script"));
+      }
+      window.AppleID.auth.init(authOptions);
+      return window.AppleID.auth.signIn().then(function(response) {
+        if (onSuccess) {
+          onSuccess(response);
+        }
+        return response;
+      }).catch(function(err) {
+        if (onError) {
+          onError(err);
+        } else {
+          console.error(err);
+        }
+        return null;
+      });
+    }).catch(function(err) {
+      if (onError) {
+        onError(err);
+      } else {
+        console.error(err);
+      }
+      return null;
+    })
+  );
+};
+var _default$1 = {
+  APPLE_SCRIPT_SRC,
+  signIn
+};
+appleAuthHelpers.default = _default$1;
+Object.defineProperty(AppleSigninButton$1, "__esModule", {
+  value: true
+});
+AppleSigninButton$1.default = void 0;
+var _react$1 = _interopRequireDefault$1(reactExports);
+var _useScript = _interopRequireDefault$1(useScript$1);
+var _appleAuthHelpers = _interopRequireDefault$1(appleAuthHelpers);
+var _excluded$1 = ["onSuccess", "onError", "skipScript", "authOptions", "iconProps", "render", "uiType", "className", "noDefaultStyle", "buttonExtraChildren"];
+function _interopRequireDefault$1(obj) {
+  return obj && obj.__esModule ? obj : { default: obj };
+}
+function _extends() {
+  _extends = Object.assign || function(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+    return target;
+  };
+  return _extends.apply(this, arguments);
+}
+function ownKeys$1(object2, enumerableOnly) {
+  var keys = Object.keys(object2);
+  if (Object.getOwnPropertySymbols) {
+    var symbols = Object.getOwnPropertySymbols(object2);
+    if (enumerableOnly) {
+      symbols = symbols.filter(function(sym) {
+        return Object.getOwnPropertyDescriptor(object2, sym).enumerable;
+      });
+    }
+    keys.push.apply(keys, symbols);
+  }
+  return keys;
+}
+function _objectSpread$1(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i] != null ? arguments[i] : {};
+    if (i % 2) {
+      ownKeys$1(Object(source), true).forEach(function(key) {
+        _defineProperty$1(target, key, source[key]);
+      });
+    } else if (Object.getOwnPropertyDescriptors) {
+      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+    } else {
+      ownKeys$1(Object(source)).forEach(function(key) {
+        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+      });
+    }
+  }
+  return target;
+}
+function _defineProperty$1(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, { value, enumerable: true, configurable: true, writable: true });
+  } else {
+    obj[key] = value;
+  }
+  return obj;
+}
+function _objectWithoutProperties$1(source, excluded) {
+  if (source == null) return {};
+  var target = _objectWithoutPropertiesLoose$1(source, excluded);
+  var key, i;
+  if (Object.getOwnPropertySymbols) {
+    var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
+    for (i = 0; i < sourceSymbolKeys.length; i++) {
+      key = sourceSymbolKeys[i];
+      if (excluded.indexOf(key) >= 0) continue;
+      if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
+      target[key] = source[key];
+    }
+  }
+  return target;
+}
+function _objectWithoutPropertiesLoose$1(source, excluded) {
+  if (source == null) return {};
+  var target = {};
+  var sourceKeys = Object.keys(source);
+  var key, i;
+  for (i = 0; i < sourceKeys.length; i++) {
+    key = sourceKeys[i];
+    if (excluded.indexOf(key) >= 0) continue;
+    target[key] = source[key];
+  }
+  return target;
+}
+var _style = "\n.react-apple-signin-auth-btn {\n  background-color: transparent;\n  border: none;\n  padding: 0;\n  cursor: pointer;\n  border-radius: 4px;\n  padding: 0 8px 0 2px;\n  font-size: 14px;\n  font-size: 1em;\n  line-height: 1;\n  border: 1px solid #000;\n  overflow: hidden;\n  display: inline-flex;\n  justify-content: center;\n  align-items: center;\n}\n.react-apple-signin-auth-btn-light {\n  background-color: #FFF;\n  color: #000;\n  border-color: #000;\n}\n.react-apple-signin-auth-btn-dark {\n  background-color: #000;\n  color: #FFF;\n  border-color: #FFF;\n}".replace(/ {2}|\n/g, "");
+var AppleSigninButton = function AppleSigninButton2(_ref) {
+  var onSuccess = _ref.onSuccess, onError = _ref.onError, _ref$skipScript = _ref.skipScript, skipScript = _ref$skipScript === void 0 ? false : _ref$skipScript, authOptions = _ref.authOptions, iconProps = _ref.iconProps, render2 = _ref.render, _ref$uiType = _ref.uiType, uiType = _ref$uiType === void 0 ? "dark" : _ref$uiType, className = _ref.className, _ref$noDefaultStyle = _ref.noDefaultStyle, noDefaultStyle = _ref$noDefaultStyle === void 0 ? false : _ref$noDefaultStyle, _ref$buttonExtraChild = _ref.buttonExtraChildren, buttonExtraChildren = _ref$buttonExtraChild === void 0 ? "Continue with Apple" : _ref$buttonExtraChild, rest = _objectWithoutProperties$1(_ref, _excluded$1);
+  (0, _useScript.default)(skipScript ? null : _appleAuthHelpers.default.APPLE_SCRIPT_SRC);
+  var handleClick = function handleClick2(e2) {
+    if (e2) {
+      e2.preventDefault();
+      e2.stopPropagation();
+    }
+    _appleAuthHelpers.default.signIn({
+      authOptions,
+      onSuccess,
+      onError
+    });
+  };
+  var props = _objectSpread$1({
+    children: /* @__PURE__ */ _react$1.default.createElement(_react$1.default.Fragment, null, /* @__PURE__ */ _react$1.default.createElement("svg", _extends({
+      width: "24px",
+      height: "44px",
+      viewBox: "0 0 24 44"
+    }, iconProps), /* @__PURE__ */ _react$1.default.createElement("g", {
+      stroke: "none",
+      strokeWidth: "1",
+      fill: "none",
+      fillRule: "evenodd"
+    }, /* @__PURE__ */ _react$1.default.createElement("rect", {
+      fill: uiType === "light" ? "#FFF" : "#000",
+      x: "0",
+      y: "0",
+      width: "24",
+      height: "44"
+    }), /* @__PURE__ */ _react$1.default.createElement("path", {
+      d: "M12.2337427,16.9879688 C12.8896607,16.9879688 13.7118677,16.5445313 14.2014966,15.9532812 C14.6449341,15.4174609 14.968274,14.6691602 14.968274,13.9208594 C14.968274,13.8192383 14.9590357,13.7176172 14.9405591,13.6344727 C14.2107349,13.6621875 13.3330982,14.1241016 12.8065162,14.7430664 C12.3907935,15.2142188 12.012024,15.9532812 12.012024,16.7108203 C12.012024,16.8216797 12.0305005,16.9325391 12.0397388,16.9694922 C12.0859302,16.9787305 12.1598365,16.9879688 12.2337427,16.9879688 Z M9.92417241,28.1662891 C10.8202857,28.1662891 11.2175318,27.5658008 12.3353638,27.5658008 C13.4716724,27.5658008 13.721106,28.1478125 14.7188404,28.1478125 C15.6980982,28.1478125 16.3540162,27.2424609 16.972981,26.3555859 C17.6658521,25.339375 17.9522388,24.3416406 17.9707154,24.2954492 C17.9060474,24.2769727 16.0306763,23.5101953 16.0306763,21.3576758 C16.0306763,19.491543 17.5088013,18.6508594 17.5919459,18.5861914 C16.612688,17.1819727 15.1253248,17.1450195 14.7188404,17.1450195 C13.6194849,17.1450195 12.7233716,17.8101758 12.1598365,17.8101758 C11.5501099,17.8101758 10.7463794,17.1819727 9.79483648,17.1819727 C7.98413335,17.1819727 6.14571538,18.6785742 6.14571538,21.5054883 C6.14571538,23.2607617 6.8293482,25.1176563 7.67003179,26.3186328 C8.39061773,27.3348438 9.01882085,28.1662891 9.92417241,28.1662891 Z",
+      fill: uiType === "light" ? "#000" : "#FFF",
+      fillRule: "nonzero"
+    }))), buttonExtraChildren),
+    onClick: handleClick
+  }, rest);
+  if (render2) {
+    return render2(props);
+  }
+  return /* @__PURE__ */ _react$1.default.createElement(_react$1.default.Fragment, null, /* @__PURE__ */ _react$1.default.createElement("button", _extends({
+    className: "".concat(noDefaultStyle ? "" : "react-apple-signin-auth-btn react-apple-signin-auth-btn-".concat(uiType)).concat(className ? " ".concat(className) : ""),
+    type: "button",
+    "aria-label": "Signin with apple ID"
+  }, props)), noDefaultStyle ? null : /* @__PURE__ */ _react$1.default.createElement("style", null, _style));
+};
+var _default = AppleSigninButton;
+AppleSigninButton$1.default = _default;
+(function(exports) {
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, "appleAuthHelpers", {
+    enumerable: true,
+    get: function get2() {
+      return _appleAuthHelpers2.default;
+    }
+  });
+  Object.defineProperty(exports, "useScript", {
+    enumerable: true,
+    get: function get2() {
+      return _useScript2.default;
+    }
+  });
+  exports.default = void 0;
+  var _AppleSigninButton = _interopRequireDefault2(AppleSigninButton$1);
+  var _appleAuthHelpers2 = _interopRequireDefault2(appleAuthHelpers);
+  var _useScript2 = _interopRequireDefault2(useScript$1);
+  function _interopRequireDefault2(obj) {
+    return obj && obj.__esModule ? obj : { default: obj };
+  }
+  var _default2 = _AppleSigninButton.default;
+  exports.default = _default2;
+})(dist);
+sequenceWallet.type = "sequence";
+function sequenceWallet(params) {
+  const { defaultNetwork, connect: connect2, walletAppURL } = params;
+  const { projectAccessKey: projectAccessKey2 } = connect2;
+  return createConnector((config2) => ({
+    id: "sequence",
+    name: "Sequence",
+    type: sequenceWallet.type,
+    params,
+    setEmail(email2) {
+      if (params.connect.settings) {
+        params.connect.settings.signInWithEmail = email2;
+      }
+    },
+    async setup() {
+      const provider2 = await this.getProvider();
+      provider2.on("chainChanged", (chainIdHex) => {
+        config2.emitter.emit("change", { chainId: normalizeChainId$1(chainIdHex) });
+      });
+      provider2.on("disconnect", () => {
+        this.onDisconnect();
+      });
+    },
+    async connect() {
+      var _a2, _b2, _c2, _d2, _e2, _f2;
+      const provider2 = await this.getProvider();
+      if (!provider2.isConnected()) {
+        const localStorageTheme = await ((_a2 = config2.storage) == null ? void 0 : _a2.getItem(LocalStorageKey.Theme));
+        const ethAuthSettings = await ((_b2 = config2.storage) == null ? void 0 : _b2.getItem(LocalStorageKey.EthAuthSettings)) ?? {};
+        const connectOptionsWithTheme = {
+          authorize: true,
+          askForEmail: true,
+          ...ethAuthSettings,
+          ...connect2,
+          settings: {
+            theme: localStorageTheme || "dark",
+            ...connect2 == null ? void 0 : connect2.settings
+          }
+        };
+        const e2 = await provider2.connect(connectOptionsWithTheme);
+        if (e2.error) {
+          throw new UserRejectedRequestError(new Error(e2.error));
+        }
+        if (!e2.connected) {
+          throw new UserRejectedRequestError(new Error("Wallet connection rejected"));
+        }
+        const proofString = (_c2 = e2.proof) == null ? void 0 : _c2.proofString;
+        const proofTypedData = (_d2 = e2.proof) == null ? void 0 : _d2.typedData;
+        if (proofString && proofTypedData) {
+          const jsonEthAuthProof = {
+            proofString,
+            typedData: proofTypedData
+          };
+          await ((_e2 = config2.storage) == null ? void 0 : _e2.setItem(LocalStorageKey.EthAuthProof, jsonEthAuthProof));
+        }
+        await ((_f2 = config2.storage) == null ? void 0 : _f2.setItem(LocalStorageKey.WaasSignInEmail, e2.email || null));
+      }
+      const accounts = await this.getAccounts();
+      return {
+        accounts: [...accounts],
+        chainId: provider2.getChainId()
+      };
+    },
+    async disconnect() {
+      var _a2;
+      const provider2 = await this.getProvider();
+      provider2.disconnect();
+      await ((_a2 = config2.storage) == null ? void 0 : _a2.removeItem(LocalStorageKey.WaasSignInEmail));
+    },
+    async getAccounts() {
+      const provider2 = await this.getProvider();
+      const signer2 = provider2.getSigner();
+      const account2 = getAddress$1(await signer2.getAddress());
+      return [account2];
+    },
+    async getProvider() {
+      try {
+        const provider2 = sequence$1.getWallet();
+        return provider2;
+      } catch (err) {
+        if (!projectAccessKey2) {
+          throw "projectAccessKey not found";
+        }
+        const provider2 = sequence$1.initWallet(projectAccessKey2, {
+          defaultNetwork,
+          transports: {
+            walletAppURL: walletAppURL || "https://sequence.app"
+          },
+          defaultEIP6492: true,
+          analytics: false
+        });
+        const chainId = provider2.getChainId();
+        config2.emitter.emit("change", { chainId: normalizeChainId$1(chainId) });
+        return provider2;
+      }
+    },
+    async isAuthorized() {
+      try {
+        const account2 = await this.getAccounts();
+        return !!account2;
+      } catch (e2) {
+        return false;
+      }
+    },
+    async switchChain({ chainId }) {
+      const provider2 = await this.getProvider();
+      const chain = config2.chains.find((c2) => c2.id === chainId) || config2.chains[0];
+      provider2.setDefaultChainId(normalizeChainId$1(chainId));
+      config2.emitter.emit("change", { chainId });
+      return chain;
+    },
+    async getChainId() {
+      const provider2 = await this.getProvider();
+      const chainId = provider2.getChainId();
+      return chainId;
+    },
+    async onAccountsChanged(accounts) {
+      return { account: accounts[0] };
+    },
+    async onChainChanged(chain) {
+      const provider2 = await this.getProvider();
+      config2.emitter.emit("change", { chainId: normalizeChainId$1(chain) });
+      provider2.setDefaultChainId(normalizeChainId$1(chain));
+    },
+    async onConnect(_connectinfo) {
+    },
+    async onDisconnect() {
+      var _a2;
+      await ((_a2 = config2.storage) == null ? void 0 : _a2.removeItem(LocalStorageKey.EthAuthProof));
+      config2.emitter.emit("disconnect");
+    }
+  }));
+}
+function normalizeChainId$1(chainId) {
+  if (typeof chainId === "object")
+    return normalizeChainId$1(chainId.chainId);
+  if (typeof chainId === "string")
+    return Number.parseInt(chainId, chainId.trim().substring(0, 2) === "0x" ? 16 : 10);
+  if (typeof chainId === "bigint")
+    return Number(chainId);
+  return chainId;
+}
+var byteToHex = [];
+for (var i = 0; i < 256; ++i) {
+  byteToHex.push((i + 256).toString(16).slice(1));
+}
+function unsafeStringify(arr, offset2 = 0) {
+  return (byteToHex[arr[offset2 + 0]] + byteToHex[arr[offset2 + 1]] + byteToHex[arr[offset2 + 2]] + byteToHex[arr[offset2 + 3]] + "-" + byteToHex[arr[offset2 + 4]] + byteToHex[arr[offset2 + 5]] + "-" + byteToHex[arr[offset2 + 6]] + byteToHex[arr[offset2 + 7]] + "-" + byteToHex[arr[offset2 + 8]] + byteToHex[arr[offset2 + 9]] + "-" + byteToHex[arr[offset2 + 10]] + byteToHex[arr[offset2 + 11]] + byteToHex[arr[offset2 + 12]] + byteToHex[arr[offset2 + 13]] + byteToHex[arr[offset2 + 14]] + byteToHex[arr[offset2 + 15]]).toLowerCase();
+}
+var getRandomValues;
+var rnds8 = new Uint8Array(16);
+function rng() {
+  if (!getRandomValues) {
+    getRandomValues = typeof crypto !== "undefined" && crypto.getRandomValues && crypto.getRandomValues.bind(crypto);
+    if (!getRandomValues) {
+      throw new Error("crypto.getRandomValues() not supported. See https://github.com/uuidjs/uuid#getrandomvalues-not-supported");
+    }
+  }
+  return getRandomValues(rnds8);
+}
+var randomUUID = typeof crypto !== "undefined" && crypto.randomUUID && crypto.randomUUID.bind(crypto);
+const native = {
+  randomUUID
+};
+function v4(options, buf, offset2) {
+  if (native.randomUUID && !buf && !options) {
+    return native.randomUUID();
+  }
+  options = options || {};
+  var rnds = options.random || (options.rng || rng)();
+  rnds[6] = rnds[6] & 15 | 64;
+  rnds[8] = rnds[8] & 63 | 128;
+  return unsafeStringify(rnds);
+}
+sequenceWaasWallet.type = "sequence-waas";
+function sequenceWaasWallet(params) {
+  const isDev = !!(params == null ? void 0 : params.isDev);
+  const nodesUrl = isDev ? "https://dev-nodes.sequence.app" : "https://nodes.sequence.app";
+  const showConfirmationModal = params.enableConfirmationModal ?? false;
+  const sequenceWaas = new SequenceWaaS({
+    waasConfigKey: params.waasConfigKey,
+    projectAccessKey: params.projectAccessKey,
+    network: params.network ?? 137
+  });
+  const sequenceWaasProvider = new SequenceWaasProvider(sequenceWaas, showConfirmationModal, nodesUrl);
+  return createConnector((config2) => ({
+    id: `sequence-waas`,
+    name: "Sequence WaaS",
+    type: sequenceWaasWallet.type,
+    sequenceWaas,
+    sequenceWaasProvider,
+    params,
+    async setup() {
+      var _a2, _b2, _c2;
+      if (typeof window !== "object") {
+        return;
+      }
+      if (params.googleClientId) {
+        await ((_a2 = config2.storage) == null ? void 0 : _a2.setItem(LocalStorageKey.WaasGoogleClientID, params.googleClientId));
+      }
+      if (params.appleClientId) {
+        await ((_b2 = config2.storage) == null ? void 0 : _b2.setItem(LocalStorageKey.WaasAppleClientID, params.appleClientId));
+      }
+      if (params.appleRedirectURI) {
+        await ((_c2 = config2.storage) == null ? void 0 : _c2.setItem(LocalStorageKey.WaasAppleRedirectURI, params.appleRedirectURI));
+      }
+      sequenceWaasProvider.on("error", (error) => {
+        if (isSessionInvalidOrNotFoundError(error)) {
+          this.disconnect();
+        }
+      });
+    },
+    async connect(_connectInfo) {
+      var _a2, _b2, _c2, _d2, _e2, _f2, _g2, _h2;
+      const provider2 = await this.getProvider();
+      const isSignedIn = await provider2.sequenceWaas.isSignedIn();
+      if (!isSignedIn) {
+        const googleIdToken = await ((_a2 = config2.storage) == null ? void 0 : _a2.getItem(LocalStorageKey.WaasGoogleIdToken));
+        const emailIdToken = await ((_b2 = config2.storage) == null ? void 0 : _b2.getItem(LocalStorageKey.WaasEmailIdToken));
+        const appleIdToken = await ((_c2 = config2.storage) == null ? void 0 : _c2.getItem(LocalStorageKey.WaasAppleIdToken));
+        let idToken;
+        if (params.loginType === "google" && googleIdToken) {
+          idToken = googleIdToken;
+        } else if (params.loginType === "email" && emailIdToken) {
+          idToken = emailIdToken;
+        } else if (params.loginType === "apple" && appleIdToken) {
+          idToken = appleIdToken;
+        }
+        await ((_d2 = config2.storage) == null ? void 0 : _d2.removeItem(LocalStorageKey.WaasGoogleIdToken));
+        await ((_e2 = config2.storage) == null ? void 0 : _e2.removeItem(LocalStorageKey.WaasEmailIdToken));
+        await ((_f2 = config2.storage) == null ? void 0 : _f2.removeItem(LocalStorageKey.WaasAppleIdToken));
+        if (idToken) {
+          try {
+            const signInResponse = await provider2.sequenceWaas.signIn({ idToken }, randomName());
+            if (signInResponse == null ? void 0 : signInResponse.email) {
+              await ((_g2 = config2.storage) == null ? void 0 : _g2.setItem(LocalStorageKey.WaasSignInEmail, signInResponse.email));
+            }
+          } catch (e2) {
+            console.log(e2);
+            await this.disconnect();
+            throw e2;
+          }
+        }
+      }
+      const accounts = await this.getAccounts();
+      if (accounts.length) {
+        await ((_h2 = config2.storage) == null ? void 0 : _h2.setItem(LocalStorageKey.WaasActiveLoginType, params.loginType));
+      } else {
+        throw new Error("No accounts found");
+      }
+      return {
+        accounts,
+        chainId: await this.getChainId()
+      };
+    },
+    async disconnect() {
+      var _a2, _b2;
+      const provider2 = await this.getProvider();
+      try {
+        await provider2.sequenceWaas.dropSession({ sessionId: await provider2.sequenceWaas.getSessionId(), strict: false });
+      } catch (e2) {
+        console.log(e2);
+      }
+      await ((_a2 = config2.storage) == null ? void 0 : _a2.removeItem(LocalStorageKey.WaasActiveLoginType));
+      await ((_b2 = config2.storage) == null ? void 0 : _b2.removeItem(LocalStorageKey.WaasSignInEmail));
+      config2.emitter.emit("disconnect");
+    },
+    async getAccounts() {
+      const provider2 = await this.getProvider();
+      try {
+        const isSignedIn = await provider2.sequenceWaas.isSignedIn();
+        if (isSignedIn) {
+          const address = await provider2.sequenceWaas.getAddress();
+          return [getAddress$1(address)];
+        }
+      } catch (err) {
+        return [];
+      }
+      return [];
+    },
+    async getProvider() {
+      return sequenceWaasProvider;
+    },
+    async isAuthorized() {
+      var _a2;
+      const provider2 = await this.getProvider();
+      const activeWaasOption = await ((_a2 = config2.storage) == null ? void 0 : _a2.getItem(LocalStorageKey.WaasActiveLoginType));
+      if (params.loginType !== activeWaasOption) {
+        return false;
+      }
+      try {
+        return await provider2.sequenceWaas.isSignedIn();
+      } catch (e2) {
+        return false;
+      }
+    },
+    async switchChain({ chainId }) {
+      const provider2 = await this.getProvider();
+      const chain = config2.chains.find((c2) => c2.id === chainId) || config2.chains[0];
+      await provider2.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: toQuantity(chainId) }]
+      });
+      config2.emitter.emit("change", { chainId });
+      return chain;
+    },
+    async getChainId() {
+      const provider2 = await this.getProvider();
+      return Number(provider2.getChainId());
+    },
+    async onAccountsChanged(accounts) {
+      return { account: accounts[0] };
+    },
+    async onChainChanged(chain) {
+      config2.emitter.emit("change", { chainId: normalizeChainId(chain) });
+    },
+    async onConnect(_connectInfo) {
+    },
+    async onDisconnect() {
+      await this.disconnect();
+    }
+  }));
+}
+class SequenceWaasProvider extends AbstractProvider {
+  constructor(sequenceWaas, showConfirmation, nodesUrl) {
+    var _a2;
+    super(sequenceWaas.config.network);
+    __publicField(this, "sequenceWaas");
+    __publicField(this, "showConfirmation");
+    __publicField(this, "nodesUrl");
+    __publicField(this, "jsonRpcProvider");
+    __publicField(this, "requestConfirmationHandler");
+    __publicField(this, "feeConfirmationHandler");
+    __publicField(this, "currentNetwork");
+    this.sequenceWaas = sequenceWaas;
+    this.showConfirmation = showConfirmation;
+    this.nodesUrl = nodesUrl;
+    const initialChain = sequenceWaas.config.network;
+    const initialChainName = (_a2 = allNetworks.find((n2) => n2.chainId === initialChain || n2.name === initialChain)) == null ? void 0 : _a2.name;
+    const initialJsonRpcProvider = new JsonRpcProvider$1(`${nodesUrl}/${initialChainName}/${sequenceWaas.config.projectAccessKey}`);
+    this.jsonRpcProvider = initialJsonRpcProvider;
+    this.currentNetwork = Network.from(sequenceWaas.config.network);
+  }
+  async request({ method, params }) {
+    var _a2;
+    if (method === "wallet_switchEthereumChain") {
+      const chainId = normalizeChainId(params == null ? void 0 : params[0].chainId);
+      const networkName = (_a2 = allNetworks.find((n2) => n2.chainId === chainId)) == null ? void 0 : _a2.name;
+      const jsonRpcProvider = new JsonRpcProvider$1(`${this.nodesUrl}/${networkName}/${this.sequenceWaas.config.projectAccessKey}`);
+      this.jsonRpcProvider = jsonRpcProvider;
+      this.currentNetwork = Network.from(chainId);
+      return null;
+    }
+    if (method === "eth_chainId") {
+      return toQuantity(this.currentNetwork.chainId);
+    }
+    if (method === "eth_accounts") {
+      const address = await this.sequenceWaas.getAddress();
+      const account2 = getAddress$1(address);
+      return [account2];
+    }
+    if (method === "eth_sendTransaction") {
+      const txns = await resolveProperties$1(params == null ? void 0 : params[0]);
+      const chainId = this.getChainId();
+      let feeOptionsResponse;
+      try {
+        feeOptionsResponse = await this.checkTransactionFeeOptions({ transactions: [txns], chainId });
+      } catch (error) {
+        if (isSessionInvalidOrNotFoundError(error)) {
+          await this.emit("error", error);
+          throw new ProviderDisconnectedError(new Error("Provider is not connected"));
+        } else {
+          const message = typeof error === "object" && error !== null && "cause" in error ? String(error.cause) ?? "Failed to check transaction fee options" : "Failed to check transaction fee options";
+          throw new InternalRpcError(new Error(message));
+        }
+      }
+      const feeOptions2 = feeOptionsResponse == null ? void 0 : feeOptionsResponse.feeOptions;
+      let selectedFeeOption;
+      if (!(feeOptionsResponse == null ? void 0 : feeOptionsResponse.isSponsored) && feeOptions2 && feeOptions2.length > 0) {
+        if (!this.feeConfirmationHandler) {
+          throw new TransactionRejectedRpcError(new Error("Unable to send transaction: please use useWaasFeeOptions hook and pick a fee option"));
+        }
+        const id2 = v4();
+        const confirmation = await this.feeConfirmationHandler.confirmFeeOption(id2, feeOptions2, txns, chainId);
+        if (!confirmation.confirmed) {
+          throw new UserRejectedRequestError(new Error("User rejected send transaction request"));
+        }
+        if (id2 !== confirmation.id) {
+          throw new UserRejectedRequestError(new Error("User confirmation ids do not match"));
+        }
+        selectedFeeOption = feeOptions2.find((feeOption) => feeOption.token.contractAddress === confirmation.feeTokenAddress);
+      }
+      if (this.requestConfirmationHandler && this.showConfirmation) {
+        const id2 = v4();
+        const confirmation = await this.requestConfirmationHandler.confirmSignTransactionRequest(id2, txns, chainId);
+        if (!confirmation.confirmed) {
+          throw new UserRejectedRequestError(new Error("User rejected send transaction request"));
+        }
+        if (id2 !== confirmation.id) {
+          throw new UserRejectedRequestError(new Error("User confirmation ids do not match"));
+        }
+      }
+      let response;
+      try {
+        response = await this.sequenceWaas.sendTransaction({
+          transactions: [await resolveProperties$1(params == null ? void 0 : params[0])],
+          network: chainId,
+          transactionsFeeOption: selectedFeeOption,
+          transactionsFeeQuote: feeOptionsResponse == null ? void 0 : feeOptionsResponse.feeQuote
+        });
+      } catch (error) {
+        if (isSessionInvalidOrNotFoundError(error)) {
+          await this.emit("error", error);
+          throw new ProviderDisconnectedError(new Error("Provider is not connected"));
+        } else {
+          const message = typeof error === "object" && error !== null && "cause" in error ? String(error.cause) ?? "Failed to send transaction" : "Failed to send transaction";
+          throw new InternalRpcError(new Error(message));
+        }
+      }
+      if (response.code === "transactionFailed") {
+        throw new TransactionRejectedRpcError(new Error(`Unable to send transaction: ${response.data.error}`));
+      }
+      if (response.code === "transactionReceipt") {
+        const { txHash } = response.data;
+        return txHash;
+      }
+    }
+    if (method === "eth_sign" || method === "eth_signTypedData" || method === "eth_signTypedData_v4" || method === "personal_sign") {
+      if (this.requestConfirmationHandler && this.showConfirmation) {
+        const id2 = v4();
+        const confirmation = await this.requestConfirmationHandler.confirmSignMessageRequest(id2, params == null ? void 0 : params[0], Number(this.currentNetwork.chainId));
+        if (!confirmation.confirmed) {
+          throw new UserRejectedRequestError(new Error("User rejected sign message request"));
+        }
+        if (id2 !== confirmation.id) {
+          throw new UserRejectedRequestError(new Error("User confirmation ids do not match"));
+        }
+      }
+      let sig;
+      try {
+        sig = await this.sequenceWaas.signMessage({ message: params == null ? void 0 : params[0], network: Number(this.currentNetwork.chainId) });
+      } catch (error) {
+        if (isSessionInvalidOrNotFoundError(error)) {
+          await this.emit("error", error);
+          throw new ProviderDisconnectedError(new Error("Provider is not connected"));
+        } else {
+          const message = typeof error === "object" && error !== null && "cause" in error ? String(error.cause) ?? "Failed to sign message" : "Failed to sign message";
+          throw new InternalRpcError(new Error(message));
+        }
+      }
+      return sig.data.signature;
+    }
+    return await this.jsonRpcProvider.send(method, params ?? []);
+  }
+  async getTransaction(txHash) {
+    return await this.jsonRpcProvider.getTransaction(txHash);
+  }
+  detectNetwork() {
+    return Promise.resolve(this.currentNetwork);
+  }
+  getChainId() {
+    return Number(this.currentNetwork.chainId);
+  }
+  async checkTransactionFeeOptions({ transactions: transactions2, chainId }) {
+    const resp = await this.sequenceWaas.feeOptions({
+      transactions: transactions2,
+      network: chainId
+    });
+    if (resp.data.feeQuote && resp.data.feeOptions) {
+      return { feeQuote: resp.data.feeQuote, feeOptions: resp.data.feeOptions, isSponsored: false };
+    }
+    return { feeQuote: resp.data.feeQuote, feeOptions: resp.data.feeOptions, isSponsored: true };
+  }
+}
+const DEVICE_EMOJIS = [
+  // 256 emojis for unsigned byte range 0 - 255
+  ..."🐶🐱🐭🐹🐰🦊🐻🐼🐨🐯🦁🐮🐷🐽🐸🐵🙈🙉🙊🐒🐔🐧🐦🐤🐣🐥🦆🦅🦉🦇🐺🐗🐴🦄🐝🐛🦋🐌🐞🐜🦟🦗🕷🕸🦂🐢🐍🦎🦖🦕🐙🦑🦐🦞🦀🐡🐠🐟🐬🐳🐋🦈🐊🐅🐆🦓🦍🦧🐘🦛🦏🐪🐫🦒🦘🐃🐂🐄🐎🐖🐏🐑🦙🐐🦌🐕🐩🦮🐈🐓🦃🦚🦜🦢🦩🕊🐇🦝🦨🦡🦦🦥🐁🐀🐿🦔🐾🐉🐲🌵🎄🌲🌳🌴🌱🌿🍀🎍🎋🍃👣🍂🍁🍄🐚🌾💐🌷🌹🥀🌺🌸🌼🌻🌞🌝🍏🍎🍐🍊🍋🍌🍉🍇🍓🍈🥭🍍🥥🥝🍅🥑🥦🥬🥒🌶🌽🥕🧄🧅🥔🍠🥐🥯🍞🥖🥨🧀🥚🍳🧈🥞🧇🥓🥩🍗🍖🦴🌭🍔🍟🍕🥪🥙🧆🌮🌯🥗🥘🥫🍝🍜🍲🍛🍣🍱🥟🦪🍤🍙🍚🍘🍥🥠🥮🍢🍡🍧🍨🍦🥧🧁🍰🎂🍮🍭🍬🍫🍿🍩🍪🌰🥜👀👂👃👄👅👆👇👈👉👊👋👌👍👎👏👐👑👒👓🎯🎰🎱🎲🎳👾👯👺👻👽🏂🏃🏄"
+];
+function randomName() {
+  const wordlistSize = 2048;
+  const words2 = wordlists.en;
+  const randomEmoji = DEVICE_EMOJIS[Math.floor(Math.random() * DEVICE_EMOJIS.length)];
+  const randomWord1 = words2.getWord(Math.floor(Math.random() * wordlistSize));
+  const randomWord2 = words2.getWord(Math.floor(Math.random() * wordlistSize));
+  return `${randomEmoji} ${randomWord1} ${randomWord2}`;
+}
+function normalizeChainId(chainId) {
+  if (typeof chainId === "object")
+    return normalizeChainId(chainId.chainId);
+  if (typeof chainId === "string")
+    return Number.parseInt(chainId, chainId.trim().substring(0, 2) === "0x" ? 16 : 10);
+  if (typeof chainId === "bigint")
+    return Number(chainId);
+  return chainId;
+}
+function isSessionInvalidOrNotFoundError(error) {
+  return error instanceof WebrpcEndpointError7 && error.cause === "session invalid or not found";
+}
+function useEmailAuth({ connector, onSuccess }) {
+  if (!connector) {
+    return {
+      inProgress: false,
+      loading: false,
+      error: void 0,
+      initiateAuth: async (_email) => {
+      },
+      sendChallengeAnswer: async (_answer) => {
+      }
+    };
+  }
+  const [email2, setEmail] = reactExports.useState("");
+  const [error, setError] = reactExports.useState();
+  const [loading, setLoading] = reactExports.useState(false);
+  const [instance, setInstance] = reactExports.useState("");
+  const [respondWithCode, setRespondWithCode] = reactExports.useState();
+  const getSequenceWaas = () => {
+    if (!connector) {
+      throw new Error("Connector is not defined");
+    }
+    const sequenceWaas = connector.sequenceWaas;
+    if (!sequenceWaas) {
+      throw new Error("Connector does not support SequenceWaaS");
+    }
+    return sequenceWaas;
+  };
+  const initiateAuth2 = async (email3) => {
+    connector.params;
+    const waas = getSequenceWaas();
+    setLoading(true);
+    setError(void 0);
+    waas.onEmailAuthCodeRequired(async (respondWithCode2) => {
+      setRespondWithCode(() => respondWithCode2);
+    });
+    waas.signIn({ email: email3 }, randomName()).then((signInResponse) => {
+      onSuccess({ version: 2, signInResponse });
+      if (signInResponse.email) {
+        setEmail(signInResponse.email);
+      }
+    }).catch((err) => {
+      setError(err);
+    });
+    setLoading(false);
+  };
+  const sendChallengeAnswer = async (answer) => {
+    connector.params;
+    getSequenceWaas();
+    setLoading(true);
+    setError(void 0);
+    if (!respondWithCode) {
+      throw new Error("Email v2 auth, respondWithCode is not defined");
+    }
+    try {
+      await respondWithCode(answer);
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const cancel2 = () => {
+    setLoading(false);
+    setRespondWithCode(null);
+    setError(void 0);
+  };
+  return {
+    inProgress: loading || !!instance,
+    loading,
+    error,
+    initiateAuth: initiateAuth2,
+    sendChallengeAnswer,
+    cancel: cancel2
+  };
+}
+const BUTTON_SIZE = "14";
+const ICON_SIZE = "10";
+const getLogo = (theme, walletProps) => theme === "dark" ? walletProps.logoDark || walletProps.monochromeLogoDark : walletProps.logoLight || walletProps.monochromeLogoLight;
+const ConnectButton = (props) => {
+  const { connector, label, onConnect } = props;
+  const { theme } = useTheme$1();
+  const walletProps = connector._wallet;
+  const Logo = getLogo(theme, walletProps);
+  return jsxRuntimeExports$1.jsx(Tooltip, { message: label || walletProps.name, children: jsxRuntimeExports$1.jsx(Card, { clickable: true, width: BUTTON_SIZE, height: BUTTON_SIZE, padding: "2", borderRadius: "xs", justifyContent: "center", alignItems: "center", onClick: () => onConnect(connector), children: jsxRuntimeExports$1.jsx(Box, { as: Logo, width: ICON_SIZE, height: ICON_SIZE }) }) });
+};
+const GoogleWaasConnectButton = (props) => {
+  const { connector, onConnect } = props;
+  const storage = useStorage();
+  const [enableGoogleTooltip, setEnableGoogleTooltip] = reactExports.useState(false);
+  const { theme } = useTheme$1();
+  const walletProps = connector._wallet;
+  const Logo = getLogo(theme, walletProps);
+  reactExports.useEffect(() => {
+    setTimeout(() => {
+      setEnableGoogleTooltip(true);
+    }, 300);
+  });
+  return jsxRuntimeExports$1.jsx(Tooltip, { message: "Google", disabled: !enableGoogleTooltip, children: jsxRuntimeExports$1.jsxs(Card, { clickable: true, background: "transparent", borderRadius: "xs", padding: "0", width: BUTTON_SIZE, height: BUTTON_SIZE, position: "relative", children: [jsxRuntimeExports$1.jsx(Box, { width: "full", height: "full", overflow: "hidden", borderRadius: "sm", alignItems: "center", justifyContent: "center", style: { opacity: 1e-7, transform: "scale(1.4)" }, children: jsxRuntimeExports$1.jsx(GoogleLogin, { type: "icon", size: "large", width: "56", onSuccess: (credentialResponse) => {
+    if (credentialResponse.credential) {
+      storage == null ? void 0 : storage.setItem(LocalStorageKey.WaasGoogleIdToken, credentialResponse.credential);
+      onConnect(connector);
+    }
+  }, onError: () => {
+    console.log("Login Failed");
+  } }) }), jsxRuntimeExports$1.jsx(Box, { background: "backgroundSecondary", borderRadius: "xs", display: "flex", justifyContent: "center", alignItems: "center", position: "absolute", pointerEvents: "none", width: "full", height: "full", top: "0", right: "0", children: jsxRuntimeExports$1.jsx(Box, { as: Logo, width: ICON_SIZE, height: ICON_SIZE }) })] }) });
+};
+const AppleWaasConnectButton = (props) => {
+  const { connector, onConnect } = props;
+  const storage = useStorage();
+  const { data: appleClientId } = useStorageItem(LocalStorageKey.WaasAppleClientID);
+  const { data: appleRedirectUri } = useStorageItem(LocalStorageKey.WaasAppleRedirectURI);
+  return appleClientId && appleRedirectUri ? jsxRuntimeExports$1.jsx(ConnectButton, { connector, onConnect: () => {
+    dist.appleAuthHelpers.signIn({
+      authOptions: {
+        clientId: appleClientId,
+        redirectURI: appleRedirectUri,
+        scope: "openid email",
+        usePopup: true
+      },
+      onSuccess: (response) => {
+        var _a2;
+        if ((_a2 = response.authorization) == null ? void 0 : _a2.id_token) {
+          storage == null ? void 0 : storage.setItem(LocalStorageKey.WaasAppleIdToken, response.authorization.id_token);
+          onConnect(connector);
+        } else {
+          console.log("Apple login error: No id_token found");
+        }
+      },
+      onError: (error) => console.error(error)
+    });
+  } }) : null;
+};
+const EmailConnectButton = (props) => {
+  const { onClick } = props;
+  return jsxRuntimeExports$1.jsx(Tooltip, { message: "Email", children: jsxRuntimeExports$1.jsx(Card, { clickable: true, width: BUTTON_SIZE, height: BUTTON_SIZE, padding: "2", borderRadius: "xs", justifyContent: "center", alignItems: "center", onClick, children: jsxRuntimeExports$1.jsx(SvgEmailIcon, { size: "xl", color: "text100" }) }) });
+};
+const Banner = ({ config: config2 = {} }) => {
+  const { signIn: signIn3 = {} } = config2;
+  const { logoUrl } = signIn3;
+  return jsxRuntimeExports$1.jsx(jsxRuntimeExports$1.Fragment, { children: logoUrl && jsxRuntimeExports$1.jsx(Box, { marginTop: "5", justifyContent: "center", alignItems: "center", children: jsxRuntimeExports$1.jsx(Image$1, { src: logoUrl, style: { height: "110px" } }) }) });
+};
+const EmailWaasVerify = (props) => {
+  const { isLoading, error, onConfirm } = props;
+  const [waasEmailPinCode, setWaasEmailPinCode] = reactExports.useState([]);
+  return jsxRuntimeExports$1.jsx(jsxRuntimeExports$1.Fragment, { children: jsxRuntimeExports$1.jsxs(Box, { paddingY: "6", alignItems: "center", justifyContent: "center", flexDirection: "column", children: [jsxRuntimeExports$1.jsx(Text, { marginTop: "5", marginBottom: "4", variant: "normal", color: "text80", children: "Enter code received in email." }), jsxRuntimeExports$1.jsx(PINCodeInput, { value: waasEmailPinCode, digits: 6, group: 3, onChange: setWaasEmailPinCode, disabled: isLoading }), jsxRuntimeExports$1.jsxs(Box, { gap: "4", marginTop: "4", alignItems: "center", justifyContent: "center", flexDirection: "column", children: [jsxRuntimeExports$1.jsx(Button, { variant: "primary", disabled: waasEmailPinCode.includes("") || isLoading, label: "Confirm", onClick: () => onConfirm(waasEmailPinCode.join("")), "data-id": "verifyButton" }), isLoading && jsxRuntimeExports$1.jsx(Spinner, {}), error && jsxRuntimeExports$1.jsx(Text, { variant: "small", color: "negative", textAlign: "center", children: error.message })] })] }) });
+};
+const ExtendedWalletList = ({ onConnect, connectors }) => {
+  const { theme } = useTheme$1();
+  const { isPending } = useConnect();
+  return jsxRuntimeExports$1.jsx(Box, { flexDirection: "column", gap: "2", marginTop: "5", children: connectors.map((connector) => {
+    const Logo = theme === "dark" ? connector._wallet.logoDark : connector._wallet.logoLight;
+    const walletName = connector._wallet.name;
+    const connectorId = connector._wallet.id;
+    return jsxRuntimeExports$1.jsx(Button, { width: "full", shape: "square", leftIcon: () => jsxRuntimeExports$1.jsx(Box, { justifyContent: "center", alignItems: "center", style: { backgroundColor: connector._wallet.iconBackground }, width: "8", height: "8", overflow: "hidden", children: jsxRuntimeExports$1.jsx(Logo, { style: { width: 30 } }) }), onClick: () => onConnect(connector), label: jsxRuntimeExports$1.jsxs(Text, { children: [walletName, isPending] }) }, connectorId);
+  }) });
+};
+const Connect = (props) => {
+  var _a2;
+  dist.useScript(dist.appleAuthHelpers.APPLE_SCRIPT_SRC);
+  const { onClose, emailConflictInfo, config: config2 = {}, isPreview = false } = props;
+  const { signIn: signIn3 = {} } = config2;
+  const { isConnected } = useAccount();
+  const storage = useStorage();
+  const [isLoading, setIsLoading] = reactExports.useState(false);
+  const projectName = (_a2 = config2 == null ? void 0 : config2.signIn) == null ? void 0 : _a2.projectName;
+  const [email2, setEmail] = reactExports.useState("");
+  const [showEmailInput, setShowEmailInput] = reactExports.useState(false);
+  const [showEmailWaasPinInput, setShowEmailWaasPinInput] = reactExports.useState(false);
+  const [showExtendedList, setShowExtendedList] = reactExports.useState(false);
+  const { status, connectors, connect: connect2 } = useConnect();
+  const hasInjectedSequenceConnector = connectors.some((c2) => c2.id === "app.sequence");
+  const baseWalletConnectors = connectors.filter((c2) => {
+    return c2._wallet && (c2._wallet.type === "wallet" || c2._wallet.type === void 0);
+  }).filter((c2) => {
+    var _a3;
+    if (((_a3 = c2._wallet) == null ? void 0 : _a3.id) === "sequence" && hasInjectedSequenceConnector) {
+      return false;
+    }
+    return true;
+  });
+  const mockConnector = baseWalletConnectors.find((connector) => {
+    return connector._wallet.id === "mock";
+  });
+  const injectedConnectors = connectors.filter((c2) => c2.type === "injected").filter((connector) => {
+    if (connector.id === "com.coinbase.wallet") {
+      return !connectors.find((connector2) => {
+        var _a3;
+        return ((_a3 = connector2 == null ? void 0 : connector2._wallet) == null ? void 0 : _a3.id) === "coinbase-wallet";
+      });
+    }
+    return true;
+  }).map((connector) => {
+    const Logo = (props2) => {
+      return jsxRuntimeExports$1.jsx(Image$1, { src: connector.icon, alt: connector.name, disableAnimation: true, ...props2 });
+    };
+    return {
+      ...connector,
+      _wallet: {
+        id: connector.id,
+        name: connector.name,
+        logoLight: Logo,
+        logoDark: Logo,
+        type: "wallet"
+      }
+    };
+  });
+  const socialAuthConnectors = connectors.filter((c2) => {
+    var _a3;
+    return ((_a3 = c2._wallet) == null ? void 0 : _a3.type) === "social";
+  });
+  const walletConnectors = [...baseWalletConnectors, ...injectedConnectors];
+  const emailConnector = socialAuthConnectors.find((c2) => c2._wallet.id.includes("email"));
+  const isEmailOnly = emailConnector && socialAuthConnectors.length === 1;
+  const displayExtendedListButton = walletConnectors.length > 7;
+  const onChangeEmail = (ev) => {
+    setEmail(ev.target.value);
+  };
+  reactExports.useEffect(() => {
+    if (isConnected) {
+      onClose();
+    }
+  }, [isConnected]);
+  reactExports.useEffect(() => {
+    setIsLoading(status === "pending" || status === "success");
+  }, [status]);
+  const onConnect = (connector) => {
+    if (signIn3.useMock && mockConnector) {
+      connect2({ connector: mockConnector });
+      return;
+    }
+    if (connector._wallet.id === "email") {
+      const email3 = prompt("Auto-email login, please specify the email address:");
+      if ("setEmail" in connector) {
+        connector.setEmail(email3);
+      }
+    }
+    connect2({ connector });
+  };
+  const onConnectInlineEmail = async (e2) => {
+    e2.preventDefault();
+    if (signIn3.useMock && mockConnector) {
+      connect2({ connector: mockConnector });
+      return;
+    }
+    if (emailConnector) {
+      if ("setEmail" in emailConnector) {
+        emailConnector.setEmail(email2);
+      }
+      if (emailConnector._wallet.id === "email-waas") {
+        try {
+          await initiateEmailAuth(email2);
+          setShowEmailWaasPinInput(true);
+        } catch (e3) {
+          console.log(e3);
+        }
+      } else {
+        connect2({ connector: emailConnector });
+      }
+    }
+  };
+  const { inProgress: emailAuthInProgress, loading: emailAuthLoading, error: emailAuthError, initiateAuth: initiateEmailAuth, sendChallengeAnswer } = useEmailAuth({
+    connector: emailConnector,
+    onSuccess: async (result) => {
+      var _a3;
+      if ("signInResponse" in result && ((_a3 = result.signInResponse) == null ? void 0 : _a3.email)) {
+        storage == null ? void 0 : storage.setItem(LocalStorageKey.WaasSignInEmail, result.signInResponse.email);
+      }
+      if (emailConnector) {
+        if (result.version === 1) {
+          storage == null ? void 0 : storage.setItem(LocalStorageKey.WaasEmailIdToken, result.idToken);
+        }
+        connect2({ connector: emailConnector });
+      }
+    }
+  });
+  reactExports.useEffect(() => {
+    if (emailConflictInfo) {
+      setShowEmailWaasPinInput(false);
+    }
+  }, [emailConflictInfo]);
+  return jsxRuntimeExports$1.jsxs(Box, { padding: "4", children: [jsxRuntimeExports$1.jsx(Box, { justifyContent: "center", color: "text100", alignItems: "center", fontWeight: "medium", style: {
+    marginTop: "4px"
+  }, children: jsxRuntimeExports$1.jsx(TitleWrapper, { isPreview, children: jsxRuntimeExports$1.jsx(Text, { children: isLoading ? `Connecting...` : `Sign in ${projectName ? `to ${projectName}` : ""}` }) }) }), isLoading ? jsxRuntimeExports$1.jsx(Box, { justifyContent: "center", alignItems: "center", paddingTop: "4", children: jsxRuntimeExports$1.jsx(Spinner, {}) }) : jsxRuntimeExports$1.jsx(jsxRuntimeExports$1.Fragment, { children: showEmailWaasPinInput ? jsxRuntimeExports$1.jsx(EmailWaasVerify, { error: emailAuthError, isLoading: emailAuthLoading, onConfirm: sendChallengeAnswer }) : showExtendedList ? jsxRuntimeExports$1.jsxs(jsxRuntimeExports$1.Fragment, { children: [jsxRuntimeExports$1.jsx(Box, { position: "absolute", top: "4", children: jsxRuntimeExports$1.jsx(IconButton, { icon: SvgChevronLeftIcon, onClick: () => setShowExtendedList(false), size: "xs" }) }), jsxRuntimeExports$1.jsx(ExtendedWalletList, { connectors: walletConnectors, onConnect })] }) : jsxRuntimeExports$1.jsxs(jsxRuntimeExports$1.Fragment, { children: [jsxRuntimeExports$1.jsx(Banner, { config: config2 }), jsxRuntimeExports$1.jsxs(Box, { marginTop: "6", children: [emailConnector && (showEmailInput || isEmailOnly) ? jsxRuntimeExports$1.jsxs("form", { onSubmit: onConnectInlineEmail, children: [jsxRuntimeExports$1.jsx(TextInput, { onChange: onChangeEmail, value: email2, name: "email", placeholder: "Enter email", "data-1p-ignore": true }), jsxRuntimeExports$1.jsxs(Box, { alignItems: "center", justifyContent: "center", marginTop: "4", children: [!emailAuthInProgress && jsxRuntimeExports$1.jsxs(Box, { gap: "2", width: "full", children: [!isEmailOnly && jsxRuntimeExports$1.jsx(Button, { label: "Back", width: "full", onClick: () => setShowEmailInput(false) }), jsxRuntimeExports$1.jsx(Button, { type: "submit", variant: "primary", disabled: !isEmailValid(email2), width: "full", label: "Continue", rightIcon: SvgChevronRightIcon })] }), emailAuthInProgress && jsxRuntimeExports$1.jsx(Spinner, {})] })] }) : jsxRuntimeExports$1.jsx(jsxRuntimeExports$1.Fragment, { children: socialAuthConnectors.length > 0 && jsxRuntimeExports$1.jsx(Box, { marginTop: "2", gap: "2", flexDirection: "row", justifyContent: "center", alignItems: "center", flexWrap: "wrap", children: socialAuthConnectors.map((connector) => {
+    return jsxRuntimeExports$1.jsx(Box, { aspectRatio: "1/1", alignItems: "center", justifyContent: "center", children: connector._wallet.id === "google-waas" ? jsxRuntimeExports$1.jsx(GoogleWaasConnectButton, { connector, onConnect }) : connector._wallet.id === "apple-waas" ? jsxRuntimeExports$1.jsx(AppleWaasConnectButton, { connector, onConnect }) : connector._wallet.id.includes("email") ? jsxRuntimeExports$1.jsx(EmailConnectButton, { onClick: () => setShowEmailInput(true) }) : jsxRuntimeExports$1.jsx(ConnectButton, { connector, onConnect }) }, connector.uid);
+  }) }) }), walletConnectors.length > 0 && !showEmailInput && jsxRuntimeExports$1.jsxs(jsxRuntimeExports$1.Fragment, { children: [socialAuthConnectors.length > 0 && jsxRuntimeExports$1.jsxs(jsxRuntimeExports$1.Fragment, { children: [jsxRuntimeExports$1.jsx(Divider, { color: "backgroundSecondary" }), jsxRuntimeExports$1.jsx(Box, { justifyContent: "center", alignItems: "center", children: jsxRuntimeExports$1.jsx(Text, { variant: "small", color: "text50", children: "or select a wallet" }) })] }), jsxRuntimeExports$1.jsx(Box, { marginTop: "2", gap: "2", flexDirection: "row", justifyContent: "center", alignItems: "center", children: walletConnectors.slice(0, 7).map((connector) => {
+    return jsxRuntimeExports$1.jsx(ConnectButton, { connector, onConnect }, connector.uid);
+  }) }), displayExtendedListButton && jsxRuntimeExports$1.jsx(Box, { marginTop: "4", justifyContent: "center", children: jsxRuntimeExports$1.jsx(Button, { shape: "square", size: "xs", onClick: () => setShowExtendedList(true), label: "More options", rightIcon: SvgChevronRightIcon }) })] })] }), jsxRuntimeExports$1.jsx(PoweredBySequence, {})] }) })] });
+};
+const TitleWrapper = ({ children, isPreview }) => {
+  if (isPreview) {
+    return jsxRuntimeExports$1.jsx(jsxRuntimeExports$1.Fragment, { children });
+  }
+  return jsxRuntimeExports$1.jsx(index$2$1.Title, { asChild: true, children });
+};
 const KitProvider = (props) => {
   var _a2, _b2;
   const { config: config2, children } = props;
@@ -99139,7 +99133,7 @@ const KitProvider = (props) => {
       overflow: "visible",
       ...getModalPositionCss(position)
     }
-  }, onClose: () => setOpenConnectModal(false), children: jsxRuntimeExports$1.jsx(ConnectWalletContent, { onClose: () => setOpenConnectModal(false), emailConflictInfo, ...props }) }), pendingRequestConfirmation && jsxRuntimeExports$1.jsx(Modal, { scroll: false, backdropColor: "backgroundBackdrop", size: "sm", contentProps: {
+  }, onClose: () => setOpenConnectModal(false), children: jsxRuntimeExports$1.jsx(Connect, { onClose: () => setOpenConnectModal(false), emailConflictInfo, ...props }) }), pendingRequestConfirmation && jsxRuntimeExports$1.jsx(Modal, { scroll: false, backdropColor: "backgroundBackdrop", size: "sm", contentProps: {
     style: {
       maxWidth: "364px",
       ...getModalPositionCss(position)
@@ -99314,7 +99308,7 @@ function version4(parameters) {
       if (!walletProvider) {
         const CoinbaseWalletSDK = await (async () => {
           const { default: SDK } = await __vitePreload(async () => {
-            const { default: SDK2 } = await import("./index-CAqnVBvl.js").then((n2) => n2.i);
+            const { default: SDK2 } = await import("./index-CP9tCgLP.js").then((n2) => n2.i);
             return { default: SDK2 };
           }, true ? __vite__mapDeps([0,1,2]) : void 0, import.meta.url);
           if (typeof SDK !== "function" && typeof SDK.default === "function")
@@ -99496,7 +99490,7 @@ function version3(parameters) {
       if (!walletProvider) {
         const CoinbaseWalletSDK = await (async () => {
           const { default: SDK } = await __vitePreload(async () => {
-            const { default: SDK2 } = await import("./index-GjKY_ZWz.js").then((n2) => n2.i);
+            const { default: SDK2 } = await import("./index-Dt8GhP-t.js").then((n2) => n2.i);
             return { default: SDK2 };
           }, true ? __vite__mapDeps([3,2,1]) : void 0, import.meta.url);
           if (typeof SDK !== "function" && typeof SDK.default === "function")
@@ -99732,7 +99726,7 @@ function walletConnect$1(parameters) {
         if (!optionalChains.length)
           return;
         const { EthereumProvider } = await __vitePreload(async () => {
-          const { EthereumProvider: EthereumProvider2 } = await import("./index.es-BkW29cbf.js");
+          const { EthereumProvider: EthereumProvider2 } = await import("./index.es-FI6n73Yf.js");
           return { EthereumProvider: EthereumProvider2 };
         }, true ? __vite__mapDeps([4,2]) : void 0, import.meta.url);
         return await EthereumProvider.init({
