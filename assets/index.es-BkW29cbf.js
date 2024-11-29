@@ -1,6 +1,6 @@
-const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["./index-Crh23hpI.js","./index-tCAxCIVt.js","./index-g_cLYwVj.css"])))=>i.map(i=>d[i]);
-import { p as process$1, a as getAugmentedNamespace, c as commonjsGlobal, b as global, B as Buffer, g as getDefaultExportFromCjs, _ as __vitePreload } from "./index-tCAxCIVt.js";
-import { a as require$$0$2, r as require$$0$3, i as inherits_browserExports, e as eventsExports, G as Gg } from "./inherits_browser-CcXPmW2n.js";
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["./index-BfQ9UbOY.js","./index-ieULS5hn.js","./index-g_cLYwVj.css"])))=>i.map(i=>d[i]);
+import { p as process$1, a as getAugmentedNamespace, c as commonjsGlobal, b as global, B as Buffer, g as getDefaultExportFromCjs, _ as __vitePreload } from "./index-ieULS5hn.js";
+import { a as require$$0$2, r as require$$0$3, i as inherits_browserExports, e as eventsExports, G as Gg } from "./inherits_browser-gft0_vxm.js";
 var __spreadArray = function(to2, from2, pack) {
   if (pack || arguments.length === 2) for (var i3 = 0, l2 = from2.length, ar2; i3 < l2; i3++) {
     if (ar2 || !(i3 in from2)) {
@@ -27392,7 +27392,7 @@ class C2 {
     if (this.rpc = this.getRpcConfig(t), this.chainId = this.rpc.chains.length ? m2(this.rpc.chains) : m2(this.rpc.optionalChains), this.signer = await Iv.init({ projectId: this.rpc.projectId, metadata: this.rpc.metadata, disableProviderPing: t.disableProviderPing, relayUrl: t.relayUrl, storageOptions: t.storageOptions, customStoragePrefix: t.customStoragePrefix, telemetryEnabled: t.telemetryEnabled }), this.registerEventListeners(), await this.loadPersistedSession(), this.rpc.showQrModal) {
       let s2;
       try {
-        const { WalletConnectModal: i3 } = await __vitePreload(() => import("./index-Crh23hpI.js").then((n4) => n4.i), true ? __vite__mapDeps([0,1,2]) : void 0, import.meta.url);
+        const { WalletConnectModal: i3 } = await __vitePreload(() => import("./index-BfQ9UbOY.js").then((n4) => n4.i), true ? __vite__mapDeps([0,1,2]) : void 0, import.meta.url);
         s2 = i3;
       } catch {
         throw new Error("To use QR modal, please install @walletconnect/modal package");
