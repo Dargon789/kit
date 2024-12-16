@@ -24,7 +24,7 @@ interface PayWithCreditCardProps {
   disableButtons: boolean
 }
 
-type PaymentProviderOptions = 'sardine'
+type PaymentProviderOptions = 'sardine' | 'transak'
 
 export const PayWithCreditCard = ({ settings, disableButtons }: PayWithCreditCardProps) => {
   const {
@@ -39,7 +39,8 @@ export const PayWithCreditCard = ({ settings, disableButtons }: PayWithCreditCar
     isDev = false,
     onSuccess = () => {},
     onError = () => {},
-    creditCardProviders = []
+    creditCardProviders = [],
+    transakConfig
   } = settings
 
   const { address: userAddress } = useAccount()
@@ -61,14 +62,15 @@ export const PayWithCreditCard = ({ settings, disableButtons }: PayWithCreditCar
   const payWithSelectedProvider = () => {
     switch (selectedPaymentProvider) {
       case 'sardine':
-        onPurchaseSardine()
+      case 'transak':
+        onPurchase()
         return
       default:
         return
     }
   }
 
-  const onPurchaseSardine = () => {
+  const onPurchase = () => {
     if (!userAddress || !currencyInfoData) {
       return
     }
@@ -94,7 +96,9 @@ export const PayWithCreditCard = ({ settings, disableButtons }: PayWithCreditCar
         nftQuantity: collectible.quantity,
         nftDecimals: collectible.decimals === undefined ? undefined : String(collectible.decimals),
         isDev,
+        provider: selectedPaymentProvider,
         calldata: txData,
+        transakConfig,
         approvedSpenderAddress: approvedSpenderAddress || targetContractAddress
       }
     }
@@ -106,40 +110,51 @@ export const PayWithCreditCard = ({ settings, disableButtons }: PayWithCreditCar
   const Options = () => {
     return (
       <Box flexDirection="column" justifyContent="center" alignItems="center" gap="2" width="full">
-        {creditCardProviders.map(creditCardProvider => {
-          switch (creditCardProvider) {
-            case 'sardine':
-              return (
-                <Card
-                  key="sardine"
-                  justifyContent="space-between"
-                  alignItems="center"
-                  padding="4"
-                  onClick={() => {
-                    setSelectedPaymentProvider('sardine')
-                  }}
-                  opacity={{
-                    hover: '80',
-                    base: '100'
-                  }}
-                  cursor="pointer"
-                  disabled={disableButtons}
-                >
-                  <Box flexDirection="row" gap="3" alignItems="center">
-                    <PaymentsIcon color="white" />
-                    <Text color="text100" variant="normal" fontWeight="bold">
-                      Pay with credit or debit card
-                    </Text>
-                  </Box>
-                  <Box style={{ transform: 'rotate(-45deg)' }}>
-                    <ArrowRightIcon color="white" />
-                  </Box>
-                </Card>
-              )
-            default:
-              return null
-          }
-        })}
+        {/* Only 1 option will be displayed, even if multiple providers are passed */}
+        {creditCardProviders
+          .slice(0, 1)
+          .filter(provider => {
+            // cannot display transak checkout if the settings aren't provided
+            if (provider === 'transak' && !settings.transakConfig) {
+              return false
+            }
+            return true
+          })
+          .map(creditCardProvider => {
+            switch (creditCardProvider) {
+              case 'sardine':
+              case 'transak':
+                return (
+                  <Card
+                    key="sardine"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    padding="4"
+                    onClick={() => {
+                      setSelectedPaymentProvider(creditCardProvider)
+                    }}
+                    opacity={{
+                      hover: '80',
+                      base: '100'
+                    }}
+                    cursor="pointer"
+                    disabled={disableButtons}
+                  >
+                    <Box flexDirection="row" gap="3" alignItems="center">
+                      <PaymentsIcon color="white" />
+                      <Text color="text100" variant="normal" fontWeight="bold">
+                        Pay with credit or debit card
+                      </Text>
+                    </Box>
+                    <Box style={{ transform: 'rotate(-45deg)' }}>
+                      <ArrowRightIcon color="white" />
+                    </Box>
+                  </Card>
+                )
+              default:
+                return null
+            }
+          })}
       </Box>
     )
   }
