@@ -7,28 +7,40 @@ import { formatUnits } from 'viem'
 
 import { fetchSardineOrderStatus } from '../api'
 import { TransactionPendingNavigation } from '../contexts'
-import { useNavigation, useCheckoutModal, useSardineClientToken, useTransactionStatusModal } from '../hooks'
+import {
+  useNavigation,
+  useCheckoutModal,
+  useSardineClientToken,
+  useTransactionStatusModal,
+  useSkipOnCloseCallback
+} from '../hooks'
 import { TRANSAK_PROXY_ADDRESS } from '../utils/transak'
 const POLLING_TIME = 10 * 1000
+
+interface PendingCreditTransactionProps {
+  skipOnCloseCallback: () => void
+}
 
 export const PendingCreditCardTransaction = () => {
   const nav = useNavigation()
   const {
     params: {
-      creditCardCheckout: { provider }
+      creditCardCheckout: { provider, onClose = () => {} }
     }
   } = nav.navigation as TransactionPendingNavigation
 
+  const { skipOnCloseCallback } = useSkipOnCloseCallback(onClose)
+
   switch (provider) {
     case 'transak':
-      return <PendingCreditCardTransactionTransak />
+      return <PendingCreditCardTransactionTransak skipOnCloseCallback={skipOnCloseCallback} />
     case 'sardine':
     default:
-      return <PendingCreditCardTransactionSardine />
+      return <PendingCreditCardTransactionSardine skipOnCloseCallback={skipOnCloseCallback} />
   }
 }
 
-export const PendingCreditCardTransactionTransak = () => {
+export const PendingCreditCardTransactionTransak = ({ skipOnCloseCallback }: PendingCreditTransactionProps) => {
   const { openTransactionStatusModal } = useTransactionStatusModal()
   const nav = useNavigation()
   const { settings, closeCheckout } = useCheckoutModal()
@@ -114,6 +126,7 @@ export const PendingCreditCardTransactionTransak = () => {
         console.log('Order Data: ', message?.data?.data)
         const txHash = message?.data?.data?.transactionHash || ''
 
+        skipOnCloseCallback()
         closeCheckout()
         openTransactionStatusModal({
           chainId: creditCardCheckout.chainId,
@@ -132,7 +145,8 @@ export const PendingCreditCardTransactionTransak = () => {
             if (creditCardCheckout.onSuccess) {
               creditCardCheckout.onSuccess(txHash, creditCardCheckout)
             }
-          }
+          },
+          onClose: creditCardCheckout?.onClose
         })
         return
       }
@@ -211,7 +225,7 @@ export const PendingCreditCardTransactionTransak = () => {
   )
 }
 
-export const PendingCreditCardTransactionSardine = () => {
+export const PendingCreditCardTransactionSardine = ({ skipOnCloseCallback }: PendingCreditTransactionProps) => {
   const { openTransactionStatusModal } = useTransactionStatusModal()
   const nav = useNavigation()
   const { settings, closeCheckout } = useCheckoutModal()
@@ -270,6 +284,7 @@ export const PendingCreditCardTransactionSardine = () => {
         return
       }
       if (status === 'Complete') {
+        skipOnCloseCallback()
         closeCheckout()
         openTransactionStatusModal({
           chainId: creditCardCheckout.chainId,
@@ -288,7 +303,8 @@ export const PendingCreditCardTransactionSardine = () => {
             if (creditCardCheckout.onSuccess) {
               creditCardCheckout.onSuccess(transactionHash, creditCardCheckout)
             }
-          }
+          },
+          onClose: creditCardCheckout?.onClose
         })
         return
       }
