@@ -1,5 +1,13 @@
 import { Box, Button, Spinner, Text } from '@0xsequence/design-system'
-import { compareAddress, formatDisplay, useContractInfo, useSwapPrices, useSwapQuote, sendTransactions } from '@0xsequence/kit'
+import {
+  compareAddress,
+  formatDisplay,
+  useContractInfo,
+  useSwapPrices,
+  useSwapQuote,
+  sendTransactions,
+  useIndexerClient
+} from '@0xsequence/kit'
 import { findSupportedNetwork } from '@0xsequence/network'
 import { useState } from 'react'
 import { zeroAddress, formatUnits, Hex } from 'viem'
@@ -27,7 +35,7 @@ export const Swap = () => {
   const [isError, setIsError] = useState(false)
   const [selectedCurrency, setSelectedCurrency] = useState<string>()
   const publicClient = usePublicClient({ chainId })
-  const { data: walletClient } = useWalletClient()
+  const { data: walletClient } = useWalletClient({ chainId })
 
   const buyCurrencyAddress = currencyAddress
   const sellCurrencyAddress = selectedCurrency || ''
@@ -68,6 +76,8 @@ export const Swap = () => {
       disabled: disableSwapQuote
     }
   )
+
+  const indexerClient = useIndexerClient(chainId)
 
   const isMainCurrencySelected = compareAddress(selectedCurrency || '', currencyAddress)
   const quoteFetchInProgress = isLoadingSwapQuote && !isMainCurrencySelected
@@ -127,6 +137,7 @@ export const Swap = () => {
         walletClient,
         publicClient,
         chainId,
+        indexerClient,
         senderAddress: userAddress,
         transactionConfirmations: blockConfirmations,
         transactions: [...getSwapTransactions(), ...(postSwapTransactions ?? [])]
