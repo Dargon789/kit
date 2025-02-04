@@ -10,7 +10,6 @@ import {
   ContractVerificationStatus
 } from '@0xsequence/kit'
 import { ethers } from 'ethers'
-import React from 'react'
 import { useAccount, useConfig } from 'wagmi'
 
 import { HEADER_HEIGHT } from '../../constants'
@@ -32,6 +31,8 @@ export const CoinDetails = ({ contractAddress, chainId }: CoinDetailsProps) => {
   const { setNavigation } = useNavigation()
   const { fiatCurrency, hideUnlistedTokens } = useSettings()
   const { address: accountAddress } = useAccount()
+
+  const isReadOnly = !chains.map(chain => chain.id).includes(chainId)
 
   const {
     data: dataTransactionHistory,
@@ -69,7 +70,7 @@ export const CoinDetails = ({ contractAddress, chainId }: CoinDetailsProps) => {
   const isPending = isPendingCoinBalance || isPendingCoinPrices || isPendingConversionRate
 
   if (isPending) {
-    return <CoinDetailsSkeleton chainId={chainId} />
+    return <CoinDetailsSkeleton chainId={chainId} isReadOnly={isReadOnly} />
   }
 
   const isNativeToken = compareAddress(contractAddress, ethers.ZeroAddress)
@@ -118,7 +119,9 @@ export const CoinDetails = ({ contractAddress, chainId }: CoinDetailsProps) => {
             <Text variant="normal" fontWeight="medium" color="text50">{`${fiatCurrency.sign}${coinBalanceFiat}`}</Text>
           </Box>
         </Box>
-        <Button width="full" variant="primary" leftIcon={SendIcon} color="text100" label="Send" onClick={onClickSend} />
+        {!isReadOnly && (
+          <Button width="full" variant="primary" leftIcon={SendIcon} color="text100" label="Send" onClick={onClickSend} />
+        )}
         <Box>
           <InfiniteScroll onLoad={() => fetchNextPage()} hasMore={hasNextPage}>
             <TransactionHistoryList
