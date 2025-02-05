@@ -270,7 +270,7 @@ export const Connect = (props: ConnectWalletContentProps) => {
 
       if (emailConnector._wallet.id === 'email-waas') {
         try {
-          await initiateEmailAuth(email)
+          await sendEmailCode()
           setShowEmailWaasPinInput(true)
         } catch (e) {
           console.log(e)
@@ -286,7 +286,8 @@ export const Connect = (props: ConnectWalletContentProps) => {
     loading: emailAuthLoading,
     error: emailAuthError,
     initiateAuth: initiateEmailAuth,
-    sendChallengeAnswer
+    sendChallengeAnswer,
+    resetError
   } = useEmailAuth({
     connector: emailConnector,
     onSuccess: async result => {
@@ -304,6 +305,10 @@ export const Connect = (props: ConnectWalletContentProps) => {
       }
     }
   })
+
+  const sendEmailCode = async () => {
+    await initiateEmailAuth(email)
+  }
 
   // Hide the email input if there is an email conflict
   useEffect(() => {
@@ -392,7 +397,13 @@ export const Connect = (props: ConnectWalletContentProps) => {
             </>
           )}
           {showEmailWaasPinInput ? (
-            <EmailWaasVerify error={emailAuthError} isLoading={emailAuthLoading} onConfirm={sendChallengeAnswer} />
+            <EmailWaasVerify
+              sendEmailCode={sendEmailCode}
+              error={emailAuthError}
+              isLoading={emailAuthLoading}
+              onConfirm={sendChallengeAnswer}
+              resetError={resetError}
+            />
           ) : (
             <>
               {!hasConnectedSocialOrSequenceUniversal && (
