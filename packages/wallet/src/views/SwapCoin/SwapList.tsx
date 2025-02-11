@@ -1,73 +1,70 @@
-import { Box, Button, Spinner, Text } from '@0xsequence/design-system'
+import { Box, Button, Spinner, Text, vars } from '@0xsequence/design-system'
 import {
   CryptoOption,
   compareAddress,
   formatDisplay,
-  useContractInfo,
   useSwapPrices,
   useSwapQuote,
   sendTransactions,
-  useIndexerClient
+  useIndexerClient,
+  useAnalyticsContext,
+  ExtendedConnector,
+  useClearCachedBalances,
+  useCurrencyInfo
 } from '@0xsequence/kit'
-import { findSupportedNetwork } from '@0xsequence/network'
 import { useState } from 'react'
 import { zeroAddress, formatUnits, Hex } from 'viem'
-import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
+import { useAccount, useChainId, usePublicClient, useSwitchChain, useWalletClient } from 'wagmi'
 
 import { HEADER_HEIGHT } from '../../constants'
-import { useSwapModal, useTransactionStatusModal } from '../../hooks'
+import { useNavigation } from '../../hooks'
 
-export const Swap = () => {
-  const { openTransactionStatusModal } = useTransactionStatusModal()
-  const { swapModalSettings, closeSwapModal } = useSwapModal()
-  const {
-    currencyAddress,
-    currencyAmount,
-    chainId,
-    disableMainCurrency = true,
-    description,
-    postSwapTransactions,
-    blockConfirmations,
-    onSuccess = () => {}
-  } = swapModalSettings!
+interface SwapListProps {
+  chainId: number
+  contractAddress: string
+  amount: string
+}
+
+export const SwapList = ({ chainId, contractAddress, amount }: SwapListProps) => {
+  const { clearCachedBalances } = useClearCachedBalances()
+  const { setNavigation } = useNavigation()
   const { address: userAddress, connector } = useAccount()
   const [isTxsPending, setIsTxsPending] = useState(false)
   const [isError, setIsError] = useState(false)
   const [selectedCurrency, setSelectedCurrency] = useState<string>()
   const publicClient = usePublicClient({ chainId })
   const { data: walletClient } = useWalletClient({ chainId })
+  const { switchChainAsync } = useSwitchChain()
 
-  const buyCurrencyAddress = currencyAddress
+  const isConnectorSequenceBased = !!(connector as ExtendedConnector)?._wallet?.isSequenceBased
+  const { analytics } = useAnalyticsContext()
+  const connectedChainId = useChainId()
+  const isCorrectChainId = connectedChainId === chainId
+  const showSwitchNetwork = !isCorrectChainId && !isConnectorSequenceBased
+
+  const buyCurrencyAddress = contractAddress
   const sellCurrencyAddress = selectedCurrency || ''
-
-  const { data: currencyInfoData, isLoading: isLoadingCurrencyInfo } = useContractInfo(chainId, currencyAddress)
 
   const { data: swapPrices = [], isLoading: swapPricesIsLoading } = useSwapPrices(
     {
       userAddress: userAddress ?? '',
       buyCurrencyAddress,
       chainId: chainId,
-      buyAmount: currencyAmount,
+      buyAmount: amount,
       withContractInfo: true
     },
     { disabled: false }
   )
 
-  const isNativeCurrency = compareAddress(currencyAddress, zeroAddress)
-  const network = findSupportedNetwork(chainId)
-
-  const mainCurrencyName = isNativeCurrency ? network?.nativeToken.name : currencyInfoData?.name
-  const mainCurrencyLogo = isNativeCurrency ? network?.logoURI : currencyInfoData?.logoURI
-  const mainCurrencySymbol = isNativeCurrency ? network?.nativeToken.symbol : currencyInfoData?.symbol
-  const mainCurrencyDecimals = isNativeCurrency ? network?.nativeToken.decimals : currencyInfoData?.decimals
+  const { data: currencyInfo, isLoading: isLoadingCurrencyInfo } = useCurrencyInfo({ chainId, currencyAddress: contractAddress })
 
   const disableSwapQuote = !selectedCurrency || compareAddress(selectedCurrency, buyCurrencyAddress)
 
   const { data: swapQuote, isLoading: isLoadingSwapQuote } = useSwapQuote(
     {
       userAddress: userAddress ?? '',
-      buyCurrencyAddress: currencyAddress,
-      buyAmount: currencyAmount,
+      buyCurrencyAddress,
+      buyAmount: amount,
       chainId: chainId,
       sellCurrencyAddress,
       includeApprove: true
@@ -79,10 +76,9 @@ export const Swap = () => {
 
   const indexerClient = useIndexerClient(chainId)
 
-  const isMainCurrencySelected = compareAddress(selectedCurrency || '', currencyAddress)
-  const quoteFetchInProgress = isLoadingSwapQuote && !isMainCurrencySelected
+  const quoteFetchInProgress = isLoadingSwapQuote
 
-  const isLoading = isLoadingCurrencyInfo || swapPricesIsLoading
+  const isLoading = swapPricesIsLoading || isLoadingCurrencyInfo
 
   const onClickProceed = async () => {
     if (!userAddress || !publicClient || !walletClient || !connector) {
@@ -91,13 +87,12 @@ export const Swap = () => {
 
     setIsError(false)
     setIsTxsPending(true)
-
     try {
       const swapPrice = swapPrices?.find(price => price.info?.address === selectedCurrency)
       const isSwapNativeToken = compareAddress(zeroAddress, swapPrice?.price.currencyAddress || '')
 
       const getSwapTransactions = () => {
-        if (isMainCurrencySelected || !swapQuote || !swapPrice) {
+        if (!swapQuote || !swapPrice) {
           return []
         }
 
@@ -139,16 +134,28 @@ export const Swap = () => {
         chainId,
         indexerClient,
         senderAddress: userAddress,
-        transactionConfirmations: blockConfirmations,
-        transactions: [...getSwapTransactions(), ...(postSwapTransactions ?? [])]
+        transactions: [...getSwapTransactions()]
       })
 
-      closeSwapModal()
-      openTransactionStatusModal({
-        chainId,
-        txHash,
-        onSuccess: () => {
-          onSuccess(txHash)
+      analytics?.track({
+        event: 'SEND_TRANSACTION_REQUEST',
+        props: {
+          type: 'crypto',
+          walletClient: (connector as ExtendedConnector | undefined)?._wallet?.id || 'unknown',
+          source: 'sequence-kit/wallet',
+          chainId: String(chainId),
+          origin: window.location.origin,
+          txHash
+        }
+      })
+
+      clearCachedBalances()
+
+      setNavigation({
+        location: 'coin-details',
+        params: {
+          chainId,
+          contractAddress
         }
       })
     } catch (e) {
@@ -158,7 +165,7 @@ export const Swap = () => {
     }
   }
 
-  const noOptionsFound = disableMainCurrency && swapPrices.length === 0
+  const noOptionsFound = swapPrices.length === 0
 
   const SwapContent = () => {
     if (isLoading) {
@@ -170,39 +177,36 @@ export const Swap = () => {
     } else if (noOptionsFound) {
       return (
         <Box width="full" justifyContent="center" alignItems="center">
-          <Text variant="normal">No swap option found!</Text>
+          <Text variant="normal" color="text100">
+            No swap option found!
+          </Text>
         </Box>
       )
     } else {
-      const formattedPrice = formatUnits(BigInt(currencyAmount), mainCurrencyDecimals || 0)
-      const displayPrice = formatDisplay(formattedPrice, {
+      const buyCurrencySymbol = currencyInfo?.symbol || ''
+      const buyCurrencyDecimals = currencyInfo?.decimals || 0
+      const displayedAmount = formatDisplay(formatUnits(BigInt(amount), buyCurrencyDecimals), {
         disableScientificNotation: true,
         disableCompactNotation: true,
         significantDigits: 6
       })
 
+      const getButtonLabel = () => {
+        if (quoteFetchInProgress) {
+          return 'Preparing swap...'
+        } else if (isTxsPending) {
+          return 'Processing...'
+        } else {
+          return 'Proceed'
+        }
+      }
+
       return (
         <Box width="full" gap="3" flexDirection="column">
-          <Text variant="normal" color="text100">
-            {description}
-          </Text>
           <Box width="full" flexDirection="column" gap="2">
-            {!disableMainCurrency && (
-              <CryptoOption
-                key={currencyAddress}
-                chainId={chainId}
-                currencyName={mainCurrencyName || mainCurrencySymbol || ''}
-                price={displayPrice}
-                iconUrl={mainCurrencyLogo}
-                symbol={mainCurrencySymbol || ''}
-                isSelected={compareAddress(selectedCurrency || '', currencyAddress)}
-                onClick={() => {
-                  setIsError(false)
-                  setSelectedCurrency(currencyAddress)
-                }}
-                disabled={isTxsPending}
-              />
-            )}
+            <Text variant="small" color="text100">
+              Select a token in your wallet to swap for {displayedAmount} {buyCurrencySymbol}.
+            </Text>
             {swapPrices.map(swapPrice => {
               const sellCurrencyAddress = swapPrice.info?.address || ''
 
@@ -237,11 +241,40 @@ export const Swap = () => {
               </Text>
             </Box>
           )}
+
+          {showSwitchNetwork && (
+            <Box marginTop="3">
+              <Text variant="small" color="negative" marginBottom="2">
+                The wallet is connected to the wrong network. Please switch network before proceeding
+              </Text>
+              <Button
+                marginTop="2"
+                width="full"
+                variant="primary"
+                type="button"
+                label="Switch Network"
+                onClick={async () => await switchChainAsync({ chainId })}
+                disabled={isCorrectChainId}
+                style={{ height: '52px', borderRadius: vars.radii.md }}
+              />
+            </Box>
+          )}
+
           <Button
-            disabled={noOptionsFound || !selectedCurrency || quoteFetchInProgress || isTxsPending}
+            width="full"
+            type="button"
+            disabled={
+              noOptionsFound ||
+              !selectedCurrency ||
+              quoteFetchInProgress ||
+              isTxsPending ||
+              (!isCorrectChainId && !isConnectorSequenceBased) ||
+              showSwitchNetwork
+            }
             variant="primary"
-            label={quoteFetchInProgress ? 'Preparing swap...' : 'Proceed'}
+            label={getButtonLabel()}
             onClick={onClickProceed}
+            style={{ height: '52px', borderRadius: vars.radii.md }}
           />
         </Box>
       )
@@ -249,16 +282,7 @@ export const Swap = () => {
   }
 
   return (
-    <Box
-      flexDirection="column"
-      gap="2"
-      alignItems="flex-start"
-      paddingBottom="6"
-      paddingX="6"
-      style={{
-        paddingTop: HEADER_HEIGHT
-      }}
-    >
+    <Box padding="5" gap="2" flexDirection="column" style={{ marginTop: HEADER_HEIGHT }}>
       <SwapContent />
     </Box>
   )

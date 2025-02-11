@@ -13,7 +13,7 @@ import {
 } from '@0xsequence/indexer'
 import { ContractInfo, SequenceMetadata } from '@0xsequence/metadata'
 import { findSupportedNetwork } from '@0xsequence/network'
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { zeroAddress } from 'viem'
 
@@ -28,6 +28,28 @@ export const time = {
   oneSecond: 1 * 1000,
   oneMinute: 60 * 1000,
   oneHour: 60 * 60 * 1000
+}
+
+export const useClearCachedBalances = () => {
+  const queryClient = useQueryClient()
+
+  return {
+    clearCachedBalances: () => {
+      queryClient.invalidateQueries({
+        queryKey: [
+          'balances',
+          'balancesSummary',
+          'coinBalance',
+          'coinBalanceSummary',
+          'collectibleBalance',
+          'collectibleBalanceDetails',
+          'collectionBalance',
+          'collectionBalanceDetails',
+          'transactionHistory'
+        ]
+      })
+    }
+  }
 }
 
 export const getNativeTokenBalance = async (indexerClient: SequenceIndexer, chainId: number, accountAddress: string) => {
@@ -815,4 +837,42 @@ export const useLinkedWallets = (args: GetLinkedWalletsArgs, options: UseLinkedW
     refetch,
     clearCache
   }
+}
+
+interface UseCurrencyInfoArgs {
+  chainId: number
+  currencyAddress: string
+}
+
+export const useCurrencyInfo = (args: UseCurrencyInfoArgs) => {
+  const metadataClient = useMetadataClient()
+
+  return useQuery({
+    queryKey: ['currencyInfo', args],
+    queryFn: async () => {
+      const network = findSupportedNetwork(args.chainId)
+
+      const isNativeToken = compareAddress(args.currencyAddress, zeroAddress)
+
+      if (isNativeToken) {
+        return {
+          ...network?.nativeToken,
+          logoURI: network?.logoURI || '',
+          address: zeroAddress
+        } as ContractInfo
+      }
+
+      const res = await metadataClient.getContractInfo({
+        chainID: String(args.chainId),
+        contractAddress: args.currencyAddress
+      })
+
+      return {
+        ...res.contractInfo
+      }
+    },
+    retry: true,
+    staleTime: time.oneMinute * 10,
+    enabled: !!args.chainId && !!args.currencyAddress
+  })
 }

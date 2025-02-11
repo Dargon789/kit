@@ -121,12 +121,16 @@ export {
   useContractInfo,
   useTransactionHistory,
   useSwapPrices,
-  useSwapQuote
+  useSwapQuote,
+  useClearCachedBalances,
+  useCurrencyInfo
 } from './hooks/data'
 
 // Components
 export { NetworkBadge } from './components/NetworkBadge'
 export { CollectibleTileImage } from './components/CollectibleTileImage'
+export { CryptoOption } from './components/CryptoOption'
+export { SelectedIndicator } from './components/SelectedIndicator'
 
 // Indexer
 export { ContractVerificationStatus } from '@0xsequence/indexer'
