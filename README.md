@@ -1,8 +1,8 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/0xsequence/kit/master/public/docs/kit-logo-in-one.png">
+  <img src="https://raw.githubusercontent.com/0xsequence/web-sdk/master/public/docs/kit-logo-in-one.png">
 </div>
 
-# Sequence Kit 🧰
+# Sequence Web SDK 🧰
 
 [![npm version](https://badge.fury.io/js/@0xsequence%2Fkit.svg)](https://badge.fury.io/js/@0xsequence%2Fkit)
 
