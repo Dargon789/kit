@@ -142,6 +142,7 @@ export const PendingCreditCardTransactionTransak = ({ skipOnCloseCallback }: Pen
         analytics?.track({
           event: 'SEND_TRANSACTION_REQUEST',
           props: {
+            ...creditCardCheckout.supplementaryAnalyticsInfo,
             type: 'credit_card',
             provider: 'transak',
             source: NFT_CHECKOUT_SOURCE,
@@ -309,6 +310,7 @@ export const PendingCreditCardTransactionSardine = ({ skipOnCloseCallback }: Pen
         analytics?.track({
           event: 'SEND_TRANSACTION_REQUEST',
           props: {
+            ...creditCardCheckout.supplementaryAnalyticsInfo,
             type: 'credit_card',
             provider: 'sardine',
             source: NFT_CHECKOUT_SOURCE,
