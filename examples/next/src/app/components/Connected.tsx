@@ -118,13 +118,13 @@ export const Connected = () => {
             balance: nativeTokenBalance.balance.balance
           }
         }
-          return {
-            tokenName: option.token.name,
-            decimals: option.token.decimals || 0,
-            balance:
-              tokenBalances.balances.find(b => b.contractAddress.toLowerCase() === option.token.contractAddress!.toLowerCase())
-                ?.balance || '0'
-          }
+        return {
+          tokenName: option.token.name,
+          decimals: option.token.decimals || 0,
+          balance:
+            tokenBalances.balances.find(b => b.contractAddress.toLowerCase() === option.token.contractAddress!.toLowerCase())
+              ?.balance || '0'
+        }
       })
 
       setFeeOptionBalances(balances)
@@ -270,7 +270,7 @@ export const Connected = () => {
               Connected Wallets
             </Text>
 
-            <Card className="flex flex-col gap-2 p-2">
+            <div className="flex flex-col gap-2 p-2">
               {[...wallets]
                 .sort((a, b) => {
                   // Sort embedded wallet to the top
@@ -290,7 +290,7 @@ export const Connected = () => {
                     onDisconnect={() => disconnectWallet(wallet.address)}
                   />
                 ))}
-            </Card>
+            </div>
           </div>
           <div className="flex gap-2 flex-row items-center justify-center">
             <Button shape="square" onClick={onClickConnect} variant="feature" size="sm" label="Connect another wallet" />
