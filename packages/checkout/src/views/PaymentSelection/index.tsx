@@ -1,17 +1,20 @@
 import { Button, Divider, Text } from '@0xsequence/design-system'
 import {
-  useBalancesSummary,
   useAnalyticsContext,
-  useContractInfo,
-  useSwapPrices,
-  useSwapQuote,
   compareAddress,
   TRANSACTION_CONFIRMATIONS_DEFAULT,
   sendTransactions,
-  SwapPricesWithCurrencyInfo,
   ContractVerificationStatus,
   useIndexerClient
 } from '@0xsequence/kit'
+import {
+  useClearCachedBalances,
+  useGetTokenBalancesSummary,
+  useGetContractInfo,
+  SwapPricesWithCurrencyInfo,
+  useGetSwapPrices,
+  useGetSwapQuote
+} from '@0xsequence/kit-hooks'
 import { findSupportedNetwork } from '@0xsequence/network'
 import { useState, useEffect } from 'react'
 import { encodeFunctionData, Hex, zeroAddress } from 'viem'
@@ -19,7 +22,7 @@ import { usePublicClient, useWalletClient, useReadContract, useAccount } from 'w
 
 import { HEADER_HEIGHT, NFT_CHECKOUT_SOURCE } from '../../constants'
 import { ERC_20_CONTRACT_ABI } from '../../constants/abi'
-import { useClearCachedBalances, useSelectPaymentModal, useTransactionStatusModal, useSkipOnCloseCallback } from '../../hooks'
+import { useSelectPaymentModal, useTransactionStatusModal, useSkipOnCloseCallback } from '../../hooks'
 import { NavigationHeader } from '../../shared/components/NavigationHeader'
 
 import { Footer } from './Footer'
@@ -98,24 +101,27 @@ export const PaymentSelectionContent = () => {
     }
   })
 
-  const { data: _currencyBalanceData, isLoading: currencyBalanceIsLoading } = useBalancesSummary({
+  const { data: _currencyBalanceData, isLoading: currencyBalanceIsLoading } = useGetTokenBalancesSummary({
     chainIds: [chainId],
     filter: {
       accountAddresses: userAddress ? [userAddress] : [],
       contractStatus: ContractVerificationStatus.ALL,
       contractWhitelist: [currencyAddress],
-      omitNativeBalances: true
+      omitNativeBalances: false
     },
     // omitMetadata must be true to avoid a bug
     omitMetadata: true
   })
 
-  const { data: _currencyInfoData, isLoading: isLoadingCurrencyInfo } = useContractInfo(chainId, currencyAddress)
+  const { data: _currencyInfoData, isLoading: isLoadingCurrencyInfo } = useGetContractInfo({
+    chainID: String(chainId),
+    contractAddress: currencyAddress
+  })
 
   const buyCurrencyAddress = currencyAddress
   const sellCurrencyAddress = selectedCurrency || ''
 
-  const { data: swapPrices = [], isLoading: _swapPricesIsLoading } = useSwapPrices(
+  const { data: swapPrices = [], isLoading: _swapPricesIsLoading } = useGetSwapPrices(
     {
       userAddress: userAddress ?? '',
       buyCurrencyAddress,
@@ -128,7 +134,7 @@ export const PaymentSelectionContent = () => {
 
   const disableSwapQuote = !selectedCurrency || compareAddress(selectedCurrency, buyCurrencyAddress)
 
-  const { data: swapQuote, isLoading: isLoadingSwapQuote } = useSwapQuote(
+  const { data: swapQuote, isLoading: isLoadingSwapQuote } = useGetSwapQuote(
     {
       userAddress: userAddress ?? '',
       buyCurrencyAddress: currencyAddress,

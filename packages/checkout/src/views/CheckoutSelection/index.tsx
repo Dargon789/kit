@@ -9,14 +9,8 @@ import {
   Skeleton,
   TokenImage
 } from '@0xsequence/design-system'
-import {
-  ContractVerificationStatus,
-  getNativeTokenInfoByChainId,
-  useBalancesSummary,
-  useContractInfo,
-  compareAddress,
-  formatDisplay
-} from '@0xsequence/kit'
+import { ContractVerificationStatus, getNativeTokenInfoByChainId, compareAddress, formatDisplay } from '@0xsequence/kit'
+import { useGetTokenBalancesSummary, useGetContractInfo } from '@0xsequence/kit-hooks'
 import { ethers } from 'ethers'
 import { useAccount, useConfig } from 'wagmi'
 
@@ -36,17 +30,17 @@ export const CheckoutSelection = () => {
   const displayCreditCardCheckout = !!creditCardCheckoutSettings
   const displayCryptoCheckout = !!cryptoCheckoutSettings
 
-  const { data: contractInfoData, isLoading: isPendingContractInfo } = useContractInfo(
-    cryptoCheckoutSettings?.chainId || 1,
-    cryptoCheckoutSettings?.coinQuantity?.contractAddress || ''
-  )
+  const { data: contractInfoData, isLoading: isPendingContractInfo } = useGetContractInfo({
+    chainID: String(cryptoCheckoutSettings?.chainId || 1),
+    contractAddress: cryptoCheckoutSettings?.coinQuantity?.contractAddress || ''
+  })
 
-  const { data: balancesData, isPending: isPendingBalances } = useBalancesSummary({
+  const { data: balancesData, isPending: isPendingBalances } = useGetTokenBalancesSummary({
     chainIds: [cryptoCheckoutSettings?.chainId || 1],
     filter: {
       accountAddresses: accountAddress ? [accountAddress] : [],
       contractStatus: ContractVerificationStatus.ALL,
-      omitNativeBalances: true
+      omitNativeBalances: false
     }
   })
 
