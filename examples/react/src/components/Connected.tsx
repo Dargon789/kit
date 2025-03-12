@@ -1,4 +1,7 @@
 import { Button, Card, Modal, Select, Switch, Text, TextInput, cn } from '@0xsequence/design-system'
+import { allNetworks, ChainId } from '@0xsequence/network'
+import { useCheckoutModal, useAddFundsModal, useSelectPaymentModal, useSwapModal } from '@0xsequence/react-checkout'
+import type { SwapModalSettings } from '@0xsequence/react-checkout'
 import {
   useStorage,
   useWaasFeeOptions,
@@ -6,14 +9,11 @@ import {
   validateEthProof,
   getModalPositionCss,
   useOpenConnectModal,
-  useKitWallets
-} from '@0xsequence/kit'
-import { useCheckoutModal, useAddFundsModal, useSelectPaymentModal, useSwapModal } from '@0xsequence/kit-checkout'
-import type { SwapModalSettings } from '@0xsequence/kit-checkout'
-import { CardButton, Header, WalletListItem } from '@0xsequence/kit-example-shared-components'
-import { useOpenWalletModal } from '@0xsequence/kit-wallet'
-import { allNetworks, ChainId } from '@0xsequence/network'
+  useWallets
+} from '@0xsequence/react-connect'
+import { useOpenWalletModal } from '@0xsequence/react-wallet'
 import { ethers } from 'ethers'
+import { CardButton, Header, WalletListItem } from 'example-shared-components'
 import { AnimatePresence } from 'motion/react'
 import React, { type ComponentProps, useEffect } from 'react'
 import { encodeFunctionData, formatUnits, toHex } from 'viem'
@@ -47,7 +47,7 @@ export const Connected = () => {
   const [checkoutTokenContractAddress, setCheckoutTokenContractAddress] = React.useState('')
   const [checkoutTokenId, setCheckoutTokenId] = React.useState('')
 
-  const { wallets, setActiveWallet, disconnectWallet } = useKitWallets()
+  const { wallets, setActiveWallet, disconnectWallet } = useWallets()
   const isWaasConnectionActive = wallets.some(w => w.isEmbedded && w.isActive)
 
   const {

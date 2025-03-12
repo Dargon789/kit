@@ -1,19 +1,19 @@
 import { Text, Card, Button, Select, cn } from '@0xsequence/design-system'
+import { ChainId, allNetworks } from '@0xsequence/network'
+import type { CheckoutSettings } from '@0xsequence/react-checkout'
 import {
   signEthAuthProof,
   useIndexerClient,
-  useKitWallets,
+  useWallets,
   useStorage,
   useWaasFeeOptions,
   validateEthProof,
   ContractVerificationStatus,
   useOpenConnectModal
-} from '@0xsequence/kit'
-import type { CheckoutSettings } from '@0xsequence/kit-checkout'
-import { CardButton, Header, WalletListItem } from '@0xsequence/kit-example-shared-components'
-import { useOpenWalletModal } from '@0xsequence/kit-wallet'
-import { ChainId, allNetworks } from '@0xsequence/network'
+} from '@0xsequence/react-connect'
+import { useOpenWalletModal } from '@0xsequence/react-wallet'
 import { ethers } from 'ethers'
+import { CardButton, Header, WalletListItem } from 'example-shared-components'
 import { type ComponentProps, useEffect, useState } from 'react'
 import { formatUnits, parseUnits } from 'viem'
 import { useAccount, useChainId, usePublicClient, useSendTransaction, useWalletClient, useWriteContract } from 'wagmi'
@@ -31,7 +31,7 @@ export const Connected = () => {
   const { data: walletClient } = useWalletClient()
   const storage = useStorage()
 
-  const { wallets, setActiveWallet, disconnectWallet } = useKitWallets()
+  const { wallets, setActiveWallet, disconnectWallet } = useWallets()
 
   const onClickConnect = () => {
     setOpenConnectModal(true)
