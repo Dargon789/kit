@@ -131,7 +131,9 @@ export const PendingCreditCardTransactionTransak = ({ skipOnCloseCallback }: Pen
     const transakIframe = transakIframeElement.contentWindow
 
     const readMessage = (message: any) => {
-      if (message.source !== transakIframe) return
+      if (message.source !== transakIframe) {
+        return
+      }
 
       if (message?.data?.event_id === 'TRANSAK_ORDER_SUCCESSFUL' && message?.data?.data?.status === 'COMPLETED') {
         console.log('Order Data: ', message?.data?.data)
@@ -350,24 +352,22 @@ export const PendingCreditCardTransactionSardine = ({ skipOnCloseCallback }: Pen
         return
       }
       if (status === 'Declined' || status === 'Cancelled') {
-        setNavigation &&
-          setNavigation({
-            location: 'transaction-error',
-            params: {
-              error: new Error('Failed to transfer collectible')
-            }
-          })
+        setNavigation({
+          location: 'transaction-error',
+          params: {
+            error: new Error('Failed to transfer collectible')
+          }
+        })
         return
       }
     } catch (e) {
       console.error('An error occurred while fetching the transaction status')
-      setNavigation &&
-        setNavigation({
-          location: 'transaction-error',
-          params: {
-            error: e as Error
-          }
-        })
+      setNavigation({
+        location: 'transaction-error',
+        params: {
+          error: e as Error
+        }
+      })
     }
   }
 
