@@ -38,12 +38,16 @@ import {
 } from '../../views'
 import { NavigationHeader } from '../NavigationHeader'
 
-export type SequenceCheckoutProvider = {
-  children: React.ReactNode
-  envOverrides?: Partial<EnvironmentOverrides>
+export interface SequenceCheckoutConfig {
+  env?: Partial<EnvironmentOverrides>
 }
 
-export const SequenceCheckoutProvider = (props: SequenceCheckoutProvider) => {
+export type SequenceCheckoutProviderProps = {
+  children: React.ReactNode
+  config?: SequenceCheckoutConfig
+}
+
+export const SequenceCheckoutProvider = (props: SequenceCheckoutProviderProps) => {
   const queryClient = new QueryClient()
 
   return (
@@ -53,7 +57,7 @@ export const SequenceCheckoutProvider = (props: SequenceCheckoutProvider) => {
   )
 }
 
-export const SequenceCheckoutContent = ({ children, envOverrides }: SequenceCheckoutProvider) => {
+export const SequenceCheckoutContent = ({ children, config }: SequenceCheckoutProviderProps) => {
   const { theme, position } = useTheme()
   const [openCheckoutModal, setOpenCheckoutModal] = useState<boolean>(false)
   const [openAddFundsModal, setOpenAddFundsModal] = useState<boolean>(false)
@@ -207,10 +211,10 @@ export const SequenceCheckoutContent = ({ children, envOverrides }: SequenceChec
   return (
     <EnvironmentContextProvider
       value={{
-        marketplaceApiUrl: envOverrides?.marketplaceApiUrl ?? 'https://marketplace.sequence.app',
-        sardineApiUrl: envOverrides?.sardineApiUrl ?? 'https://sardine-checkout.sequence.info',
-        transakApiUrl: envOverrides?.transakApiUrl ?? 'https://global.transak.com',
-        transakApiKey: envOverrides?.transakApiKey ?? '5911d9ec-46b5-48fa-a755-d59a715ff0cf'
+        marketplaceApiUrl: config?.env?.marketplaceApiUrl ?? 'https://marketplace.sequence.app',
+        sardineApiUrl: config?.env?.sardineApiUrl ?? 'https://sardine-checkout.sequence.info',
+        transakApiUrl: config?.env?.transakApiUrl ?? 'https://global.transak.com',
+        transakApiKey: config?.env?.transakApiKey ?? '5911d9ec-46b5-48fa-a755-d59a715ff0cf'
       }}
     >
       <SwapModalContextProvider
