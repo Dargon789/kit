@@ -1,5 +1,5 @@
 import { useWallets, useOpenConnectModal, WalletType } from '@0xsequence/connect'
-import { Button, Card, Text, Image, useTheme, CheckmarkIcon } from '@0xsequence/design-system'
+import { Button, Card, Text, Image, CheckmarkIcon } from '@0xsequence/design-system'
 import { clsx } from 'clsx'
 import { Footer } from 'example-shared-components'
 
@@ -10,8 +10,6 @@ const searchParams = new URLSearchParams(location.search)
 const walletType: WalletType = searchParams.get('type') === 'universal' ? 'universal' : 'waas'
 
 export const Homepage = () => {
-  const { theme } = useTheme()
-
   const { wallets } = useWallets()
   const { setOpenConnectModal } = useOpenConnectModal()
 
@@ -31,12 +29,7 @@ export const Homepage = () => {
       {wallets.length === 0 ? (
         <div className="flex flex-col items-center justify-center gap-5 h-screen">
           <div className="flex flex-row items-center justify-center gap-3">
-            <Image className="w-12" src="images/kit-logo.svg" />
-            <Image
-              className="w-8"
-              src="images/kit-logo-text.svg"
-              style={{ filter: theme === 'dark' ? 'invert(0)' : 'invert(1)' }}
-            />
+            <Image className="w-[300px]" src="images/sequence-websdk-dark.svg" />
           </div>
 
           <div className="flex gap-2 flex-row items-center">
