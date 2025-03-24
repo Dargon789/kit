@@ -1,5 +1,14 @@
 # @0xsequence/kit
 
+## 5.0.4
+
+### Patch Changes
+
+- Ecosystem wallet connector
+
+- Updated dependencies []:
+  - @0xsequence/hooks@5.0.4
+
 ## 5.0.3
 
 ### Patch Changes
