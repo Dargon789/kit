@@ -1,5 +1,11 @@
 # @0xsequence/hooks
 
+## 5.0.9
+
+### Patch Changes
+
+- Wallet linking fixes
+
 ## 5.0.8
 
 ### Patch Changes
