@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext } from 'react'
+import { createContext, useState } from 'react'
 
 export interface SequenceHooksEnv {
   indexerGatewayUrl: string
@@ -13,11 +13,14 @@ export interface SequenceHooksEnv {
 export interface SequenceHooksConfigProviderValue {
   projectAccessKey: string
   env?: Partial<SequenceHooksEnv>
+  jwt?: string
 }
 
 export interface SequenceHooksConfig {
   projectAccessKey: string
   env: Required<SequenceHooksEnv>
+  jwt: string | undefined
+  setJWT: React.Dispatch<React.SetStateAction<string | undefined>>
 }
 
 const defaultEnv: Required<SequenceHooksEnv> = {
@@ -36,12 +39,16 @@ interface SequenceHooksProviderProps {
 }
 
 export const SequenceHooksProvider = (props: SequenceHooksProviderProps) => {
-  const config = {
+  const [jwt, setJWT] = useState<string | undefined>(props.config.jwt)
+
+  const config: SequenceHooksConfig = {
     ...props.config,
     env: {
       ...defaultEnv,
       ...props.config.env
-    }
+    },
+    jwt,
+    setJWT
   }
 
   return <SequenceHooksContext.Provider value={config}>{props.children}</SequenceHooksContext.Provider>
