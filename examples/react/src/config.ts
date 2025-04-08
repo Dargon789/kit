@@ -73,7 +73,7 @@ export const passportInstance = new passport.Passport({
     publishableKey: 'pk_imapik-test-VEMeW7wUX7hE7LHg3FxY'
   },
   clientId: 'ap8Gv3188GLFROiBFBNFz77DojRpqxnS',
-  redirectUri: `${window.location.origin}/auth/callback`,
+  redirectUri: `${window.location.origin}/web-sdk/auth/callback`,
   audience: 'platform_api',
   scope: 'openid offline_access email transact'
 })

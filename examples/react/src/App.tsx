@@ -9,12 +9,20 @@ import { ImmutableCallback } from './components/ImmutableCallback'
 import { config, checkoutConfig } from './config'
 
 export const App = () => {
+  const isLocalhost = window.location.hostname === 'localhost'
+  const isRootPath = window.location.pathname === '/'
+
+  if (isLocalhost && isRootPath) {
+    window.location.href = '/web-sdk'
+    return null
+  }
+
   return (
     <ThemeProvider theme="dark">
       <SequenceConnect config={config}>
         <SequenceWalletProvider>
           <SequenceCheckoutProvider config={checkoutConfig}>
-            <BrowserRouter>
+            <BrowserRouter basename="/web-sdk">
               <Routes>
                 <Route path="/" element={<Homepage />} />
                 <Route path="/auth/callback" element={<ImmutableCallback />} />
