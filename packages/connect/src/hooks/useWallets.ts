@@ -159,6 +159,7 @@ export interface ConnectedWallet {
   address: string
   isActive: boolean
   isEmbedded: boolean
+  signInMethod: string
 }
 
 /**
@@ -222,6 +223,7 @@ export interface UseWalletsReturnType {
  * }
  * ```
  */
+
 export const useWallets = (): UseWalletsReturnType => {
   const { address } = useAccount()
   const connections = useConnections()
@@ -261,12 +263,21 @@ export const useWallets = (): UseWalletsReturnType => {
     name: getConnectorName(connection.connector),
     address: connection.accounts[0],
     isActive: connection.accounts[0] === address,
-    isEmbedded: connection.connector.id.includes('waas')
+    isEmbedded: connection.connector.id.includes('waas'),
+    signInMethod: (connection.connector._wallet as any)?.id
   }))
 
   const setActiveWallet = async (walletAddress: string) => {
-    const connection = connections.find((c: UseConnectionsReturnType[number]) => c.accounts[0] === walletAddress)
+    const connection = connections.find(
+      (c: UseConnectionsReturnType[number]) => c.accounts[0].toLowerCase() === walletAddress.toLowerCase()
+    )
     if (!connection) {
+      console.error('No connection found for wallet address:', walletAddress)
+      return
+    }
+
+    // Do not try to change if it's already active
+    if (wallets.find(w => w.address.toLowerCase() === walletAddress.toLowerCase())?.isActive) {
       return
     }
 
@@ -278,7 +289,9 @@ export const useWallets = (): UseWalletsReturnType => {
   }
 
   const disconnectWallet = async (walletAddress: string) => {
-    const connection = connections.find((c: UseConnectionsReturnType[number]) => c.accounts[0] === walletAddress)
+    const connection = connections.find(
+      (c: UseConnectionsReturnType[number]) => c.accounts[0].toLowerCase() === walletAddress.toLowerCase()
+    )
     if (!connection) {
       return
     }

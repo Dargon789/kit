@@ -24,6 +24,7 @@ interface TransactionConfirmationProps {
     options: FeeOption[]
     chainId: number
   }
+  disabled?: boolean
   onSelectFeeOption?: (feeTokenAddress: string | null) => void
   isLoading?: boolean
 
@@ -89,6 +90,7 @@ export const TransactionConfirmation = ({
   feeOptions,
   onSelectFeeOption,
   isLoading,
+  disabled,
   onConfirm,
   onCancel
 }: TransactionConfirmationProps) => {
@@ -103,7 +105,7 @@ export const TransactionConfirmation = ({
   // If feeOptions exist and have options, a selection is required
   // If feeOptions don't exist or have no options, no selection is required
   const isFeeSelectionRequired = Boolean(feeOptions?.options?.length)
-  const isConfirmDisabled = isFeeSelectionRequired && !selectedFeeOptionAddress
+  const isConfirmDisabled = (isFeeSelectionRequired && !selectedFeeOptionAddress) || disabled
 
   return (
     <div className="flex w-full h-full items-center justify-center bg-background-primary">
@@ -164,16 +166,18 @@ export const TransactionConfirmation = ({
             </div>
           ) : (
             <>
+              <Button className="w-full" variant="glass" size="lg" onClick={onCancel} label="Cancel" />
               <Button
                 className="w-full"
                 variant="primary"
                 size="lg"
-                onClick={onConfirm}
+                onClick={() => {
+                  onConfirm()
+                }}
                 label="Confirm"
                 rightIcon={ChevronRightIcon}
                 disabled={isConfirmDisabled}
               />
-              <Button className="w-full" variant="glass" size="lg" onClick={onCancel} label="Cancel" />
             </>
           )}
         </div>
