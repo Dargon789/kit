@@ -1,5 +1,15 @@
 # @0xsequence/checkout
 
+## 5.2.0
+
+### Minor Changes
+
+- useCheckoutUI hook
+
+- Updated dependencies []:
+  - @0xsequence/connect@5.2.0
+  - @0xsequence/hooks@5.2.0
+
 ## 5.1.1
 
 ### Patch Changes
