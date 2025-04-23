@@ -553,6 +553,9 @@ export const styles = String.raw`
   .w-screen {
     width: 100vw;
   }
+  .max-w-1 {
+    max-width: calc(var(--spacing) * 1);
+  }
   .max-w-\[532px\] {
     max-width: 532px;
   }
