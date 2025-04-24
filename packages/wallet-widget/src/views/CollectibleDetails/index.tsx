@@ -1,10 +1,10 @@
-import { formatDisplay, ContractVerificationStatus, useWallets } from '@0xsequence/connect'
+import { formatDisplay, useWallets } from '@0xsequence/connect'
 import { Button, Image, NetworkImage, SendIcon, Text } from '@0xsequence/design-system'
 import {
-  useGetTokenBalancesDetails,
   useGetTransactionHistory,
   useGetCollectiblePrices,
-  useGetExchangeRate
+  useGetExchangeRate,
+  useGetSingleTokenBalance
 } from '@0xsequence/hooks'
 import { useEffect } from 'react'
 import { formatUnits } from 'viem'
@@ -39,33 +39,27 @@ export const CollectibleDetails = ({ contractAddress, chainId, tokenId, accountA
 
   const {
     data: dataTransactionHistory,
-    isPending: isPendingTransactionHistory,
+    isLoading: isLoadingTransactionHistory,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage
   } = useGetTransactionHistory({
     chainId,
-    accountAddress: accountAddress || '',
-    contractAddress,
+    accountAddresses: [accountAddress || ''],
+    contractAddresses: [contractAddress],
     tokenId
   })
 
   const transactionHistory = flattenPaginatedTransactionHistory(dataTransactionHistory)
 
-  const { data: dataTokens, isPending: isPendingCollectibleBalance } = useGetTokenBalancesDetails({
-    filter: {
-      accountAddresses: accountAddress ? [accountAddress] : [],
-      contractStatus: ContractVerificationStatus.ALL,
-      contractWhitelist: [contractAddress],
-      omitNativeBalances: true
-    },
-    chainIds: [chainId]
+  const { data: tokenBalance, isLoading: isLoadingCollectibleBalance } = useGetSingleTokenBalance({
+    chainId,
+    contractAddress,
+    accountAddress: accountAddress || '',
+    tokenId
   })
 
-  const dataCollectibleBalance =
-    dataTokens && dataTokens.length > 0 ? dataTokens.find(token => token.tokenID === tokenId) : undefined
-
-  const { data: dataCollectiblePrices, isPending: isPendingCollectiblePrices } = useGetCollectiblePrices([
+  const { data: dataCollectiblePrices, isLoading: isLoadingCollectiblePrices } = useGetCollectiblePrices([
     {
       chainId,
       contractAddress,
@@ -73,11 +67,11 @@ export const CollectibleDetails = ({ contractAddress, chainId, tokenId, accountA
     }
   ])
 
-  const { data: conversionRate = 1, isPending: isPendingConversionRate } = useGetExchangeRate(fiatCurrency.symbol)
+  const { data: conversionRate = 1, isLoading: isLoadingConversionRate } = useGetExchangeRate(fiatCurrency.symbol)
 
-  const isPending = isPendingCollectibleBalance || isPendingCollectiblePrices || isPendingConversionRate
+  const isLoading = isLoadingCollectibleBalance || isLoadingCollectiblePrices || isLoadingConversionRate
 
-  if (isPending) {
+  if (isLoading) {
     return <CollectibleDetailsSkeleton isReadOnly={isReadOnly} />
   }
 
@@ -92,17 +86,17 @@ export const CollectibleDetails = ({ contractAddress, chainId, tokenId, accountA
     })
   }
 
-  const collectionLogo = dataCollectibleBalance?.contractInfo?.logoURI
-  const collectionName = dataCollectibleBalance?.contractInfo?.name || 'Unknown Collection'
+  const collectionLogo = tokenBalance?.contractInfo?.logoURI
+  const collectionName = tokenBalance?.contractInfo?.name || 'Unknown Collection'
 
-  const decimals = dataCollectibleBalance?.tokenMetadata?.decimals || 0
-  const rawBalance = dataCollectibleBalance?.balance || '0'
+  const decimals = tokenBalance?.tokenMetadata?.decimals || 0
+  const rawBalance = tokenBalance?.balance || '0'
   const balance = formatUnits(BigInt(rawBalance), decimals)
   const formattedBalance = formatDisplay(Number(balance))
 
-  const valueFiat = dataCollectibleBalance
+  const valueFiat = tokenBalance
     ? computeBalanceFiat({
-        balance: dataCollectibleBalance,
+        balance: tokenBalance,
         prices: dataCollectiblePrices || [],
         conversionRate,
         decimals: decimals
@@ -138,7 +132,7 @@ export const CollectibleDetails = ({ contractAddress, chainId, tokenId, accountA
           </div>
           <div className="flex flex-col justify-center items-center">
             <Text variant="large" color="primary" fontWeight="bold">
-              {dataCollectibleBalance?.tokenMetadata?.name || 'Unknown Collectible'}
+              {tokenBalance?.tokenMetadata?.name || 'Unknown Collectible'}
             </Text>
             <Text variant="small" color="muted" fontWeight="medium">
               {`#${tokenId}`}
@@ -146,7 +140,7 @@ export const CollectibleDetails = ({ contractAddress, chainId, tokenId, accountA
           </div>
         </div>
         <div>
-          <CollectibleTileImage imageUrl={dataCollectibleBalance?.tokenMetadata?.image} />
+          <CollectibleTileImage imageUrl={tokenBalance?.tokenMetadata?.image} />
         </div>
         <div>
           {/* balance */}
@@ -177,7 +171,7 @@ export const CollectibleDetails = ({ contractAddress, chainId, tokenId, accountA
           <InfiniteScroll onLoad={() => fetchNextPage()} hasMore={hasNextPage}>
             <TransactionHistoryList
               transactions={transactionHistory}
-              isPending={isPendingTransactionHistory}
+              isLoading={isLoadingTransactionHistory}
               isFetchingNextPage={isFetchingNextPage}
             />
           </InfiniteScroll>

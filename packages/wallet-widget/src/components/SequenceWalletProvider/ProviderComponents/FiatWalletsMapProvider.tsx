@@ -1,10 +1,10 @@
-import { compareAddress, ContractVerificationStatus, useWallets } from '@0xsequence/connect'
-import { useGetExchangeRate, useGetCoinPrices, useGetTokenBalancesDetails } from '@0xsequence/hooks'
+import { compareAddress, useWallets } from '@0xsequence/connect'
+import { useGetExchangeRate, useGetCoinPrices } from '@0xsequence/hooks'
 import { useState, ReactNode, useEffect } from 'react'
 import { zeroAddress, getAddress } from 'viem'
 
 import { FiatWalletPair, FiatWalletsMapContextProvider } from '../../../contexts'
-import { useSettings } from '../../../hooks'
+import { useGetAllTokensDetails, useSettings } from '../../../hooks'
 import { computeBalanceFiat } from '../../../utils'
 
 // Define the provider component
@@ -14,32 +14,29 @@ export const FiatWalletsMapProvider = ({ children }: { children: ReactNode }) =>
 
   const [fiatWalletsMap, setFiatWalletsMap] = useState<FiatWalletPair[]>([])
 
-  const { data: tokenBalancesData, isPending: isTokenBalancesPending } = useGetTokenBalancesDetails({
+  const { data: tokenBalancesData, isLoading: isTokenBalancesLoading } = useGetAllTokensDetails({
+    accountAddresses: wallets.map(wallet => wallet.address),
     chainIds: selectedNetworks,
-    filter: {
-      accountAddresses: wallets.map(wallet => wallet.address),
-      contractStatus: hideUnlistedTokens ? ContractVerificationStatus.VERIFIED : ContractVerificationStatus.ALL,
-      omitNativeBalances: false
-    }
+    hideUnlistedTokens
   })
 
   const coinBalancesUnordered =
     tokenBalancesData?.filter(b => b.contractType === 'ERC20' || compareAddress(b.contractAddress, zeroAddress)) || []
 
-  const { data: coinPrices = [], isPending: isCoinPricesPending } = useGetCoinPrices(
+  const { data: coinPrices = [], isLoading: isCoinPricesLoading } = useGetCoinPrices(
     coinBalancesUnordered.map(token => ({
       chainId: token.chainId,
       contractAddress: token.contractAddress
     }))
   )
 
-  const { data: conversionRate, isPending: isConversionRatePending } = useGetExchangeRate(fiatCurrency.symbol)
+  const { data: conversionRate, isLoading: isConversionRateLoading } = useGetExchangeRate(fiatCurrency.symbol)
 
   useEffect(() => {
     if (
-      !isTokenBalancesPending &&
-      !isCoinPricesPending &&
-      !isConversionRatePending &&
+      !isTokenBalancesLoading &&
+      !isCoinPricesLoading &&
+      !isConversionRateLoading &&
       coinBalancesUnordered.length > 0 &&
       coinPrices.length > 0 &&
       conversionRate

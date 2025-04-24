@@ -1,12 +1,6 @@
-import {
-  compareAddress,
-  formatDisplay,
-  getNativeTokenInfoByChainId,
-  ContractVerificationStatus,
-  useWallets
-} from '@0xsequence/connect'
+import { compareAddress, formatDisplay, getNativeTokenInfoByChainId, useWallets } from '@0xsequence/connect'
 import { Button, SendIcon, SwapIcon, Text, TokenImage } from '@0xsequence/design-system'
-import { useGetTokenBalancesSummary, useGetCoinPrices, useGetExchangeRate, useGetTransactionHistory } from '@0xsequence/hooks'
+import { useGetCoinPrices, useGetExchangeRate, useGetTransactionHistory, useGetSingleTokenBalance } from '@0xsequence/hooks'
 import { useEffect } from 'react'
 import { formatUnits, zeroAddress } from 'viem'
 import { useConfig } from 'wagmi'
@@ -29,8 +23,8 @@ export interface CoinDetailsProps {
 export const CoinDetails = ({ contractAddress, chainId, accountAddress }: CoinDetailsProps) => {
   const { chains } = useConfig()
   const { setNavigation } = useNavigation()
+  const { fiatCurrency } = useSettings()
   const { setActiveWallet } = useWallets()
-  const { fiatCurrency, hideUnlistedTokens } = useSettings()
 
   useEffect(() => {
     setActiveWallet(accountAddress)
@@ -40,61 +34,50 @@ export const CoinDetails = ({ contractAddress, chainId, accountAddress }: CoinDe
 
   const {
     data: dataTransactionHistory,
-    isPending: isPendingTransactionHistory,
+    isLoading: isLoadingTransactionHistory,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage
   } = useGetTransactionHistory({
     chainId,
-    accountAddress: accountAddress || '',
-    contractAddress
+    accountAddresses: [accountAddress],
+    contractAddresses: [contractAddress]
   })
 
   const transactionHistory = flattenPaginatedTransactionHistory(dataTransactionHistory)
 
-  const { data: tokenBalance, isPending: isPendingCoinBalance } = useGetTokenBalancesSummary({
-    chainIds: [chainId],
-    filter: {
-      accountAddresses: [accountAddress || ''],
-      contractWhitelist: [contractAddress],
-      contractStatus: hideUnlistedTokens ? ContractVerificationStatus.VERIFIED : ContractVerificationStatus.ALL,
-      omitNativeBalances: false
-    }
+  const { data: tokenBalance, isLoading: isLoadingCoinBalance } = useGetSingleTokenBalance({
+    chainId,
+    contractAddress,
+    accountAddress: accountAddress || ''
   })
 
-  const dataCoinBalance =
-    tokenBalance && tokenBalance.length > 0
-      ? compareAddress(contractAddress, zeroAddress)
-        ? tokenBalance?.[0]
-        : tokenBalance?.[1]
-      : undefined
-
-  const { data: dataCoinPrices, isPending: isPendingCoinPrices } = useGetCoinPrices([
+  const { data: dataCoinPrices, isLoading: isLoadingCoinPrices } = useGetCoinPrices([
     {
       chainId,
       contractAddress
     }
   ])
 
-  const { data: conversionRate = 1, isPending: isPendingConversionRate } = useGetExchangeRate(fiatCurrency.symbol)
+  const { data: conversionRate = 1, isLoading: isLoadingConversionRate } = useGetExchangeRate(fiatCurrency.symbol)
 
-  const isPending = isPendingCoinBalance || isPendingCoinPrices || isPendingConversionRate
+  const isLoading = isLoadingCoinBalance || isLoadingCoinPrices || isLoadingConversionRate
 
-  if (isPending) {
+  if (isLoading) {
     return <CoinDetailsSkeleton chainId={chainId} isReadOnly={isReadOnly} />
   }
 
   const isNativeToken = compareAddress(contractAddress, zeroAddress)
-  const logo = isNativeToken ? getNativeTokenInfoByChainId(chainId, chains).logoURI : dataCoinBalance?.contractInfo?.logoURI
-  const symbol = isNativeToken ? getNativeTokenInfoByChainId(chainId, chains).symbol : dataCoinBalance?.contractInfo?.symbol
-  const name = isNativeToken ? getNativeTokenInfoByChainId(chainId, chains).name : dataCoinBalance?.contractInfo?.name
-  const decimals = isNativeToken ? getNativeTokenInfoByChainId(chainId, chains).decimals : dataCoinBalance?.contractInfo?.decimals
-  const formattedBalance = formatUnits(BigInt(dataCoinBalance?.balance || '0'), decimals || 18)
+  const logo = isNativeToken ? getNativeTokenInfoByChainId(chainId, chains).logoURI : tokenBalance?.contractInfo?.logoURI
+  const symbol = isNativeToken ? getNativeTokenInfoByChainId(chainId, chains).symbol : tokenBalance?.contractInfo?.symbol
+  const name = isNativeToken ? getNativeTokenInfoByChainId(chainId, chains).name : tokenBalance?.contractInfo?.name
+  const decimals = isNativeToken ? getNativeTokenInfoByChainId(chainId, chains).decimals : tokenBalance?.contractInfo?.decimals
+  const formattedBalance = formatUnits(BigInt(tokenBalance?.balance || '0'), decimals || 18)
   const balanceDisplayed = formatDisplay(formattedBalance)
 
-  const coinBalanceFiat = dataCoinBalance
+  const coinBalanceFiat = tokenBalance
     ? computeBalanceFiat({
-        balance: dataCoinBalance,
+        balance: tokenBalance,
         prices: dataCoinPrices || [],
         conversionRate,
         decimals: decimals || 18
@@ -149,7 +132,7 @@ export const CoinDetails = ({ contractAddress, chainId, accountAddress }: CoinDe
           <InfiniteScroll onLoad={() => fetchNextPage()} hasMore={hasNextPage}>
             <TransactionHistoryList
               transactions={transactionHistory}
-              isPending={isPendingTransactionHistory}
+              isLoading={isLoadingTransactionHistory}
               isFetchingNextPage={isFetchingNextPage}
             />
           </InfiniteScroll>

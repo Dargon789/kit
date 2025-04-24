@@ -7,22 +7,21 @@ import Fuse from 'fuse.js'
 import { useState, useMemo } from 'react'
 import { useConfig } from 'wagmi'
 
-import { useSettings } from '../../hooks'
+import { useSettings, useGetMoreBalances } from '../../hooks'
 import { computeBalanceFiat, TokenBalanceWithPrice } from '../../utils'
-import { useGetMoreBalances } from '../../utils'
 import { FilterButton } from '../Filter/FilterButton'
 
 import { CoinsTab } from './TokenList/CoinsTab'
 
 export const TokenList = ({
   tokenBalancesData,
-  isPendingTokenBalances,
+  isLoadingFirstPage,
   onTokenClick,
   includeUserAddress = false,
   enableFilters = true
 }: {
   tokenBalancesData: TokenBalance[]
-  isPendingTokenBalances: boolean
+  isLoadingFirstPage: boolean
   onTokenClick: (token: TokenBalanceWithPrice) => void
   enableFilters?: boolean
   includeUserAddress?: boolean
@@ -37,14 +36,14 @@ export const TokenList = ({
   const coinBalancesUnordered =
     tokenBalancesData?.filter(b => b.contractType === 'ERC20' || compareAddress(b.contractAddress, ethers.ZeroAddress)) || []
 
-  const { data: coinPrices = [], isPending: isPendingCoinPrices } = useGetCoinPrices(
+  const { data: coinPrices = [], isLoading: isLoadingCoinPrices } = useGetCoinPrices(
     coinBalancesUnordered.map(token => ({
       chainId: token.chainId,
       contractAddress: token.contractAddress
     }))
   )
 
-  const { data: conversionRate = 1, isPending: isPendingConversionRate } = useGetExchangeRate(fiatCurrency.symbol)
+  const { data: conversionRate = 1, isLoading: isLoadingConversionRate } = useGetExchangeRate(fiatCurrency.symbol)
 
   const coinBalances = coinBalancesUnordered.sort((a, b) => {
     const fiatA = computeBalanceFiat({
@@ -82,7 +81,7 @@ export const TokenList = ({
     }
   })
 
-  const isPending = isPendingTokenBalances || isPendingCoinPrices || isPendingConversionRate
+  const isLoading = isLoadingFirstPage || isLoadingCoinPrices || isLoadingConversionRate
 
   const fuseOptions = {
     threshold: 0.1,
@@ -148,7 +147,7 @@ export const TokenList = ({
           fetchMoreCoinBalances={search ? fetchMoreSearchBalances : fetchMoreBalances}
           hasMoreCoinBalances={search ? hasMoreSearchBalances : hasMoreBalances}
           isFetchingMoreCoinBalances={search ? isFetchingMoreSearchBalances : isFetchingMoreBalances}
-          isFetchingInitialBalances={isPending}
+          isFetchingInitialBalances={isLoading}
           onTokenClick={onTokenClick}
           includeUserAddress={includeUserAddress}
         />

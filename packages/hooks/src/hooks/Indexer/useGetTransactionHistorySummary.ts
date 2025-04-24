@@ -7,19 +7,20 @@ import { HooksOptions } from '../../types'
 
 import { useIndexerClients } from './useIndexerClient'
 
-export type GetTransactionHistorySummaryArgs =
-  | { accountAddress: string; accountAddresses?: never; chainIds: number[] }
-  | { accountAddress?: never; accountAddresses: string[]; chainIds: number[] }
+export interface GetTransactionHistorySummaryArgs {
+  accountAddresses: string[]
+  chainIds: number[]
+}
 
 const getTransactionHistorySummary = async (
   indexerClients: Map<number, SequenceIndexer>,
-  { accountAddress, accountAddresses }: GetTransactionHistorySummaryArgs
+  { accountAddresses }: GetTransactionHistorySummaryArgs
 ): Promise<Transaction[]> => {
   const histories = await Promise.all(
     Array.from(indexerClients.values()).map(indexerClient =>
       indexerClient.getTransactionHistory({
         filter: {
-          accountAddresses: accountAddresses || [accountAddress]
+          accountAddresses
         },
         includeMetadata: true
       })
@@ -84,7 +85,7 @@ const getTransactionHistorySummary = async (
  *   const { address: accountAddress } = useAccount()
  *   const {
  *     data: transactionHistory = [],
- *     isPending: isPendingTransactionHistory
+ *     isLoading: isLoadingTransactionHistory
  *   } = useGetTransactionHistorySummary({
  *     accountAddress: accountAddress || '',
  *     chainIds: [1, 137]
@@ -129,7 +130,7 @@ export const useGetTransactionHistorySummary = (
     refetchOnMount: true,
     enabled:
       getTransactionHistorySummaryArgs.chainIds.length > 0 &&
-      !!(getTransactionHistorySummaryArgs.accountAddress || (getTransactionHistorySummaryArgs.accountAddresses?.length ?? 0)) &&
+      getTransactionHistorySummaryArgs.accountAddresses.length > 0 &&
       !options?.disabled
   })
 }

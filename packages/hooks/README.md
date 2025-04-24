@@ -42,7 +42,7 @@ Sequence hooks are grouped into 5 categories, based on the sequence service they
 - useGetTokenBalancesSummary
 - useGetTokenBalancesDetails
 - useGetTokenBalancesByContract
-- useGetSingleTokenBalanceSummary
+- useGetSingleTokenBalance
 
 ### Metadata
 
@@ -115,14 +115,13 @@ const { data, isLoading, error } = useGetExchangeRate('CAD', {
 ```tsx
 import { useGetTransactionHistory } from '@0xsequence/hooks'
 
-const { data, isLoading, error } = useGetTransactionHistory({
-  accountAddress: '0x0123456789012345678901234567890123456789',
-  contractAddress: '0x0123456789012345678901234567890123456789', // optional
+const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, error } = useGetTransactionHistory({
+  accountAddresses: ['0x0123456789012345678901234567890123456789'],
+  contractAddresses: ['0x0123456789012345678901234567890123456789'], // optional
   tokenId: '1', // optional
   chainId: 1, // optional
   page: { // optional
     pageSize: 10,
-    page: 1
   },
   {
     // options param is optional and default values are below
@@ -139,7 +138,7 @@ import { useGetTransactionHistorySummary } from '@0xsequence/hooks'
 
 const { data, isLoading, error } = useGetTransactionHistorySummary(
   {
-    accountAddress: '0x0123456789012345678901234567890123456789',
+    accountAddresses: ['0x0123456789012345678901234567890123456789'],
     chainIds: [1]
   },
   {
@@ -175,7 +174,7 @@ const { data, isLoading, error } = useGetNativeTokenBalance(
 import { ContractVerificationStatus } from '@0xsequence/indexer'
 import { useGetTokenBalancesSummary } from '@0xsequence/hooks'
 
-const { data, isLoading, error } = useGetTokenBalancesSummary(
+const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, error } = useGetTokenBalancesSummary(
   {
     chainIds: [1], // either use chainIds or networks name
     networks: ['mainnet'],
@@ -189,15 +188,13 @@ const { data, isLoading, error } = useGetTokenBalancesSummary(
     omitMetadata: false, // optional
     page: {
       // optional
-      pageSize: 10,
-      page: 1
+      pageSize: 10
     }
   },
   {
     // options param is optional and default values are below
     disabled: false,
-    retry: true,
-    hideCollectibles: false
+    retry: true
   }
 )
 ```
@@ -208,7 +205,7 @@ const { data, isLoading, error } = useGetTokenBalancesSummary(
 import { ContractVerificationStatus } from '@0xsequence/indexer'
 import { useGetTokenBalancesDetails } from '@0xsequence/hooks'
 
-const { data, isLoading, error } = useGetTokenBalancesDetails(
+const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, error } = useGetTokenBalancesDetails(
   {
     chainIds: [1], // either use chainIds or networks name
     networks: ['mainnet'],
@@ -222,15 +219,13 @@ const { data, isLoading, error } = useGetTokenBalancesDetails(
     omitMetadata: false, // optional
     page: {
       // optional
-      pageSize: 10,
-      page: 1
+      pageSize: 10
     }
   },
   {
     // options param is optional and default values are below
     disabled: false,
-    retry: true,
-    hideCollectibles: false
+    retry: true
   }
 )
 ```
@@ -241,7 +236,7 @@ const { data, isLoading, error } = useGetTokenBalancesDetails(
 import { ContractVerificationStatus } from '@0xsequence/indexer'
 import { useGetTokenBalancesByContract } from '@0xsequence/hooks'
 
-const { data, isLoading, error } = useGetTokenBalancesByContract(
+const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, error } = useGetTokenBalancesByContract(
   {
     chainIds: [1], // either use chainIds or networks name
     networks: ['mainnet'],
@@ -255,25 +250,23 @@ const { data, isLoading, error } = useGetTokenBalancesByContract(
     omitMetadata: false, // optional
     page: {
       // optional
-      pageSize: 10,
-      page: 1
+      pageSize: 10
     }
   },
   {
     // options param is optional and default values are below
     disabled: false,
-    retry: true,
-    hideCollectibles: false
+    retry: true
   }
 )
 ```
 
-### useGetSingleTokenBalanceSummary
+### useGetSingleTokenBalance
 
 ```tsx
-import { useGetSingleTokenBalanceSummary } from '@0xsequence/hooks'
+import { useGetSingleTokenBalance } from '@0xsequence/hooks'
 
-const { data, isLoading, error } = useGetSingleTokenBalanceSummary({
+const { data, isLoading, error } = useGetSingleTokenBalance({
   chainId: 1,
   accountAddress: '0x9876543210987654321098765432109876543210',
   contractAddress: '0x0123456789012345678901234567890123456789'

@@ -25,12 +25,12 @@ import {
 } from '@0xsequence/design-system'
 import {
   useClearCachedBalances,
-  useGetTokenBalancesSummary,
   useGetCoinPrices,
   useGetExchangeRate,
-  useIndexerClient
+  useIndexerClient,
+  useGetSingleTokenBalance
 } from '@0xsequence/hooks'
-import { ContractVerificationStatus, TokenBalance } from '@0xsequence/indexer'
+import { TokenBalance } from '@0xsequence/indexer'
 import { useState, ChangeEvent, useRef, useEffect } from 'react'
 import { encodeFunctionData, formatUnits, parseUnits, toHex, zeroAddress, Hex } from 'viem'
 import { useAccount, useChainId, useSwitchChain, useConfig, usePublicClient, useWalletClient } from 'wagmi'
@@ -83,27 +83,23 @@ export const SendCoin = ({ chainId, contractAddress }: SendCoinProps) => {
   const checkFeeOptions = useCheckWaasFeeOptions()
   const [pendingFeeOption, confirmFeeOption, _rejectFeeOption] = useWaasFeeOptions()
 
-  const { data: balances = [], isPending: isPendingBalances } = useGetTokenBalancesSummary({
-    chainIds: [chainId],
-    filter: {
-      accountAddresses: [accountAddress],
-      contractStatus: ContractVerificationStatus.ALL,
-      contractWhitelist: [contractAddress],
-      omitNativeBalances: false
-    }
+  const { data: tokenBalance, isLoading: isLoadingBalances } = useGetSingleTokenBalance({
+    chainId,
+    contractAddress,
+    accountAddress
   })
+
   const nativeTokenInfo = getNativeTokenInfoByChainId(chainId, chains)
-  const tokenBalance = (balances as TokenBalance[]).find(b => b.contractAddress === contractAddress)
-  const { data: coinPrices = [], isPending: isPendingCoinPrices } = useGetCoinPrices([
+  const { data: coinPrices = [], isLoading: isLoadingCoinPrices } = useGetCoinPrices([
     {
       chainId,
       contractAddress
     }
   ])
 
-  const { data: conversionRate = 1, isPending: isPendingConversionRate } = useGetExchangeRate(fiatCurrency.symbol)
+  const { data: conversionRate = 1, isLoading: isLoadingConversionRate } = useGetExchangeRate(fiatCurrency.symbol)
 
-  const isPending = isPendingBalances || isPendingCoinPrices || isPendingConversionRate
+  const isLoading = isLoadingBalances || isLoadingCoinPrices || isLoadingConversionRate
 
   // Handle fee option confirmation when pendingFeeOption is available
   useEffect(() => {
@@ -117,7 +113,7 @@ export const SendCoin = ({ chainId, contractAddress }: SendCoinProps) => {
     setIsBackButtonEnabled(!showConfirmation)
   }, [showConfirmation, setIsBackButtonEnabled])
 
-  if (isPending) {
+  if (isLoading) {
     return null
   }
 

@@ -95,7 +95,7 @@ export const SwapList = ({ chainId, contractAddress, amount }: SwapListProps) =>
 
   const quoteFetchInProgress = isLoadingSwapQuote
 
-  const isLoading = swapPricesIsLoading || isLoadingCurrencyInfo
+  const isLoading = swapPricesIsLoading || isLoadingCurrencyInfo || isLoadingSwapQuote
 
   const onClickProceed = async () => {
     if (!userAddress || !publicClient || !walletClient || !connector) {

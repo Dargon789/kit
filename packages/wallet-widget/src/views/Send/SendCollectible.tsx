@@ -24,8 +24,8 @@ import {
   Card,
   useToast
 } from '@0xsequence/design-system'
-import { useGetTokenBalancesDetails, useClearCachedBalances, useIndexerClient } from '@0xsequence/hooks'
-import { ContractType, ContractVerificationStatus, TokenBalance } from '@0xsequence/indexer'
+import { useClearCachedBalances, useIndexerClient, useGetSingleTokenBalance } from '@0xsequence/hooks'
+import { ContractType, TokenBalance } from '@0xsequence/indexer'
 import { useRef, useState, ChangeEvent, useEffect } from 'react'
 import { encodeFunctionData, formatUnits, parseUnits, toHex, Hex } from 'viem'
 import { useAccount, useChainId, useSwitchChain, useConfig, usePublicClient, useWalletClient } from 'wagmi'
@@ -79,17 +79,12 @@ export const SendCollectible = ({ chainId, contractAddress, tokenId }: SendColle
   const checkFeeOptions = useCheckWaasFeeOptions()
   const [pendingFeeOption, confirmFeeOption, _rejectFeeOption] = useWaasFeeOptions()
 
-  const { data: dataTokens, isPending: isPendingBalances } = useGetTokenBalancesDetails({
-    filter: {
-      accountAddresses: [accountAddress],
-      contractStatus: ContractVerificationStatus.ALL,
-      contractWhitelist: [contractAddress],
-      omitNativeBalances: false
-    },
-    chainIds: [chainId]
+  const { data: tokenBalance, isLoading: isLoadingBalances } = useGetSingleTokenBalance({
+    chainId,
+    contractAddress,
+    accountAddress,
+    tokenId
   })
-
-  const tokenBalance = dataTokens && dataTokens.length > 0 ? dataTokens.find(balance => balance.tokenID === tokenId) : undefined
 
   let contractType: ContractType | undefined
   if (tokenBalance) {
@@ -122,9 +117,9 @@ export const SendCollectible = ({ chainId, contractAddress, tokenId }: SendColle
 
   const nativeTokenInfo = getNativeTokenInfoByChainId(chainId, chains)
 
-  const isPending = isPendingBalances
+  const isLoading = isLoadingBalances
 
-  if (isPending) {
+  if (isLoading) {
     return null
   }
 
