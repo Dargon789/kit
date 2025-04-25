@@ -34,9 +34,9 @@ export const ConnectButton = (props: ConnectButtonProps) => {
 
   if (isDescriptive) {
     return (
-      <Tooltip message={label || walletProps.name} side="bottom">
+      <Tooltip message={label || walletProps.name} side="bottom" disabled={disableTooltip}>
         <Card
-          className="flex gap-1 justify-center items-center w-full"
+          className="flex gap-3 justify-center items-center w-full"
           clickable
           onClick={() => onConnect(connector)}
           style={{ height: BUTTON_HEIGHT_DESCRIPTIVE }}
