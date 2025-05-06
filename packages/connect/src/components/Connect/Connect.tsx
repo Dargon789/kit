@@ -15,6 +15,7 @@ import { useEmailAuth } from '../../hooks/useWaasEmailAuth'
 import { FormattedEmailConflictInfo } from '../../hooks/useWaasEmailConflict'
 import { useWaasLinkWallet } from '../../hooks/useWaasLinkWallet'
 import { useWallets } from '../../hooks/useWallets'
+import { useWalletSettings } from '../../hooks/useWalletSettings'
 import { ExtendedConnector, ConnectConfig, LogoProps } from '../../types'
 import { isEmailValid } from '../../utils/helpers'
 import { AppleWaasConnectButton, ConnectButton, GoogleWaasConnectButton, ShowAllWalletsButton } from '../ConnectButton'
@@ -39,6 +40,7 @@ export const Connect = (props: ConnectProps) => {
   useScript(appleAuthHelpers.APPLE_SCRIPT_SRC)
 
   const { analytics } = useAnalyticsContext()
+  const { hideExternalConnectOptions, hideConnectedWallets, hideSocialConnectOptions } = useWalletSettings()
 
   const { onClose, emailConflictInfo, config = {} as ConnectConfig, isPreview = false } = props
   const { signIn = {} } = config
@@ -380,7 +382,7 @@ export const Connect = (props: ConnectProps) => {
         </div>
       ) : (
         <>
-          {wallets.length > 0 && !showEmailWaasPinInput && (
+          {!hideConnectedWallets && wallets.length > 0 && !showEmailWaasPinInput && (
             <>
               <ConnectedWallets
                 wallets={wallets}
@@ -390,12 +392,16 @@ export const Connect = (props: ConnectProps) => {
               />
 
               <>
-                <Divider className="text-background-raised w-full" />
-                <div className="flex justify-center">
-                  <Text variant="small" color="muted">
-                    {!hasConnectedSocialOrSequenceUniversal ? 'Connect with a social account' : 'Connect another wallet'}
-                  </Text>
-                </div>
+                {!hideExternalConnectOptions && (
+                  <>
+                    <Divider className="text-background-raised w-full" />
+                    <div className="flex justify-center">
+                      <Text variant="small" color="muted">
+                        {!hasConnectedSocialOrSequenceUniversal ? 'Connect with a social account' : 'Connect another wallet'}
+                      </Text>
+                    </div>
+                  </>
+                )}
               </>
             </>
           )}
@@ -415,7 +421,7 @@ export const Connect = (props: ConnectProps) => {
 
                   <div className="flex mt-6 gap-6 flex-col">
                     <>
-                      {showSocialConnectorSection && (
+                      {!hideSocialConnectOptions && showSocialConnectorSection && (
                         <div className={`flex gap-2 justify-center items-center ${descriptiveSocials ? 'flex-col' : 'flex-row'}`}>
                           {socialAuthConnectors.slice(0, socialConnectorsPerRow).map(connector => {
                             return (
@@ -450,7 +456,7 @@ export const Connect = (props: ConnectProps) => {
                           )}
                         </div>
                       )}
-                      {showSocialConnectorSection && showEmailInputSection && (
+                      {!hideSocialConnectOptions && showSocialConnectorSection && showEmailInputSection && (
                         <div className="flex gap-4 flex-row justify-center items-center">
                           <Divider className="mx-0 my-0 text-background-secondary grow" />
                           <Text className="leading-4 h-4 text-sm" variant="normal" fontWeight="medium" color="muted">
@@ -486,7 +492,7 @@ export const Connect = (props: ConnectProps) => {
                   </div>
                 </>
               )}
-              {walletConnectors.length > 0 && (
+              {!hideExternalConnectOptions && walletConnectors.length > 0 && (
                 <>
                   <div
                     className={clsx(
