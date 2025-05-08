@@ -1,5 +1,5 @@
 import { TransactionOnRampProvider } from '@0xsequence/marketplace'
-import { Hex } from 'viem'
+import type { Hex } from 'viem'
 
 import { createGenericContext } from './genericContext'
 
@@ -28,4 +28,4 @@ type AddFundsModalContext = {
 
 const [useAddFundsModalContext, AddFundsContextProvider] = createGenericContext<AddFundsModalContext>()
 
-export { useAddFundsModalContext, AddFundsContextProvider }
+export { AddFundsContextProvider, useAddFundsModalContext }

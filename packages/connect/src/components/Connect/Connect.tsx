@@ -1,9 +1,9 @@
 'use client'
 
-import { ArrowRightIcon, Divider, Text, TextInput, Spinner, Image, IconButton, ModalPrimitive } from '@0xsequence/design-system'
+import { ArrowRightIcon, Divider, IconButton, Image, ModalPrimitive, Spinner, Text, TextInput } from '@0xsequence/design-system'
 import { genUserId } from '@databeat/tracker'
 import { clsx } from 'clsx'
-import React, { useState, useEffect } from 'react'
+import { useEffect, useState, type ChangeEventHandler, type ReactNode } from 'react'
 import { appleAuthHelpers, useScript } from 'react-apple-signin-auth'
 import { useConnect, useConnections, useSignMessage } from 'wagmi'
 
@@ -12,14 +12,14 @@ import { CHAIN_ID_FOR_SIGNATURE } from '../../constants/walletLinking'
 import { useAnalyticsContext } from '../../contexts/Analytics'
 import { useStorage } from '../../hooks/useStorage'
 import { useEmailAuth } from '../../hooks/useWaasEmailAuth'
-import { FormattedEmailConflictInfo } from '../../hooks/useWaasEmailConflict'
+import type { FormattedEmailConflictInfo } from '../../hooks/useWaasEmailConflict'
 import { useWaasLinkWallet } from '../../hooks/useWaasLinkWallet'
 import { useWallets } from '../../hooks/useWallets'
 import { useWalletSettings } from '../../hooks/useWalletSettings'
-import { ExtendedConnector, ConnectConfig, LogoProps } from '../../types'
+import type { ConnectConfig, ExtendedConnector, LogoProps } from '../../types'
 import { isEmailValid } from '../../utils/helpers'
 import { AppleWaasConnectButton, ConnectButton, GoogleWaasConnectButton, ShowAllWalletsButton } from '../ConnectButton'
-import { SequenceConnectProviderProps } from '../SequenceConnectProvider'
+import type { SequenceConnectProviderProps } from '../SequenceConnectProvider'
 import { PoweredBySequence } from '../SequenceLogo'
 
 import { Banner } from './Banner'
@@ -224,7 +224,7 @@ export const Connect = (props: ConnectProps) => {
   )
   const emailConnector = (connectors as ExtendedConnector[]).find(c => c._wallet?.id.includes('email'))
 
-  const onChangeEmail: React.ChangeEventHandler<HTMLInputElement> = ev => {
+  const onChangeEmail: ChangeEventHandler<HTMLInputElement> = ev => {
     setEmail(ev.target.value)
   }
 
@@ -518,7 +518,7 @@ export const Connect = (props: ConnectProps) => {
   )
 }
 
-const TitleWrapper = ({ children, isPreview }: { children: React.ReactNode; isPreview: boolean }) => {
+const TitleWrapper = ({ children, isPreview }: { children: ReactNode; isPreview: boolean }) => {
   if (isPreview) {
     return <>{children}</>
   }

@@ -1,6 +1,6 @@
 'use client'
 
-import { Hex } from 'viem'
+import type { Hex } from 'viem'
 
 import { createGenericContext } from './genericContext'
 
@@ -33,4 +33,4 @@ type SwapModalContext = {
 
 const [useSwapModalContext, SwapModalContextProvider] = createGenericContext<SwapModalContext>()
 
-export { useSwapModalContext, SwapModalContextProvider }
+export { SwapModalContextProvider, useSwapModalContext }

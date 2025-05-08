@@ -1,6 +1,6 @@
 'use client'
 
-import { Transaction } from '@0xsequence/indexer'
+import type { Transaction } from '@0xsequence/indexer'
 
 import { createGenericContext } from './genericContext'
 
@@ -144,4 +144,4 @@ type NavigationContext = {
 
 const [useNavigationContext, NavigationContextProvider] = createGenericContext<NavigationContext>()
 
-export { useNavigationContext, NavigationContextProvider }
+export { NavigationContextProvider, useNavigationContext }

@@ -1,5 +1,5 @@
 import { TransactionOnRampProvider } from '@0xsequence/marketplace'
-import { Hex } from 'viem'
+import type { Hex } from 'viem'
 
 import type { TransakConfig } from '../contexts/CheckoutModal'
 
@@ -59,4 +59,4 @@ type SelectPaymentModalContext = {
 
 const [useSelectPaymentContext, SelectPaymentContextProvider] = createGenericContext<SelectPaymentModalContext>()
 
-export { useSelectPaymentContext, SelectPaymentContextProvider }
+export { SelectPaymentContextProvider, useSelectPaymentContext }

@@ -1,4 +1,4 @@
-import { Hex } from 'viem'
+import type { Hex } from 'viem'
 
 import { createGenericContext } from './genericContext'
 
@@ -15,4 +15,4 @@ type TransferFundsModalContext = {
 
 const [useTransferFundsModalContext, TransferFundsContextProvider] = createGenericContext<TransferFundsModalContext>()
 
-export { useTransferFundsModalContext, TransferFundsContextProvider }
+export { TransferFundsContextProvider, useTransferFundsModalContext }

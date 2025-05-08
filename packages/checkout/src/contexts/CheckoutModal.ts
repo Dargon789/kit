@@ -1,9 +1,9 @@
 'use client'
 
-import { Theme } from '@0xsequence/design-system'
+import type { Theme } from '@0xsequence/design-system'
 
 import { createGenericContext } from './genericContext'
-import { SupplementaryAnalyticsInfo } from './SelectPaymentModal'
+import type { SupplementaryAnalyticsInfo } from './SelectPaymentModal'
 
 interface CoinQuantity {
   contractAddress: string
@@ -64,4 +64,4 @@ type CheckoutModalContext = {
 
 const [useCheckoutModalContext, CheckoutModalContextProvider] = createGenericContext<CheckoutModalContext>()
 
-export { useCheckoutModalContext, CheckoutModalContextProvider }
+export { CheckoutModalContextProvider, useCheckoutModalContext }

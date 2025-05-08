@@ -3,37 +3,37 @@
 import { getModalPositionCss, ShadowRoot, useConnectConfigContext, useTheme } from '@0xsequence/connect'
 import { Modal } from '@0xsequence/design-system'
 import { AnimatePresence } from 'motion/react'
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState, type ReactNode } from 'react'
 
 import {
-  History,
-  Navigation,
-  NavigationContextProvider,
-  CheckoutModalContextProvider,
-  CheckoutSettings,
   AddFundsContextProvider,
-  AddFundsSettings,
-  SelectPaymentContextProvider,
-  SelectPaymentSettings,
-  TransferFundsContextProvider,
-  TransferFundsSettings,
-  TransactionStatusSettings,
-  TransactionStatusModalContextProvider,
-  SwapModalSettings,
-  SwapModalContextProvider,
+  CheckoutModalContextProvider,
   EnvironmentContextProvider,
-  EnvironmentOverrides
+  NavigationContextProvider,
+  SelectPaymentContextProvider,
+  SwapModalContextProvider,
+  TransactionStatusModalContextProvider,
+  TransferFundsContextProvider,
+  type AddFundsSettings,
+  type CheckoutSettings,
+  type EnvironmentOverrides,
+  type History,
+  type Navigation,
+  type SelectPaymentSettings,
+  type SwapModalSettings,
+  type TransactionStatusSettings,
+  type TransferFundsSettings
 } from '../../contexts'
 import {
-  PendingCreditCardTransaction,
-  TransactionError,
-  TransactionSuccess,
-  CheckoutSelection,
   AddFundsContent,
+  CheckoutSelection,
   PaymentSelection,
-  TransferToWallet,
+  PendingCreditCardTransaction,
+  Swap,
+  TransactionError,
   TransactionStatus,
-  Swap
+  TransactionSuccess,
+  TransferToWallet
 } from '../../views'
 import { NavigationHeader } from '../NavigationHeader'
 
@@ -42,7 +42,7 @@ export interface SequenceCheckoutConfig {
 }
 
 export type SequenceCheckoutProviderProps = {
-  children: React.ReactNode
+  children: ReactNode
   config?: SequenceCheckoutConfig
 }
 

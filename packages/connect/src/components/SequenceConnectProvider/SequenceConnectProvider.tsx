@@ -1,17 +1,17 @@
 'use client'
 
 import { sequence } from '0xsequence'
-import { Button, Card, Collapsible, Modal, ModalPrimitive, Text, Theme } from '@0xsequence/design-system'
+import { Button, Card, Collapsible, Modal, ModalPrimitive, Text, type Theme } from '@0xsequence/design-system'
 import { SequenceHooksProvider } from '@0xsequence/hooks'
 import { ChainId } from '@0xsequence/network'
 import { SequenceClient } from '@0xsequence/provider'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import { AnimatePresence } from 'motion/react'
-import React, { useState, useEffect } from 'react'
-import { Hex, hexToString } from 'viem'
-import { Connector, useAccount, useConfig, useConnections } from 'wagmi'
+import React, { useEffect, useState } from 'react'
+import { hexToString, type Hex } from 'viem'
+import { useAccount, useConfig, useConnections, type Connector } from 'wagmi'
 
-import { DEFAULT_SESSION_EXPIRATION, WEB_SDK_VERSION, LocalStorageKey } from '../../constants'
+import { DEFAULT_SESSION_EXPIRATION, LocalStorageKey, WEB_SDK_VERSION } from '../../constants'
 import { AnalyticsContextProvider } from '../../contexts/Analytics'
 import { ConnectConfigContextProvider } from '../../contexts/ConnectConfig'
 import { ConnectModalContextProvider } from '../../contexts/ConnectModal'
@@ -20,7 +20,13 @@ import { WalletConfigContextProvider } from '../../contexts/WalletConfig'
 import { useStorage } from '../../hooks/useStorage'
 import { useWaasConfirmationHandler } from '../../hooks/useWaasConfirmationHandler'
 import { useEmailConflict } from '../../hooks/useWaasEmailConflict'
-import { ExtendedConnector, DisplayedAsset, EthAuthSettings, ConnectConfig, ModalPosition } from '../../types'
+import {
+  type ConnectConfig,
+  type DisplayedAsset,
+  type EthAuthSettings,
+  type ExtendedConnector,
+  type ModalPosition
+} from '../../types'
 import { isJSON } from '../../utils/helpers'
 import { getModalPositionCss } from '../../utils/styling'
 import { Connect } from '../Connect/Connect'

@@ -1,4 +1,4 @@
-import { cn, cardVariants, Text, ChevronDownIcon, TokenImage } from '@0xsequence/design-system'
+import { cardVariants, ChevronDownIcon, cn, Text, TokenImage } from '@0xsequence/design-system'
 import { AnimatePresence } from 'motion/react'
 import { useState } from 'react'
 import { useChains } from 'wagmi'
@@ -6,7 +6,7 @@ import { useChains } from 'wagmi'
 import { CoinRow } from '../../components/SearchLists/TokenList/CoinRow'
 import { SlideupDrawer } from '../../components/Select/SlideupDrawer'
 import { useSettings, useSwap } from '../../hooks'
-import { TokenBalanceWithPrice } from '../../utils'
+import type { TokenBalanceWithPrice } from '../../utils'
 import { formatTokenInfo } from '../../utils/formatBalance'
 
 export const CoinSelect = ({

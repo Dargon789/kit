@@ -1,4 +1,4 @@
-import { CheckoutSettings, useCheckoutModalContext } from '../contexts/CheckoutModal'
+import { useCheckoutModalContext, type CheckoutSettings } from '../contexts/CheckoutModal'
 
 /**
  * Return type for the useCheckoutModal hook.
