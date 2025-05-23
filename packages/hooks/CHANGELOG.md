@@ -1,5 +1,11 @@
 # @0xsequence/hooks
 
+## 5.3.4
+
+### Patch Changes
+
+- Fixes to checkout flow
+
 ## 5.3.3
 
 ### Patch Changes
