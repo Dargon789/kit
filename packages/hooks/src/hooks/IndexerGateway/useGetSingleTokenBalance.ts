@@ -1,11 +1,11 @@
-import { SequenceIndexerGateway } from '@0xsequence/indexer'
+import type { SequenceIndexerGateway } from '@0xsequence/indexer'
 import { useQuery } from '@tanstack/react-query'
 
-import { ZERO_ADDRESS, QUERY_KEYS, time } from '../../constants'
-import { HooksOptions } from '../../types'
-import { compareAddress, createNativeTokenBalance } from '../../utils/helpers'
+import { QUERY_KEYS, time, ZERO_ADDRESS } from '../../constants.js'
+import type { HooksOptions } from '../../types/hooks.js'
+import { compareAddress, createNativeTokenBalance } from '../../utils/helpers.js'
 
-import { useIndexerGatewayClient } from './useIndexerGatewayClient'
+import { useIndexerGatewayClient } from './useIndexerGatewayClient.js'
 
 export interface GetSingleTokenBalanceArgs {
   chainId: number
@@ -83,7 +83,7 @@ export const useGetSingleTokenBalance = (args: GetSingleTokenBalanceArgs, option
     queryFn: async () => {
       return await getSingleTokenBalance(args, indexerGatewayClient)
     },
-    retry: options?.retry ?? true,
+    retry: options?.retry ?? false,
     staleTime: time.oneSecond * 30,
     enabled: !!args.chainId && !!args.accountAddress && !options?.disabled
   })

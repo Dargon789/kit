@@ -1,7 +1,7 @@
-import { UseQueryResult, useQuery } from '@tanstack/react-query'
-import { useConfig, Storage } from 'wagmi'
+import { useQuery, type UseQueryResult } from '@tanstack/react-query'
+import { useConfig, type Storage } from 'wagmi'
 
-import { StorageItem } from '../types'
+import type { StorageItem } from '../types.js'
 
 /**
  * Hook to access the storage instance configured in the Sequence Connect client.
@@ -88,15 +88,14 @@ export const useStorage = (): Storage<StorageItem> | null => {
  * }
  * ```
  */
-export const useStorageItem = <K extends keyof StorageItem>(key: K): UseQueryResult<StorageItem[K]> => {
+export const useStorageItem = <K extends keyof StorageItem>(key: K): UseQueryResult<StorageItem[K] | null> => {
   const storage = useStorage()
 
   return useQuery({
     queryKey: ['storage', key],
     queryFn: async () => {
-      return storage?.getItem(key)
+      return storage?.getItem(key) ?? null
     },
-    retry: true,
     enabled: !!storage
   })
 }

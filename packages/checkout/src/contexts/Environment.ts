@@ -1,6 +1,6 @@
 'use client'
 
-import { createGenericContext } from './genericContext'
+import { createGenericContext } from './genericContext.js'
 
 export interface EnvironmentOverrides {
   marketplaceApiUrl: string
@@ -12,4 +12,4 @@ export interface EnvironmentOverrides {
 
 const [useEnvironmentContext, EnvironmentContextProvider] = createGenericContext<EnvironmentOverrides>()
 
-export { useEnvironmentContext, EnvironmentContextProvider }
+export { EnvironmentContextProvider, useEnvironmentContext }

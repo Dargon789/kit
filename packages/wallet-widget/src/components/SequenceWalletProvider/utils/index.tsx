@@ -1,30 +1,30 @@
-import { Navigation } from '../../../contexts'
+import type { Navigation } from '../../../contexts/index.js'
 import {
   CoinDetails,
   CollectibleDetails,
+  History,
   Home,
   Receive,
+  SearchCollectibles,
+  SearchTokens,
   SendCoin,
   SendCollectible,
-  History,
-  TransactionDetails,
-  SwapCoin,
-  SwapList,
   SendGeneral,
-  SearchTokens,
-  SearchCollectibles,
-  SettingsWallets,
   SettingsApps,
   SettingsCurrency,
   SettingsMenu,
   SettingsNetworks,
   SettingsPreferences,
   SettingsProfiles,
+  SettingsWallets,
   // QrScan,
-  Swap
-} from '../../../views'
-import { NavigationHeader } from '../../NavigationHeader'
-import { WalletHeader } from '../../WalletHeader'
+  Swap,
+  SwapCoin,
+  SwapList,
+  TransactionDetails
+} from '../../../views/index.js'
+import { NavigationHeader } from '../../NavigationHeader/index.js'
+import { WalletHeader } from '../../WalletHeader/index.js'
 
 export const getContent = (navigation: Navigation) => {
   const { location } = navigation
@@ -51,7 +51,12 @@ export const getContent = (navigation: Navigation) => {
     case 'search-tokens':
       return <SearchTokens />
     case 'search-collectibles':
-      return <SearchCollectibles />
+      return (
+        <SearchCollectibles
+          contractAddress={navigation.params?.selectedCollection?.contractAddress}
+          chainId={navigation.params?.selectedCollection?.chainId}
+        />
+      )
     case 'settings':
       return <SettingsMenu />
     case 'settings-wallets':

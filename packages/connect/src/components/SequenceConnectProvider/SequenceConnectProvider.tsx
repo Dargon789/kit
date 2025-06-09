@@ -1,35 +1,41 @@
 'use client'
 
 import { sequence } from '0xsequence'
-import { Button, Card, Collapsible, Modal, ModalPrimitive, Text, Theme } from '@0xsequence/design-system'
+import { Button, Card, Collapsible, Modal, ModalPrimitive, Text, type Theme } from '@0xsequence/design-system'
 import { SequenceHooksProvider } from '@0xsequence/hooks'
 import { ChainId } from '@0xsequence/network'
 import { SequenceClient } from '@0xsequence/provider'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import { AnimatePresence } from 'motion/react'
-import React, { useState, useEffect } from 'react'
-import { Hex, hexToString } from 'viem'
-import { Connector, useAccount, useConfig, useConnections } from 'wagmi'
+import React, { useEffect, useState } from 'react'
+import { hexToString, type Hex } from 'viem'
+import { useAccount, useConfig, useConnections, type Connector } from 'wagmi'
 
-import { DEFAULT_SESSION_EXPIRATION, WEB_SDK_VERSION, LocalStorageKey } from '../../constants'
-import { AnalyticsContextProvider } from '../../contexts/Analytics'
-import { ConnectConfigContextProvider } from '../../contexts/ConnectConfig'
-import { ConnectModalContextProvider } from '../../contexts/ConnectModal'
-import { ThemeContextProvider } from '../../contexts/Theme'
-import { WalletConfigContextProvider } from '../../contexts/WalletConfig'
-import { useStorage } from '../../hooks/useStorage'
-import { useWaasConfirmationHandler } from '../../hooks/useWaasConfirmationHandler'
-import { useEmailConflict } from '../../hooks/useWaasEmailConflict'
-import { ExtendedConnector, DisplayedAsset, EthAuthSettings, ConnectConfig, ModalPosition } from '../../types'
-import { isJSON } from '../../utils/helpers'
-import { getModalPositionCss } from '../../utils/styling'
-import { Connect } from '../Connect/Connect'
-import { JsonTreeViewer } from '../JsonTreeViewer'
-import { NetworkBadge } from '../NetworkBadge'
-import { PageHeading } from '../PageHeading'
-import { PoweredBySequence } from '../SequenceLogo'
-import { ShadowRoot } from '../ShadowRoot'
-import { TxnDetails } from '../TxnDetails'
+import { DEFAULT_SESSION_EXPIRATION, LocalStorageKey, WEB_SDK_VERSION } from '../../constants/index.js'
+import { AnalyticsContextProvider } from '../../contexts/Analytics.js'
+import { ConnectConfigContextProvider } from '../../contexts/ConnectConfig.js'
+import { ConnectModalContextProvider } from '../../contexts/ConnectModal.js'
+import { ThemeContextProvider } from '../../contexts/Theme.js'
+import { WalletConfigContextProvider } from '../../contexts/WalletConfig.js'
+import { useStorage } from '../../hooks/useStorage.js'
+import { useWaasConfirmationHandler } from '../../hooks/useWaasConfirmationHandler.js'
+import { useEmailConflict } from '../../hooks/useWaasEmailConflict.js'
+import {
+  type ConnectConfig,
+  type DisplayedAsset,
+  type EthAuthSettings,
+  type ExtendedConnector,
+  type ModalPosition
+} from '../../types.js'
+import { isJSON } from '../../utils/helpers.js'
+import { getModalPositionCss } from '../../utils/styling.js'
+import { Connect } from '../Connect/Connect.js'
+import { JsonTreeViewer } from '../JsonTreeViewer.js'
+import { NetworkBadge } from '../NetworkBadge/index.js'
+import { PageHeading } from '../PageHeading/index.js'
+import { PoweredBySequence } from '../SequenceLogo/index.js'
+import { ShadowRoot } from '../ShadowRoot/index.js'
+import { TxnDetails } from '../TxnDetails/index.js'
 
 export type SequenceConnectProviderProps = {
   children: React.ReactNode
@@ -45,7 +51,11 @@ export const SequenceConnectProvider = (props: SequenceConnectProviderProps) => 
     displayedAssets: displayedAssetsSetting = [],
     readOnlyNetworks,
     ethAuth = {} as EthAuthSettings,
-    disableAnalytics = false
+    disableAnalytics = false,
+    hideExternalConnectOptions = false,
+    hideConnectedWallets = false,
+    hideSocialConnectOptions = false,
+    customCSS
   } = config
 
   const defaultAppName = signIn.projectName || 'app'
@@ -83,7 +93,7 @@ export const SequenceConnectProvider = (props: SequenceConnectProviderProps) => 
         if (event && typeof event === 'object' && 'props' in event) {
           event.props = {
             ...event.props,
-            sdkType: 'sequence kit',
+            sdkType: 'sequence web sdk',
             version: WEB_SDK_VERSION
           }
         }
@@ -168,9 +178,18 @@ export const SequenceConnectProvider = (props: SequenceConnectProviderProps) => 
             <ConnectModalContextProvider
               value={{ isConnectModalOpen: openConnectModal, setOpenConnectModal, openConnectModalState: openConnectModal }}
             >
-              <WalletConfigContextProvider value={{ setDisplayedAssets, displayedAssets, readOnlyNetworks }}>
+              <WalletConfigContextProvider
+                value={{
+                  setDisplayedAssets,
+                  displayedAssets,
+                  readOnlyNetworks,
+                  hideExternalConnectOptions,
+                  hideConnectedWallets,
+                  hideSocialConnectOptions
+                }}
+              >
                 <AnalyticsContextProvider value={{ setAnalytics, analytics }}>
-                  <ShadowRoot theme={theme}>
+                  <ShadowRoot theme={theme} customCSS={customCSS}>
                     <AnimatePresence>
                       {openConnectModal && (
                         <Modal

@@ -1,7 +1,7 @@
-import { Wallet } from '../../types'
-import { sequenceWallet, BaseSequenceConnectorOptions } from '../wagmiConnectors'
+import type { Wallet } from '../../types.js'
+import { sequenceWallet, type BaseSequenceConnectorOptions } from '../wagmiConnectors/index.js'
 
-import { GoogleLogo, getMonochromeGoogleLogo } from './GoogleLogo'
+import { getMonochromeGoogleLogo, GoogleLogo } from './GoogleLogo.js'
 
 export type GoogleOptions = BaseSequenceConnectorOptions
 

@@ -1,4 +1,4 @@
-import { createGenericContext } from './genericContext'
+import { createGenericContext } from './genericContext.js'
 
 export interface FiatWalletPair {
   accountAddress: string
@@ -12,4 +12,4 @@ export interface FiatWalletsMapContext {
 
 const [useFiatWalletsMapContext, FiatWalletsMapContextProvider] = createGenericContext<FiatWalletsMapContext>()
 
-export { useFiatWalletsMapContext, FiatWalletsMapContextProvider }
+export { FiatWalletsMapContextProvider, useFiatWalletsMapContext }

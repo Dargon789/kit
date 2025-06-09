@@ -1,30 +1,33 @@
 'use client'
 
-import { ArrowRightIcon, Divider, Text, TextInput, Spinner, Image, IconButton, ModalPrimitive } from '@0xsequence/design-system'
+import { ArrowRightIcon, Divider, IconButton, Image, ModalPrimitive, Spinner, Text, TextInput } from '@0xsequence/design-system'
+import { useGetWaasStatus } from '@0xsequence/hooks'
 import { genUserId } from '@databeat/tracker'
 import { clsx } from 'clsx'
-import React, { useState, useEffect } from 'react'
+import { useEffect, useState, type ChangeEventHandler, type ReactNode } from 'react'
 import { appleAuthHelpers, useScript } from 'react-apple-signin-auth'
 import { useConnect, useConnections, useSignMessage } from 'wagmi'
 
-import { LocalStorageKey } from '../../constants'
-import { CHAIN_ID_FOR_SIGNATURE } from '../../constants/walletLinking'
-import { useAnalyticsContext } from '../../contexts/Analytics'
-import { useStorage } from '../../hooks/useStorage'
-import { useEmailAuth } from '../../hooks/useWaasEmailAuth'
-import { FormattedEmailConflictInfo } from '../../hooks/useWaasEmailConflict'
-import { useWaasLinkWallet } from '../../hooks/useWaasLinkWallet'
-import { useWallets } from '../../hooks/useWallets'
-import { ExtendedConnector, ConnectConfig, LogoProps } from '../../types'
-import { isEmailValid } from '../../utils/helpers'
-import { AppleWaasConnectButton, ConnectButton, GoogleWaasConnectButton, ShowAllWalletsButton } from '../ConnectButton'
-import { SequenceConnectProviderProps } from '../SequenceConnectProvider'
-import { PoweredBySequence } from '../SequenceLogo'
+import { EVENT_SOURCE } from '../../constants/analytics.js'
+import { LocalStorageKey } from '../../constants/localStorage.js'
+import { CHAIN_ID_FOR_SIGNATURE } from '../../constants/walletLinking.js'
+import { useAnalyticsContext } from '../../contexts/Analytics.js'
+import { useStorage } from '../../hooks/useStorage.js'
+import { useEmailAuth } from '../../hooks/useWaasEmailAuth.js'
+import type { FormattedEmailConflictInfo } from '../../hooks/useWaasEmailConflict.js'
+import { useWaasLinkWallet } from '../../hooks/useWaasLinkWallet.js'
+import { useWallets } from '../../hooks/useWallets.js'
+import { useWalletSettings } from '../../hooks/useWalletSettings.js'
+import type { ConnectConfig, ExtendedConnector, LogoProps } from '../../types.js'
+import { isEmailValid } from '../../utils/helpers.js'
+import { AppleWaasConnectButton, ConnectButton, GoogleWaasConnectButton, ShowAllWalletsButton } from '../ConnectButton/index.js'
+import type { SequenceConnectProviderProps } from '../SequenceConnectProvider/index.js'
+import { PoweredBySequence } from '../SequenceLogo/index.js'
 
-import { Banner } from './Banner'
-import { ConnectedWallets } from './ConnectedWallets'
-import { EmailWaasVerify } from './EmailWaasVerify'
-import { ExtendedWalletList } from './ExtendedWalletList'
+import { Banner } from './Banner.js'
+import { ConnectedWallets } from './ConnectedWallets.js'
+import { EmailWaasVerify } from './EmailWaasVerify.js'
+import { ExtendedWalletList } from './ExtendedWalletList.js'
 
 const MAX_ITEM_PER_ROW = 4
 export const SEQUENCE_UNIVERSAL_CONNECTOR_NAME = 'Sequence'
@@ -39,6 +42,7 @@ export const Connect = (props: ConnectProps) => {
   useScript(appleAuthHelpers.APPLE_SCRIPT_SRC)
 
   const { analytics } = useAnalyticsContext()
+  const { hideExternalConnectOptions, hideConnectedWallets, hideSocialConnectOptions } = useWalletSettings()
 
   const { onClose, emailConflictInfo, config = {} as ConnectConfig, isPreview = false } = props
   const { signIn = {} } = config
@@ -56,6 +60,7 @@ export const Connect = (props: ConnectProps) => {
   const connections = useConnections()
   const { signMessageAsync } = useSignMessage()
   const { wallets, linkedWallets, disconnectWallet, refetchLinkedWallets } = useWallets()
+  const { data: waasStatusData } = useGetWaasStatus()
 
   const hasInjectedSequenceConnector = connectors.some(c => c.id === 'app.sequence')
 
@@ -84,7 +89,7 @@ export const Connect = (props: ConnectProps) => {
             parentWalletAddress: parentWallet ? getUserIdForEvent(parentWallet) : '',
             linkedWalletAddress: getUserIdForEvent(address),
             linkedWalletType: linkedWallets?.find(lw => lw.linkedWalletAddress === address)?.walletType || '',
-            source: 'sequence-kit/core'
+            source: EVENT_SOURCE
           }
         })
       } catch (e) {
@@ -142,7 +147,7 @@ export const Connect = (props: ConnectProps) => {
                 parentWalletAddress: getUserIdForEvent(waasWalletAddress),
                 linkedWalletAddress: getUserIdForEvent(childWalletAddress),
                 linkedWalletType: connections.find(c => c.accounts[0] === lastConnectedWallet)?.connector?.name || '',
-                source: 'sequence-kit/core'
+                source: EVENT_SOURCE
               }
             })
           } catch (e) {
@@ -222,7 +227,7 @@ export const Connect = (props: ConnectProps) => {
   )
   const emailConnector = (connectors as ExtendedConnector[]).find(c => c._wallet?.id.includes('email'))
 
-  const onChangeEmail: React.ChangeEventHandler<HTMLInputElement> = ev => {
+  const onChangeEmail: ChangeEventHandler<HTMLInputElement> = ev => {
     setEmail(ev.target.value)
   }
 
@@ -348,6 +353,41 @@ export const Connect = (props: ConnectProps) => {
     )
   }
 
+  if (waasStatusData?.errorResponse) {
+    const errorMessage =
+      waasStatusData.errorResponse.status === 451
+        ? 'Service unavailable due to legal and geographic restrictions'
+        : `Something went wrong. (${waasStatusData.errorResponse.msg})`
+
+    return (
+      <div className="p-4">
+        <div
+          className="flex flex-col justify-center text-primary items-center font-medium"
+          style={{
+            marginTop: '2px'
+          }}
+        >
+          <TitleWrapper isPreview={isPreview}>
+            <Text color="secondary">
+              {isLoading
+                ? `Connecting...`
+                : hasConnectedSocialOrSequenceUniversal
+                  ? 'Wallets'
+                  : `Connect ${projectName ? `to ${projectName}` : ''}`}
+            </Text>
+          </TitleWrapper>
+          <div className="relative flex flex-col items-center justify-center p-8">
+            <div className="flex flex-col items-center gap-4 mt-2 mb-2">
+              <Text color="secondary" className="text-center text-lg font-medium text-negative">
+                {errorMessage}
+              </Text>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="p-4">
       <div
@@ -380,7 +420,7 @@ export const Connect = (props: ConnectProps) => {
         </div>
       ) : (
         <>
-          {wallets.length > 0 && !showEmailWaasPinInput && (
+          {!hideConnectedWallets && wallets.length > 0 && !showEmailWaasPinInput && (
             <>
               <ConnectedWallets
                 wallets={wallets}
@@ -390,12 +430,16 @@ export const Connect = (props: ConnectProps) => {
               />
 
               <>
-                <Divider className="text-background-raised w-full" />
-                <div className="flex justify-center">
-                  <Text variant="small" color="muted">
-                    {!hasConnectedSocialOrSequenceUniversal ? 'Connect with a social account' : 'Connect another wallet'}
-                  </Text>
-                </div>
+                {!hideExternalConnectOptions && (
+                  <>
+                    <Divider className="text-background-raised w-full" />
+                    <div className="flex justify-center">
+                      <Text variant="small" color="muted">
+                        {!hasConnectedSocialOrSequenceUniversal ? 'Connect with a social account' : 'Connect another wallet'}
+                      </Text>
+                    </div>
+                  </>
+                )}
               </>
             </>
           )}
@@ -415,7 +459,7 @@ export const Connect = (props: ConnectProps) => {
 
                   <div className="flex mt-6 gap-6 flex-col">
                     <>
-                      {showSocialConnectorSection && (
+                      {!hideSocialConnectOptions && showSocialConnectorSection && (
                         <div className={`flex gap-2 justify-center items-center ${descriptiveSocials ? 'flex-col' : 'flex-row'}`}>
                           {socialAuthConnectors.slice(0, socialConnectorsPerRow).map(connector => {
                             return (
@@ -450,7 +494,7 @@ export const Connect = (props: ConnectProps) => {
                           )}
                         </div>
                       )}
-                      {showSocialConnectorSection && showEmailInputSection && (
+                      {!hideSocialConnectOptions && showSocialConnectorSection && showEmailInputSection && (
                         <div className="flex gap-4 flex-row justify-center items-center">
                           <Divider className="mx-0 my-0 text-background-secondary grow" />
                           <Text className="leading-4 h-4 text-sm" variant="normal" fontWeight="medium" color="muted">
@@ -486,7 +530,7 @@ export const Connect = (props: ConnectProps) => {
                   </div>
                 </>
               )}
-              {walletConnectors.length > 0 && (
+              {!hideExternalConnectOptions && walletConnectors.length > 0 && (
                 <>
                   <div
                     className={clsx(
@@ -512,7 +556,7 @@ export const Connect = (props: ConnectProps) => {
   )
 }
 
-const TitleWrapper = ({ children, isPreview }: { children: React.ReactNode; isPreview: boolean }) => {
+const TitleWrapper = ({ children, isPreview }: { children: ReactNode; isPreview: boolean }) => {
   if (isPreview) {
     return <>{children}</>
   }

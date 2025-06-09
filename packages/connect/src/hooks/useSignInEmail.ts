@@ -1,9 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useConfig, useAccount } from 'wagmi'
+import { useAccount, useConfig } from 'wagmi'
 
-import { LocalStorageKey } from '../constants/localStorage'
+import { LocalStorageKey } from '../constants/localStorage.js'
 
 /**
  * Hook to retrieve the email address associated with the currently connected wallet.

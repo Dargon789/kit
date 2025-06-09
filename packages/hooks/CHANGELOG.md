@@ -1,5 +1,49 @@
 # @0xsequence/hooks
 
+## 5.3.4
+
+### Patch Changes
+
+- Fixes to checkout flow
+
+## 5.3.3
+
+### Patch Changes
+
+- made the tokenId field optional
+
+## 5.3.2
+
+### Patch Changes
+
+- added error message for geoblocked waas connections; more fields added to events
+
+## 5.3.1
+
+### Patch Changes
+
+- Fix for effective price used by sale contract utility functions
+
+## 5.3.0
+
+### Minor Changes
+
+- Conversion to nodeNext, various fixes
+
+## 5.2.3
+
+### Patch Changes
+
+- updated endpoints used for swaps
+
+## 5.2.2
+
+### Patch Changes
+
+- - Added nativeTokenAddress to SelectPaymentSettings to allow for custom native token addresses
+  - Added options to setOpenWalletModal
+  - Added config for disabling social login tooltips
+
 ## 5.2.1
 
 ### Patch Changes

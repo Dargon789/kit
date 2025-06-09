@@ -1,42 +1,43 @@
 import {
   getNativeTokenInfoByChainId,
-  useAnalyticsContext,
-  ExtendedConnector,
+  TRANSACTION_CONFIRMATIONS_DEFAULT,
   truncateAtMiddle,
+  useAnalyticsContext,
   useCheckWaasFeeOptions,
   useWaasFeeOptions,
+  useWallets,
   waitForTransactionReceipt,
-  TRANSACTION_CONFIRMATIONS_DEFAULT,
-  useWallets
+  type ExtendedConnector
 } from '@0xsequence/connect'
 import {
-  Button,
-  ChevronRightIcon,
-  CopyIcon,
-  CloseIcon,
-  GradientAvatar,
   AddIcon,
+  Button,
+  Card,
+  ChevronRightIcon,
+  CloseIcon,
+  CopyIcon,
+  GradientAvatar,
+  NumericInput,
+  Spinner,
   SubtractIcon,
   Text,
-  NumericInput,
   TextInput,
-  Spinner,
-  Card,
   useToast
 } from '@0xsequence/design-system'
-import { useClearCachedBalances, useIndexerClient, useGetSingleTokenBalance } from '@0xsequence/hooks'
-import { ContractType, TokenBalance } from '@0xsequence/indexer'
-import { useRef, useState, ChangeEvent, useEffect } from 'react'
-import { encodeFunctionData, formatUnits, parseUnits, toHex, Hex } from 'viem'
-import { useAccount, useChainId, useSwitchChain, useConfig, usePublicClient, useWalletClient } from 'wagmi'
+import { useClearCachedBalances, useGetSingleTokenBalance, useIndexerClient } from '@0xsequence/hooks'
+import type { ContractType, TokenBalance } from '@0xsequence/indexer'
+import { useEffect, useRef, useState, type ChangeEvent } from 'react'
+import { encodeFunctionData, formatUnits, parseUnits, toHex, type Hex } from 'viem'
+import { useAccount, useChainId, useConfig, usePublicClient, useSwitchChain, useWalletClient } from 'wagmi'
 
-import { WalletSelect } from '../../components/Select/WalletSelect'
-import { SendItemInfo } from '../../components/SendItemInfo'
-import { TransactionConfirmation } from '../../components/TransactionConfirmation'
-import { ERC_1155_ABI, ERC_721_ABI, HEADER_HEIGHT_WITH_LABEL } from '../../constants'
-import { useNavigationContext } from '../../contexts/Navigation'
-import { useNavigation } from '../../hooks'
-import { limitDecimals, isEthAddress } from '../../utils'
+import { WalletSelect } from '../../components/Select/WalletSelect.js'
+import { SendItemInfo } from '../../components/SendItemInfo.js'
+import { TransactionConfirmation } from '../../components/TransactionConfirmation.js'
+import { EVENT_SOURCE, EVENT_TYPES } from '../../constants/analytics.js'
+import { ERC_1155_ABI, ERC_721_ABI, HEADER_HEIGHT_WITH_LABEL } from '../../constants/index.js'
+import { useNavigationContext } from '../../contexts/Navigation.js'
+import { useNavigation } from '../../hooks/index.js'
+import { isEthAddress, limitDecimals } from '../../utils/index.js'
 
 interface SendCollectibleProps {
   chainId: number
@@ -240,14 +241,6 @@ export const SendCollectible = ({ chainId, contractAddress, tokenId }: SendColle
       await switchChainAsync({ chainId })
     }
 
-    analytics?.track({
-      event: 'SEND_TRANSACTION_REQUEST',
-      props: {
-        walletClient: (connector as ExtendedConnector | undefined)?._wallet?.id || 'unknown',
-        source: 'sequence-kit/wallet'
-      }
-    })
-
     if (!walletClient) {
       console.error('Wallet client not found')
       toast({
@@ -309,6 +302,24 @@ export const SendCollectible = ({ chainId, contractAddress, tokenId }: SendColle
           title: 'Transaction sent',
           description: `Successfully sent ${amountToSendFormatted} ${name} to ${toAddress}`,
           variant: 'success'
+        })
+
+        analytics?.track({
+          event: 'SEND_TRANSACTION_REQUEST',
+          props: {
+            walletClient: (connector as ExtendedConnector | undefined)?._wallet?.id || 'unknown',
+            source: EVENT_SOURCE,
+            type: EVENT_TYPES.SEND_NFT,
+            chainId: String(chainId),
+            origin: window.location.origin,
+            collectibleAddress: contractAddress,
+            collectibleId: tokenId,
+            txHash: txHash
+          },
+          nums: {
+            collectibleAmount: Number(amountRaw),
+            collectibleAmountDecimal: Number(amountToSendFormatted)
+          }
         })
 
         // Wait for receipt in the background
@@ -419,7 +430,7 @@ export const SendCollectible = ({ chainId, contractAddress, tokenId }: SendColle
                 <TextInput
                   value={toAddress}
                   onChange={ev => setToAddress(ev.target.value)}
-                  placeholder={`${nativeTokenInfo.name} Address (0x...)`}
+                  placeholder={`Wallet Address (0x...)`}
                   name="to-address"
                   data-1p-ignore
                   controls={

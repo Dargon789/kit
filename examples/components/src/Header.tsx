@@ -1,13 +1,13 @@
 import {
-  Image,
-  Text,
-  GradientAvatar,
-  truncateAddress,
-  NetworkImage,
-  Card,
   Button,
+  Card,
   ChevronDownIcon,
-  SignoutIcon
+  GradientAvatar,
+  Image,
+  NetworkImage,
+  SignoutIcon,
+  Text,
+  truncateAddress
 } from '@0xsequence/design-system'
 import * as PopoverPrimitive from '@radix-ui/react-popover'
 import { useState } from 'react'
@@ -108,7 +108,7 @@ const NetworkSelect = () => {
         >
           <div className="flex items-center gap-2">
             <NetworkImage chainId={chainId} size="sm" />
-            <Text display={{ sm: 'none', lg: 'block' }} variant="normal" fontWeight="bold" color="primary">
+            <Text className="hidden lg:block" variant="normal" fontWeight="bold" color="primary">
               {chains.find(chain => chain.id === chainId)?.name || chainId}
             </Text>
           </div>

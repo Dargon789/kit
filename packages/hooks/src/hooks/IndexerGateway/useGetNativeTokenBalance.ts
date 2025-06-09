@@ -1,11 +1,11 @@
-import { IndexerGateway, SequenceIndexerGateway, TokenBalance } from '@0xsequence/indexer'
+import { SequenceIndexerGateway, type IndexerGateway, type TokenBalance } from '@0xsequence/indexer'
 import { useQuery } from '@tanstack/react-query'
 
-import { QUERY_KEYS, time } from '../../constants'
-import { HooksOptions } from '../../types'
-import { createNativeTokenBalance } from '../../utils/helpers'
+import { QUERY_KEYS, time } from '../../constants.js'
+import type { HooksOptions } from '../../types/hooks.js'
+import { createNativeTokenBalance } from '../../utils/helpers.js'
 
-import { useIndexerGatewayClient } from './useIndexerGatewayClient'
+import { useIndexerGatewayClient } from './useIndexerGatewayClient.js'
 
 const getNativeTokenBalance = async (
   indexerGatewayClient: SequenceIndexerGateway,
@@ -57,7 +57,7 @@ export const useGetNativeTokenBalance = (args: IndexerGateway.GetNativeTokenBala
   return useQuery({
     queryKey: [QUERY_KEYS.useGetNativeTokenBalance, args, options],
     queryFn: async () => await getNativeTokenBalance(indexerGatewayClient, args),
-    retry: options?.retry ?? true,
+    retry: options?.retry ?? false,
     staleTime: time.oneSecond * 30,
     enabled: !!args.accountAddress && !options?.disabled
   })

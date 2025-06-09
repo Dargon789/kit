@@ -1,10 +1,10 @@
-import { cardVariants, cn, Divider, Text, ChevronLeftIcon, Button } from '@0xsequence/design-system'
+import { Button, cardVariants, ChevronLeftIcon, cn, Divider, Text } from '@0xsequence/design-system'
 import { motion } from 'motion/react'
 import { useContext, useEffect, useState } from 'react'
 import ReactDOM from 'react-dom'
 
-import { WALLET_WIDTH } from '../../constants'
-import { WalletContentRefContext } from '../../contexts/WalletContentRef'
+import { WALLET_WIDTH } from '../../constants/index.js'
+import { WalletContentRefContext } from '../../contexts/WalletContentRef.js'
 
 export const SlideupDrawer = ({
   label,

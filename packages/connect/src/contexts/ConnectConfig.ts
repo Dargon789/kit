@@ -1,9 +1,9 @@
 'use client'
 
-import { ConnectConfig } from '../types'
+import type { ConnectConfig } from '../types.js'
 
-import { createGenericContext } from './genericContext'
+import { createGenericContext } from './genericContext.js'
 
 const [useConnectConfigContext, ConnectConfigContextProvider] = createGenericContext<ConnectConfig>()
 
-export { useConnectConfigContext, ConnectConfigContextProvider }
+export { ConnectConfigContextProvider, useConnectConfigContext }

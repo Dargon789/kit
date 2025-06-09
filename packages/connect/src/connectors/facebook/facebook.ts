@@ -1,7 +1,7 @@
-import { Wallet } from '../../types'
-import { sequenceWallet, BaseSequenceConnectorOptions } from '../wagmiConnectors'
+import type { Wallet } from '../../types.js'
+import { sequenceWallet, type BaseSequenceConnectorOptions } from '../wagmiConnectors/index.js'
 
-import { FacebookLogo, getFacebookMonochromeLogo } from './FacebookLogo'
+import { FacebookLogo, getFacebookMonochromeLogo } from './FacebookLogo.js'
 
 export interface FacebookOptions extends BaseSequenceConnectorOptions {}
 

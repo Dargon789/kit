@@ -17,11 +17,11 @@ View the [demo](https://0xsequence.github.io/web-sdk)! 👀
 To install this package:
 
 ```bash
-npm install @0xsequence/connect wagmi ethers@6.13.0 viem 0xsequence @tanstack/react-query
+npm install @0xsequence/connect @0xsequence/hooks wagmi ethers@6.13.0 viem 0xsequence @tanstack/react-query
 # or
-pnpm install @0xsequence/connect wagmi ethers@6.13.0 viem 0xsequence @tanstack/react-query
+pnpm install @0xsequence/connect @0xsequence/hooks wagmi ethers@6.13.0 viem 0xsequence @tanstack/react-query
 # or
-yarn add @0xsequence/connect wagmi ethers@6.13.0 viem 0xsequence @tanstack/react-query
+yarn add @0xsequence/connect @0xsequence/hooks wagmi ethers@6.13.0 viem 0xsequence @tanstack/react-query
 ```
 
 ### Setting up the Library
@@ -41,6 +41,7 @@ interface CreateConfigOptions {
   disableAnalytics?: boolean
   defaultTheme?: Theme
   position?: ModalPosition
+  customCSS?: string // Injected into shadow dom
   signIn?: {
     logoUrl?: string
     projectName?: string

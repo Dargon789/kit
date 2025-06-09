@@ -1,26 +1,34 @@
-import { SearchIcon, TextInput } from '@0xsequence/design-system'
-import { TokenBalance } from '@0xsequence/indexer'
+import { SearchIcon, TextInput, TokenImage } from '@0xsequence/design-system' // Import TokenImage from design-system
+import type { TokenBalance } from '@0xsequence/indexer'
 import Fuse from 'fuse.js'
-import { useState, useMemo } from 'react'
+import { useMemo, useState } from 'react'
 
-import { useGetMoreBalances } from '../../hooks'
-import { TokenBalanceWithPrice } from '../../utils'
-import { FilterButton } from '../Filter/FilterButton'
+import { useGetMoreBalances } from '../../hooks/index.js'
+import type { TokenBalanceWithPrice } from '../../utils/index.js'
+import { FilterButton } from '../Filter/FilterButton.js'
+import { NetworkBadge } from '../NetworkBadge.js'
 
-import { CollectiblesTab } from './CollectiblesList/CollectiblesTab'
+import { CollectiblesTab } from './CollectiblesList/CollectiblesTab.js'
 
 export const CollectiblesList = ({
   tokenBalancesData,
   isLoadingFirstPage,
   onTokenClick,
   enableFilters = true,
-  gridColumns = 2
+  gridColumns = 2,
+  collectionHeaderInfo
 }: {
   tokenBalancesData: TokenBalance[]
   isLoadingFirstPage: boolean
   onTokenClick: (token: TokenBalanceWithPrice) => void
   enableFilters?: boolean
   gridColumns?: number
+  // Used only if a single collection is selected
+  collectionHeaderInfo?: {
+    logoURI?: string
+    name?: string
+    chainId: number
+  }
 }) => {
   const pageSize = 8
 
@@ -101,6 +109,24 @@ export const CollectiblesList = ({
         </div>
         {enableFilters && <FilterButton label="Collectible Filters" type="collectibles" />}
       </div>
+
+      {collectionHeaderInfo && (
+        <div className="flex flex-col items-center mb-4">
+          <div className="my-2">
+            <TokenImage src={collectionHeaderInfo.logoURI} symbol={collectionHeaderInfo.name} size="lg" />
+          </div>
+          {collectionHeaderInfo.name && (
+            <h2 className="text-lg text-white font-medium text-center mb-2">{collectionHeaderInfo.name}</h2>
+          )}
+          <NetworkBadge chainId={collectionHeaderInfo.chainId} />
+
+          <p className="text-sm text-gray-500 mt-2">
+            {collectibleBalances.length} Unique Collectible
+            {collectibleBalances.length === 0 || collectibleBalances.length > 1 ? 's' : ''}
+          </p>
+        </div>
+      )}
+
       <div className="w-full">
         <CollectiblesTab
           displayedCollectibleBalances={search ? infiniteSearchBalances?.pages.flat() : infiniteBalances?.pages.flat()}

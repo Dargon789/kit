@@ -1,25 +1,32 @@
 'use client'
 
 import { sequence } from '0xsequence'
-import { Theme, ThemeProvider } from '@0xsequence/design-system'
+import { ThemeProvider, type Theme } from '@0xsequence/design-system'
 import { SequenceClient } from '@0xsequence/provider'
 import { GoogleOAuthProvider } from '@react-oauth/google'
-import React, { useState, useEffect } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { useAccount, useConfig } from 'wagmi'
 
-import { DEFAULT_SESSION_EXPIRATION, LocalStorageKey } from '../../constants'
-import { AnalyticsContextProvider } from '../../contexts/Analytics'
-import { ConnectConfigContextProvider } from '../../contexts/ConnectConfig'
-import { ConnectModalContextProvider } from '../../contexts/ConnectModal'
-import { ThemeContextProvider } from '../../contexts/Theme'
-import { WalletConfigContextProvider } from '../../contexts/WalletConfig'
-import { useStorage } from '../../hooks/useStorage'
-import { useEmailConflict } from '../../hooks/useWaasEmailConflict'
-import { ExtendedConnector, DisplayedAsset, EthAuthSettings, ConnectConfig, ModalPosition } from '../../types'
-import { Connect } from '../Connect/Connect'
+import { DEFAULT_SESSION_EXPIRATION } from '../../constants/ethAuth.js'
+import { LocalStorageKey } from '../../constants/localStorage.js'
+import { AnalyticsContextProvider } from '../../contexts/Analytics.js'
+import { ConnectConfigContextProvider } from '../../contexts/ConnectConfig.js'
+import { ConnectModalContextProvider } from '../../contexts/ConnectModal.js'
+import { ThemeContextProvider } from '../../contexts/Theme.js'
+import { WalletConfigContextProvider } from '../../contexts/WalletConfig.js'
+import { useStorage } from '../../hooks/useStorage.js'
+import { useEmailConflict } from '../../hooks/useWaasEmailConflict.js'
+import {
+  type ConnectConfig,
+  type DisplayedAsset,
+  type EthAuthSettings,
+  type ExtendedConnector,
+  type ModalPosition
+} from '../../types.js'
+import { Connect } from '../Connect/Connect.js'
 
 export type SequenceConnectProviderProps = {
-  children: React.ReactNode
+  children: ReactNode
   config: ConnectConfig
 }
 
@@ -32,7 +39,10 @@ export const SequenceConnectPreviewProvider = (props: SequenceConnectProviderPro
     displayedAssets: displayedAssetsSetting = [],
     readOnlyNetworks,
     ethAuth = {} as EthAuthSettings,
-    disableAnalytics = false
+    disableAnalytics = false,
+    hideExternalConnectOptions = false,
+    hideConnectedWallets = false,
+    hideSocialConnectOptions = false
   } = config
 
   const defaultAppName = signIn.projectName || 'app'
@@ -122,7 +132,16 @@ export const SequenceConnectPreviewProvider = (props: SequenceConnectProviderPro
           <ConnectModalContextProvider
             value={{ isConnectModalOpen: openConnectModal, setOpenConnectModal, openConnectModalState: openConnectModal }}
           >
-            <WalletConfigContextProvider value={{ setDisplayedAssets, displayedAssets, readOnlyNetworks }}>
+            <WalletConfigContextProvider
+              value={{
+                setDisplayedAssets,
+                displayedAssets,
+                readOnlyNetworks,
+                hideExternalConnectOptions,
+                hideConnectedWallets,
+                hideSocialConnectOptions
+              }}
+            >
               <AnalyticsContextProvider value={{ setAnalytics, analytics }}>
                 <div id="kit-provider">
                   <ThemeProvider root="#kit-provider" scope="kit" theme={theme}>

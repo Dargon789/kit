@@ -1,12 +1,12 @@
-import { ContractInfo, GetContractInfoArgs } from '@0xsequence/metadata'
+import type { ContractInfo, GetContractInfoArgs } from '@0xsequence/metadata'
 import { findSupportedNetwork } from '@0xsequence/network'
-import { UseQueryResult, useQuery } from '@tanstack/react-query'
+import { useQuery, type UseQueryResult } from '@tanstack/react-query'
 
-import { QUERY_KEYS, ZERO_ADDRESS, time } from '../../constants'
-import { HooksOptions } from '../../types'
-import { compareAddress } from '../../utils/helpers'
+import { QUERY_KEYS, time, ZERO_ADDRESS } from '../../constants.js'
+import type { HooksOptions } from '../../types/hooks.js'
+import { compareAddress } from '../../utils/helpers.js'
 
-import { useMetadataClient } from './useMetadataClient'
+import { useMetadataClient } from './useMetadataClient.js'
 
 /**
  * Hook to fetch contract information.
@@ -22,7 +22,7 @@ import { useMetadataClient } from './useMetadataClient'
  * @param getContractInfoArgs.contractAddress - Contract address or ZERO_ADDRESS for native token
  * @param options - Optional configuration for the query behavior
  * @param options.disabled - If true, disables the query from automatically running
- * @param options.retry - If true (default), retries failed queries
+ * @param options.retry - If true, retries failed queries
  *
  * Query configuration:
  * - Marks data as stale after 10 minutes
@@ -92,7 +92,7 @@ export const useGetContractInfo = (args: GetContractInfoArgs, options?: HooksOpt
           : {})
       }
     },
-    retry: options?.retry ?? true,
+    retry: options?.retry ?? false,
     staleTime: time.oneMinute * 10,
     enabled: !!args.chainID && !!args.contractAddress && !options?.disabled
   })

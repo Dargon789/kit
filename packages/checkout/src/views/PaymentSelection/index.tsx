@@ -1,30 +1,30 @@
-import { useAnalyticsContext, compareAddress, TRANSACTION_CONFIRMATIONS_DEFAULT, sendTransactions } from '@0xsequence/connect'
-import { Button, Divider, Text, Spinner } from '@0xsequence/design-system'
+import type { LifiToken } from '@0xsequence/api'
+import { compareAddress, sendTransactions, TRANSACTION_CONFIRMATIONS_DEFAULT, useAnalyticsContext } from '@0xsequence/connect'
+import { Button, Divider, Spinner, Text } from '@0xsequence/design-system'
 import {
   useClearCachedBalances,
   useGetContractInfo,
-  SwapPricesWithCurrencyInfo,
-  useGetSwapPrices,
   useGetSwapQuote,
+  useGetSwapRoutes,
   useIndexerClient
 } from '@0xsequence/hooks'
 import { findSupportedNetwork } from '@0xsequence/network'
-import { useState, useEffect } from 'react'
-import { encodeFunctionData, Hex, zeroAddress } from 'viem'
-import { usePublicClient, useWalletClient, useReadContract, useAccount } from 'wagmi'
+import { useEffect, useState } from 'react'
+import { encodeFunctionData, formatUnits, zeroAddress, type Hex } from 'viem'
+import { useAccount, usePublicClient, useReadContract, useWalletClient } from 'wagmi'
 
-import { NavigationHeader } from '../../components/NavigationHeader'
-import { HEADER_HEIGHT, NFT_CHECKOUT_SOURCE } from '../../constants'
-import { ERC_20_CONTRACT_ABI } from '../../constants/abi'
-import { SelectPaymentSettings } from '../../contexts/SelectPaymentModal'
-import { useSelectPaymentModal, useTransactionStatusModal, useSkipOnCloseCallback } from '../../hooks'
+import { NavigationHeader } from '../../components/NavigationHeader.js'
+import { ERC_20_CONTRACT_ABI } from '../../constants/abi.js'
+import { EVENT_SOURCE, HEADER_HEIGHT } from '../../constants/index.js'
+import type { SelectPaymentSettings } from '../../contexts/SelectPaymentModal.js'
+import { useSelectPaymentModal, useSkipOnCloseCallback, useTransactionStatusModal } from '../../hooks/index.js'
 
-import { Footer } from './Footer'
-import { FundWithFiat } from './FundWithFiat'
-import { OrderSummary } from './OrderSummary'
-import { PayWithCreditCard } from './PayWithCreditCard'
-import { PayWithCrypto } from './PayWithCrypto/index'
-import { TransferFunds } from './TransferFunds'
+import { Footer } from './Footer.js'
+import { FundWithFiat } from './FundWithFiat.js'
+import { OrderSummary } from './OrderSummary/index.js'
+import { PayWithCreditCard } from './PayWithCreditCard/index.js'
+import { PayWithCrypto } from './PayWithCrypto/index.js'
+import { TransferFunds } from './TransferFunds.js'
 
 export const PaymentSelection = () => {
   return (
@@ -46,7 +46,7 @@ export const PaymentSelectionContent = () => {
 
   const [disableButtons, setDisableButtons] = useState(false)
   const [isError, setIsError] = useState<boolean>(false)
-
+  const [isPurchasing, setIsPurchasing] = useState<boolean>(false)
   const {
     chain,
     collectibles,
@@ -65,7 +65,8 @@ export const PaymentSelectionContent = () => {
     onSuccess = () => {},
     onError = () => {},
     onClose = () => {},
-    supplementaryAnalyticsInfo
+    supplementaryAnalyticsInfo,
+    slippageBps
   } = selectPaymentSettings
 
   const isNativeToken = compareAddress(currencyAddress, zeroAddress)
@@ -102,29 +103,30 @@ export const PaymentSelectionContent = () => {
   })
 
   const buyCurrencyAddress = currencyAddress
-  const sellCurrencyAddress = selectedCurrency || ''
 
-  const { data: swapPrices = [], isLoading: _swapPricesIsLoading } = useGetSwapPrices(
+  const { data: swapRoutes = [], isLoading: swapRoutesIsLoading } = useGetSwapRoutes(
     {
-      userAddress: userAddress ?? '',
-      buyCurrencyAddress,
-      chainId: chainId,
-      buyAmount: price,
-      withContractInfo: true
+      walletAddress: userAddress ?? '',
+      chainId,
+      toTokenAmount: price,
+      toTokenAddress: currencyAddress
     },
-    { disabled: !enableSwapPayments }
+    { disabled: !enableSwapPayments, retry: 3 }
   )
 
   const disableSwapQuote = !selectedCurrency || compareAddress(selectedCurrency, buyCurrencyAddress)
 
   const { data: swapQuote, isLoading: isLoadingSwapQuote } = useGetSwapQuote(
     {
-      userAddress: userAddress ?? '',
-      buyCurrencyAddress: currencyAddress,
-      buyAmount: price,
-      chainId: chainId,
-      sellCurrencyAddress,
-      includeApprove: true
+      params: {
+        walletAddress: userAddress ?? '',
+        toTokenAddress: buyCurrencyAddress,
+        fromTokenAddress: selectedCurrency || '',
+        toTokenAmount: price,
+        chainId: chainId,
+        includeApprove: true,
+        slippageBps: slippageBps || 100
+      }
     },
     {
       disabled: disableSwapQuote
@@ -144,6 +146,7 @@ export const PaymentSelectionContent = () => {
       return
     }
 
+    setIsPurchasing(true)
     setIsError(false)
     setDisableButtons(true)
 
@@ -198,7 +201,7 @@ export const PaymentSelectionContent = () => {
         props: {
           ...supplementaryAnalyticsInfo,
           type: 'crypto',
-          source: NFT_CHECKOUT_SOURCE,
+          source: EVENT_SOURCE,
           chainId: String(chainId),
           listedCurrency: currencyAddress,
           purchasedCurrency: currencyAddress,
@@ -207,7 +210,13 @@ export const PaymentSelectionContent = () => {
           to: targetContractAddress,
           item_ids: JSON.stringify(collectibles.map(c => c.tokenId)),
           item_quantities: JSON.stringify(collectibles.map(c => c.quantity)),
+          currencySymbol: _currencyInfoData?.symbol || '',
+          collectionAddress,
           txHash
+        },
+        nums: {
+          currencyValue: Number(price),
+          currencyValueDecimal: Number(formatUnits(BigInt(price), _currencyInfoData?.decimals || 18))
         }
       })
 
@@ -239,13 +248,15 @@ export const PaymentSelectionContent = () => {
     }
 
     setDisableButtons(false)
+    setIsPurchasing(false)
   }
 
-  const onClickPurchaseSwap = async (swapPrice: SwapPricesWithCurrencyInfo) => {
+  const onClickPurchaseSwap = async (swapTokenOption: LifiToken) => {
     if (!walletClient || !userAddress || !publicClient || !userAddress || !connector || !swapQuote) {
       return
     }
 
+    setIsPurchasing(true)
     setIsError(false)
     setDisableButtons(true)
 
@@ -261,14 +272,14 @@ export const PaymentSelectionContent = () => {
         args: [approvedSpenderAddress || targetContractAddress, price]
       })
 
-      const isSwapNativeToken = compareAddress(zeroAddress, swapPrice.price.currencyAddress)
+      const isSwapNativeToken = compareAddress(zeroAddress, swapTokenOption.address)
 
       const transactions = [
         // Swap quote optional approve step
         ...(swapQuote?.approveData && !isSwapNativeToken
           ? [
               {
-                to: swapPrice.price.currencyAddress as Hex,
+                to: swapTokenOption.address as Hex,
                 data: swapQuote.approveData as Hex,
                 chain: chainId
               }
@@ -325,16 +336,22 @@ export const PaymentSelectionContent = () => {
         props: {
           ...supplementaryAnalyticsInfo,
           type: 'crypto',
-          source: NFT_CHECKOUT_SOURCE,
+          source: EVENT_SOURCE,
           chainId: String(chainId),
-          listedCurrency: swapPrice.price.currencyAddress,
+          listedCurrency: swapTokenOption.address,
           purchasedCurrency: currencyAddress,
           origin: window.location.origin,
           from: userAddress,
           to: targetContractAddress,
           item_ids: JSON.stringify(collectibles.map(c => c.tokenId)),
           item_quantities: JSON.stringify(collectibles.map(c => c.quantity)),
+          currencySymbol: _currencyInfoData?.symbol || '',
+          collectionAddress,
           txHash
+        },
+        nums: {
+          currencyValue: Number(price),
+          currencyValueDecimal: Number(formatUnits(BigInt(price), _currencyInfoData?.decimals || 18))
         }
       })
 
@@ -366,13 +383,16 @@ export const PaymentSelectionContent = () => {
     }
 
     setDisableButtons(false)
+    setIsPurchasing(false)
   }
 
   const onClickPurchase = () => {
     if (compareAddress(selectedCurrency || '', currencyAddress)) {
       onPurchaseMainCurrency()
     } else {
-      const foundSwap = swapPrices?.find(price => price.info?.address === selectedCurrency)
+      const foundSwap = swapRoutes
+        .flatMap(route => route.fromTokens)
+        .find(fromToken => fromToken.address.toLowerCase() === selectedCurrency?.toLowerCase())
       if (foundSwap) {
         onClickPurchaseSwap(foundSwap)
       }
@@ -388,10 +408,12 @@ export const PaymentSelectionContent = () => {
     return true
   })
 
+  const isTokenIdUnknown = collectibles.some(collectible => !collectible.tokenId)
+
   return (
     <>
       <div
-        className="flex flex-col gap-2 items-start w-full pb-0 px-6 h-full"
+        className={`flex flex-col gap-2 items-start w-full pb-0 px-6 h-full transition-opacity duration-200 ${isPurchasing ? 'opacity-50 pointer-events-none' : ''}`}
         style={{
           paddingTop: HEADER_HEIGHT
         }}
@@ -408,10 +430,12 @@ export const PaymentSelectionContent = () => {
               selectedCurrency={selectedCurrency}
               setSelectedCurrency={setSelectedCurrency}
               isLoading={isLoading}
+              swapRoutes={swapRoutes}
+              swapRoutesIsLoading={swapRoutesIsLoading}
             />
           </>
         )}
-        {validCreditCardProviders.length > 0 && (
+        {validCreditCardProviders.length > 0 && !isTokenIdUnknown && (
           <>
             <Divider className="w-full my-3" />
             <PayWithCreditCard
@@ -463,7 +487,7 @@ export const PaymentSelectionContent = () => {
                 disabled={isLoading || disableButtons || !selectedCurrency || (!disableSwapQuote && isLoadingSwapQuote)}
                 shape="square"
                 variant="primary"
-                label="Complete Purchase"
+                label={isPurchasing ? <Spinner /> : 'Complete Purchase'}
               />
               <div className="flex w-full justify-center items-center gap-0.5 my-2">
                 {/* Replace by icon from design-system once new release is out */}

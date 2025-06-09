@@ -1,14 +1,14 @@
 import { TransactionOnRampProvider } from '@0xsequence/marketplace'
-import { Hex } from 'viem'
+import type { Hex } from 'viem'
 
-import type { TransakConfig } from '../contexts/CheckoutModal'
+import type { TransakConfig } from '../contexts/CheckoutModal.js'
 
-import { createGenericContext } from './genericContext'
+import { createGenericContext } from './genericContext.js'
 
 export type CreditCardProviders = 'sardine' | 'transak'
 
 export interface Collectible {
-  tokenId: string
+  tokenId?: string
   quantity: string
   decimals?: number
   price?: string
@@ -47,6 +47,8 @@ export interface SelectPaymentSettings {
   customProviderCallback?: (onSuccess: (txHash: string) => void, onError: (error: Error) => void, onClose: () => void) => void
   supplementaryAnalyticsInfo?: SupplementaryAnalyticsInfo
   skipNativeBalanceCheck?: boolean
+  slippageBps?: number
+  nativeTokenAddress?: string
 }
 
 type SelectPaymentModalContext = {
@@ -57,4 +59,4 @@ type SelectPaymentModalContext = {
 
 const [useSelectPaymentContext, SelectPaymentContextProvider] = createGenericContext<SelectPaymentModalContext>()
 
-export { useSelectPaymentContext, SelectPaymentContextProvider }
+export { SelectPaymentContextProvider, useSelectPaymentContext }

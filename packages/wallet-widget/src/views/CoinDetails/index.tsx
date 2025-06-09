@@ -1,18 +1,18 @@
 import { compareAddress, formatDisplay, getNativeTokenInfoByChainId, useWallets } from '@0xsequence/connect'
 import { Button, SendIcon, SwapIcon, Text, TokenImage } from '@0xsequence/design-system'
-import { useGetCoinPrices, useGetExchangeRate, useGetTransactionHistory, useGetSingleTokenBalance } from '@0xsequence/hooks'
+import { useGetCoinPrices, useGetExchangeRate, useGetSingleTokenBalance, useGetTransactionHistory } from '@0xsequence/hooks'
 import { useEffect } from 'react'
 import { formatUnits, zeroAddress } from 'viem'
 import { useConfig } from 'wagmi'
 
-import { InfiniteScroll } from '../../components/InfiniteScroll'
-import { NetworkBadge } from '../../components/NetworkBadge'
-import { TransactionHistoryList } from '../../components/TransactionHistoryList'
-import { HEADER_HEIGHT } from '../../constants'
-import { useSettings, useNavigation } from '../../hooks'
-import { computeBalanceFiat, flattenPaginatedTransactionHistory } from '../../utils'
+import { InfiniteScroll } from '../../components/InfiniteScroll.js'
+import { NetworkBadge } from '../../components/NetworkBadge.js'
+import { TransactionHistoryList } from '../../components/TransactionHistoryList/index.js'
+import { HEADER_HEIGHT } from '../../constants/index.js'
+import { useNavigation, useSettings } from '../../hooks/index.js'
+import { computeBalanceFiat, flattenPaginatedTransactionHistory } from '../../utils/index.js'
 
-import { CoinDetailsSkeleton } from './Skeleton'
+import { CoinDetailsSkeleton } from './Skeleton.js'
 
 export interface CoinDetailsProps {
   contractAddress: string

@@ -1,27 +1,27 @@
-import { allNetworks, EIP1193Provider } from '@0xsequence/network'
+import { allNetworks, type EIP1193Provider } from '@0xsequence/network'
 import {
   SequenceWaaS,
-  SequenceConfig,
-  ExtendedSequenceConfig,
-  Transaction,
-  FeeOption,
-  WebrpcEndpointError
+  WebrpcEndpointError,
+  type ExtendedSequenceConfig,
+  type FeeOption,
+  type SequenceConfig,
+  type Transaction
 } from '@0xsequence/waas'
 import { ethers } from 'ethers'
 import { v4 as uuidv4 } from 'uuid'
 import {
+  getAddress,
   InternalRpcError,
   ProviderDisconnectedError,
+  toHex,
   TransactionRejectedRpcError,
   UserRejectedRequestError,
-  getAddress,
-  zeroAddress,
-  toHex
+  zeroAddress
 } from 'viem'
 import { createConnector } from 'wagmi'
 
-import { LocalStorageKey } from '../../constants/localStorage'
-import { normalizeChainId } from '../../utils/helpers'
+import { LocalStorageKey } from '../../constants/localStorage.js'
+import { normalizeChainId } from '../../utils/helpers.js'
 
 export interface SequenceWaasConnectConfig {
   googleClientId?: string

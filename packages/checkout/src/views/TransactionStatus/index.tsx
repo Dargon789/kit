@@ -7,24 +7,24 @@ import {
 import {
   ArrowDownIcon,
   Card,
+  CheckmarkIcon,
+  CloseIcon,
   NetworkImage,
   Spinner,
   Text,
   TokenImage,
-  CheckmarkIcon,
-  CloseIcon,
   truncateAddress
 } from '@0xsequence/design-system'
-import { useGetTokenMetadata, useGetContractInfo, useIndexerClient } from '@0xsequence/hooks'
+import { useGetContractInfo, useGetTokenMetadata, useIndexerClient } from '@0xsequence/hooks'
 import { TransactionStatus as TransactionStatusSequence } from '@0xsequence/indexer'
 import { findSupportedNetwork } from '@0xsequence/network'
-import { useState, useEffect } from 'react'
-import TimeAgo from 'timeago-react'
-import { formatUnits, Hex, PublicClient } from 'viem'
+import { formatDistanceToNow } from 'date-fns'
+import { useEffect, useState } from 'react'
+import { formatUnits, type Hex, type PublicClient } from 'viem'
 import { usePublicClient } from 'wagmi'
 
-import { HEADER_HEIGHT } from '../../constants'
-import { useTransactionStatusModal } from '../../hooks'
+import { HEADER_HEIGHT } from '../../constants/index.js'
+import { useTransactionStatusModal } from '../../hooks/index.js'
 
 export type TxStatus = 'pending' | 'success' | 'error'
 
@@ -87,12 +87,12 @@ export const TransactionStatus = () => {
 
   const [startTime] = useState(new Date())
   const [status, setStatus] = useState<TxStatus>('pending')
-  const noItemsToDisplay = !items || !collectionAddress
+  const noItemsToDisplay = !items || !collectionAddress || items.some(i => i.tokenId === undefined)
   const { data: tokenMetadatas, isLoading: isLoadingTokenMetadatas } = useGetTokenMetadata(
     {
       chainID: String(chainId),
       contractAddress: collectionAddress || '',
-      tokenIDs: items?.map(i => i.tokenId) || []
+      tokenIDs: noItemsToDisplay ? [] : items?.map(i => i.tokenId || '')
     },
     {
       disabled: noItemsToDisplay
@@ -293,7 +293,7 @@ export const TransactionStatus = () => {
         </div>
         <div>
           <Text color="muted" variant="small" fontWeight="medium">
-            <TimeAgo datetime={startTime} />
+            {formatDistanceToNow(startTime)}
           </Text>
         </div>
       </div>

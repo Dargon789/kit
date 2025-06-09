@@ -1,10 +1,10 @@
-import { ETHAuthProof } from '@0xsequence/auth'
-import { Theme } from '@0xsequence/design-system'
-import { SequenceHooksEnv } from '@0xsequence/hooks'
-import { FunctionComponent } from 'react'
-import { Connector, CreateConnectorFn } from 'wagmi'
+import type { ETHAuthProof } from '@0xsequence/auth'
+import type { Theme } from '@0xsequence/design-system'
+import type { SequenceHooksEnv } from '@0xsequence/hooks'
+import type { FunctionComponent } from 'react'
+import type { Connector, CreateConnectorFn } from 'wagmi'
 
-import { LocalStorageKey } from './constants'
+import { LocalStorageKey } from './constants/localStorage.js'
 
 export interface LogoProps {
   className?: string
@@ -79,6 +79,10 @@ export interface ConnectConfig {
   readOnlyNetworks?: number[]
   ethAuth?: EthAuthSettings
   env?: Partial<SequenceHooksEnv>
+  hideExternalConnectOptions?: boolean
+  hideSocialConnectOptions?: boolean
+  hideConnectedWallets?: boolean
+  customCSS?: string
 }
 
 export type StorageItem = {

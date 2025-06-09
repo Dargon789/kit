@@ -1,13 +1,13 @@
-import { CheckoutOptionsSalesContractArgs, TransactionSwapProvider } from '@0xsequence/marketplace'
+import { TransactionSwapProvider, type CheckoutOptionsSalesContractArgs } from '@0xsequence/marketplace'
 import { findSupportedNetwork } from '@0xsequence/network'
-import { Abi, Hex, encodeFunctionData, toHex, zeroAddress } from 'viem'
+import { encodeFunctionData, toHex, zeroAddress, type Abi, type Hex } from 'viem'
 import { useReadContract, useReadContracts } from 'wagmi'
 
-import { ERC_1155_SALE_CONTRACT } from '../constants/abi'
-import { SelectPaymentSettings } from '../contexts/SelectPaymentModal'
+import { ERC_1155_SALE_CONTRACT } from '../constants/abi.js'
+import type { SelectPaymentSettings } from '../contexts/SelectPaymentModal.js'
 
-import { useCheckoutOptionsSalesContract } from './useCheckoutOptionsSalesContract'
-import { useSelectPaymentModal } from './useSelectPaymentModal'
+import { useCheckoutOptionsSalesContract } from './useCheckoutOptionsSalesContract.js'
+import { useSelectPaymentModal } from './useSelectPaymentModal.js'
 
 /**
  * Return type for the useERC1155SaleContractCheckout hook.
@@ -46,7 +46,7 @@ export const getERC1155SaleContractConfig = ({
     // [to, tokenIds, amounts, data, expectedPaymentToken, maxTotal, proof]
     args: [
       recipientAddress,
-      collectibles.map(c => BigInt(c.tokenId)),
+      collectibles.map(c => BigInt(c.tokenId || '')),
       collectibles.map(c => BigInt(c.quantity)),
       toHex(0),
       currencyAddress,
@@ -296,19 +296,28 @@ export const useSaleContractConfig = ({
       return saleInfos
     }
 
-    // In the sale contract, the global sale has priority over the token sale
-    // So we need to check if the global sale is set, and if it is, use that
-    // Otherwise, we use the token sale
-    const { cost: globalCost, startTime, endTime } = globalSaleDetailsERC1155 as SaleDetailsERC1155
-    const isGlobalSaleInvalid =
-      endTime === BigInt(0) ||
-      BigInt(Math.floor(Date.now() / 1000)) <= startTime ||
-      BigInt(Math.floor(Date.now() / 1000)) >= endTime
+    const { cost: globalCost } = globalSaleDetailsERC1155 as SaleDetailsERC1155
+
     saleInfos = tokenIds.map((tokenId, index) => {
-      const tokenPrice = (tokenSaleDetailsERC1155?.[index].result as SaleDetailsERC1155)['cost'] || BigInt(0)
+      const tokenSaleDetails = tokenSaleDetailsERC1155?.[index].result as SaleDetailsERC1155
+      const tokenPrice = tokenSaleDetails['cost'] || BigInt(0)
+      const startTime = tokenSaleDetails['startTime'] || BigInt(0)
+      const endTime = tokenSaleDetails['endTime'] || BigInt(0)
+
+      // In the sale contract, the token sale has priority over the global sale
+      // So we need to check if the token sale is set, and if it is, use that
+      // Otherwise, we use the global sale
+
+      const isTokenSaleInvalid =
+        endTime === BigInt(0) ||
+        BigInt(Math.floor(Date.now() / 1000)) <= startTime ||
+        BigInt(Math.floor(Date.now() / 1000)) >= endTime
+
+      const effectivePrice = isTokenSaleInvalid ? globalCost : tokenPrice
+
       return {
         tokenId,
-        price: (!isGlobalSaleInvalid ? globalCost : tokenPrice).toString()
+        price: effectivePrice.toString()
       }
     })
 

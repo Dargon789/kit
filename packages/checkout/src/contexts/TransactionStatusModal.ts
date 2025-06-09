@@ -1,7 +1,7 @@
-import { createGenericContext } from './genericContext'
+import { createGenericContext } from './genericContext.js'
 
 interface Item {
-  tokenId: string
+  tokenId?: string
   quantity: string
   decimals?: number
   price: string
@@ -27,4 +27,4 @@ type TransactionStatusContext = {
 
 const [useTransactionStatusContext, TransactionStatusModalContextProvider] = createGenericContext<TransactionStatusContext>()
 
-export { useTransactionStatusContext, TransactionStatusModalContextProvider }
+export { TransactionStatusModalContextProvider, useTransactionStatusContext }

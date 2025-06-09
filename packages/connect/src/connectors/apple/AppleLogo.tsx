@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { LogoProps } from '../../types'
+import type { LogoProps } from '../../types.js'
 
 interface GetAppleLogo {
   isDarkMode: boolean

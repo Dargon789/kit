@@ -12,8 +12,8 @@ export const QUERY_KEYS = {
   useGetExchangeRate: 'useGetExchangeRate',
   useGetCoinPrices: 'useGetCoinPrices',
   useGetCollectiblePrices: 'useGetCollectiblePrices',
-  useGetSwapPrices: 'useGetSwapPrices',
-  useGetSwapQuote: 'useGetSwapQuote'
+  useGetSwapQuote: 'useGetSwapQuote',
+  useGetSwapRoutes: 'useGetSwapRoutes'
 }
 
 export const time = {
@@ -28,3 +28,5 @@ export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 export const NATIVE_TOKEN_ADDRESS_0X_SWAP = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 
 export const ACCOUNT_ADDRESS = '0x345458cfD2F0c808455342CD0A6e07a09f893292'
+
+export const WAAS_STATUS_URL = 'https://waas.sequence.app/status'

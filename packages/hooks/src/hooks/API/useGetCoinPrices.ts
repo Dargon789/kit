@@ -1,10 +1,10 @@
-import { SequenceAPIClient, Token } from '@0xsequence/api'
+import { SequenceAPIClient, type Token } from '@0xsequence/api'
 import { useQuery } from '@tanstack/react-query'
 
-import { QUERY_KEYS, time } from '../../constants'
-import { HooksOptions } from '../../types'
+import { QUERY_KEYS, time } from '../../constants.js'
+import type { HooksOptions } from '../../types/hooks.js'
 
-import { useAPIClient } from './useAPIClient'
+import { useAPIClient } from './useAPIClient.js'
 
 /**
  * Helper function to fetch coin prices from the Sequence API.
@@ -37,7 +37,7 @@ const getCoinPrices = async (apiClient: SequenceAPIClient, tokens: Token[]) => {
  *   - contractAddress: The token's contract address (use ZERO_ADDRESS for native tokens)
  *
  * @param options - Optional configuration options:
- *   - retry: Whether to retry failed requests (defaults to true)
+ *   - retry: Whether to retry failed requests (defaults to false)
  *   - disabled: Whether to disable the query
  *
  * @returns React Query result object containing:
@@ -75,7 +75,7 @@ export const useGetCoinPrices = (tokens: Token[], options?: HooksOptions) => {
   return useQuery({
     queryKey: [QUERY_KEYS.useGetCoinPrices, tokens, options],
     queryFn: () => getCoinPrices(apiClient, tokens),
-    retry: options?.retry ?? true,
+    retry: options?.retry ?? false,
     staleTime: time.oneMinute,
     enabled: tokens.length > 0 && !options?.disabled
   })

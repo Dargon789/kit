@@ -1,6 +1,6 @@
-import { TokenBalanceWithPrice } from '../utils'
+import type { TokenBalanceWithPrice } from '../utils/index.js'
 
-import { createGenericContext } from './genericContext'
+import { createGenericContext } from './genericContext.js'
 
 export interface SwapContext {
   fromCoin: TokenBalanceWithPrice | undefined
@@ -24,4 +24,4 @@ export interface SwapContext {
 
 const [useSwapContext, SwapContextProvider] = createGenericContext<SwapContext>()
 
-export { useSwapContext, SwapContextProvider }
+export { SwapContextProvider, useSwapContext }

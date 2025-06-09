@@ -1,15 +1,15 @@
 import { useAddFundsModal } from '@0xsequence/checkout'
-import { compareAddress, formatAddress, useWallets, useOpenConnectModal, getNativeTokenInfoByChainId } from '@0xsequence/connect'
+import { compareAddress, formatAddress, getNativeTokenInfoByChainId, useOpenConnectModal, useWallets } from '@0xsequence/connect'
 import {
-  Button,
-  ArrowUpIcon,
-  SwapIcon,
-  ScanIcon,
   AddIcon,
+  ArrowUpIcon,
+  Button,
   ChevronUpDownIcon,
-  Text,
   EllipsisIcon,
-  Skeleton
+  ScanIcon,
+  Skeleton,
+  SwapIcon,
+  Text
 } from '@0xsequence/design-system'
 import { useGetCoinPrices, useGetExchangeRate } from '@0xsequence/hooks'
 import { ethers } from 'ethers'
@@ -18,18 +18,18 @@ import { AnimatePresence } from 'motion/react'
 import { useEffect, useMemo, useState } from 'react'
 import { useAccount, useConfig } from 'wagmi'
 
-import { CopyButton } from '../../components/CopyButton'
-import { WalletsFilter } from '../../components/Filter/WalletsFilter'
-import { StackedIconTag } from '../../components/IconWrappers/StackedIconTag'
-import { ListCardNav } from '../../components/ListCard/ListCardNav'
-import { ListCardNavTable } from '../../components/ListCardTable/ListCardNavTable'
-import { SelectWalletRow } from '../../components/Select/SelectWalletRow'
-import { SlideupDrawer } from '../../components/Select/SlideupDrawer'
-import { WalletAccountGradient } from '../../components/WalletAccountGradient'
-import { useNavigation, useSettings, useGetAllTokensDetails, useFiatWalletsMap } from '../../hooks'
-import { computeBalanceFiat } from '../../utils'
+import { CopyButton } from '../../components/CopyButton.js'
+import { WalletsFilter } from '../../components/Filter/WalletsFilter.js'
+import { StackedIconTag } from '../../components/IconWrappers/StackedIconTag.js'
+import { ListCardNav } from '../../components/ListCard/ListCardNav.js'
+import { ListCardNavTable } from '../../components/ListCardTable/ListCardNavTable.js'
+import { SelectWalletRow } from '../../components/Select/SelectWalletRow.js'
+import { SlideupDrawer } from '../../components/Select/SlideupDrawer.js'
+import { WalletAccountGradient } from '../../components/WalletAccountGradient.js'
+import { useFiatWalletsMap, useGetAllTokensDetails, useNavigation, useSettings } from '../../hooks/index.js'
+import { computeBalanceFiat } from '../../utils/index.js'
 
-import { OperationButtonTemplate } from './OperationButtonTemplate'
+import { OperationButtonTemplate } from './OperationButtonTemplate.js'
 
 export const Home = () => {
   const { setNavigation } = useNavigation()
@@ -374,7 +374,7 @@ export const Home = () => {
           </SlideupDrawer>
         )}
         {walletFilterOpen && (
-          <SlideupDrawer onClose={() => setWalletFilterOpen(false)} label="Select active wallet">
+          <SlideupDrawer onClose={() => setWalletFilterOpen(false)} label="Filter items by wallet">
             <WalletsFilter />
           </SlideupDrawer>
         )}

@@ -1,32 +1,33 @@
 import {
-  useCheckoutModal,
+  TransactionOnRampProvider,
   useAddFundsModal,
+  useCheckoutModal,
   useSelectPaymentModal,
-  useSwapModal,
-  TransactionOnRampProvider
+  useSwapModal
 } from '@0xsequence/checkout'
 import type { SwapModalSettings } from '@0xsequence/checkout'
 import {
+  getModalPositionCss,
+  signEthAuthProof,
+  useOpenConnectModal,
   useStorage,
   useWaasFeeOptions,
-  signEthAuthProof,
-  validateEthProof,
-  getModalPositionCss,
-  useOpenConnectModal,
-  useWallets
+  useWallets,
+  validateEthProof
 } from '@0xsequence/connect'
-import { Button, Card, Modal, Scroll, Select, Switch, Text, TextInput, cn } from '@0xsequence/design-system'
+import { Button, Card, cn, Modal, Scroll, Select, Switch, Text, TextInput } from '@0xsequence/design-system'
 import { allNetworks, ChainId } from '@0xsequence/network'
 import { useOpenWalletModal } from '@0xsequence/wallet-widget'
 import { CardButton, Header, WalletListItem } from 'example-shared-components'
 import { AnimatePresence } from 'motion/react'
-import React, { type ComponentProps, useEffect } from 'react'
+import React, { useEffect, type ComponentProps } from 'react'
 import { encodeFunctionData, formatUnits, parseAbi, toHex } from 'viem'
 import { useAccount, useChainId, usePublicClient, useSendTransaction, useWalletClient, useWriteContract } from 'wagmi'
 
 import { sponsoredContractAddresses } from '../config'
 import { messageToSign } from '../constants'
 import { ERC_1155_SALE_CONTRACT } from '../constants/erc1155-sale-contract'
+// import { ERC_721_SALE_CONTRACT } from '../constants/erc721-sale-contract'
 import { abi } from '../constants/nft-abi'
 import { delay, getCheckoutSettings, getOrderbookCalldata } from '../utils'
 
@@ -320,8 +321,8 @@ export const Connected = () => {
 
   const onClickSwap = () => {
     const chainId = 137
-    const currencyAddress = '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359'
-    const currencyAmount = '20000'
+    const toTokenAddress = '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359'
+    const toTokenAmount = '200000'
     const data = encodeFunctionData({ abi: parseAbi(['function demo()']), functionName: 'demo', args: [] })
 
     const swapModalSettings: SwapModalSettings = {
@@ -329,8 +330,8 @@ export const Connected = () => {
         console.log('swap successful!')
       },
       chainId,
-      currencyAddress,
-      currencyAmount,
+      toTokenAddress,
+      toTokenAmount,
       postSwapTransactions: [
         {
           to: '0x37470dac8a0255141745906c972e414b1409b470',
@@ -360,10 +361,8 @@ export const Connected = () => {
     const currencyAddress = '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359'
     const salesContractAddress = '0xe65b75eb7c58ffc0bf0e671d64d0e1c6cd0d3e5b'
     const collectionAddress = '0xdeb398f41ccd290ee5114df7e498cf04fac916cb'
-    const price = '20000'
+    const price = '200000'
     const contractId = '674eb5613d739107bbd18ed2'
-
-    const chainId = 137
 
     const collectibles = [
       {
@@ -387,19 +386,41 @@ export const Connected = () => {
       ]
     })
 
+    // ERC-721 contract
+    // const currencyAddress = '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359'
+    // const salesContractAddress = '0xa0284905d29cbeb19f4be486f9091fac215b7a6a'
+    // const collectionAddress = '0xd705db0a96075b98758c4bdafe8161d8566a68f8'
+    // const price = '1'
+    // const contractId = '674eb5613d739107bbd18ed2'
+
+    // const chainId = 137
+
+    // const collectibles = [
+    //   {
+    //     quantity: '1'
+    //   }
+    // ]
+
+    // const purchaseTransactionData = encodeFunctionData({
+    //   abi: ERC_721_SALE_CONTRACT,
+    //   functionName: 'mint',
+    //   // [to, amount, expectedPaymentToken, maxTotal, proof]
+    //   args: [address, BigInt(1), currencyAddress, price, [toHex(0, { size: 32 })]]
+    // })
+
     openSelectPaymentModal({
       collectibles,
       chain: chainId,
       price,
       targetContractAddress: salesContractAddress,
+      enableMainCurrencyPayment: true,
       recipientAddress: address,
       currencyAddress,
       collectionAddress,
       creditCardProviders: [checkoutProvider || 'transak'],
       onRampProvider: onRampProvider ? (onRampProvider as TransactionOnRampProvider) : TransactionOnRampProvider.transak,
       transakConfig: {
-        contractId,
-        apiKey: '5911d9ec-46b5-48fa-a755-d59a715ff0cf'
+        contractId
       },
       copyrightText: 'ⓒ2024 Sequence',
       onSuccess: (txnHash: string) => {
@@ -515,6 +536,23 @@ export const Connected = () => {
               title="Wallet widget"
               description="View your integrated wallet"
               onClick={() => setOpenWalletModal(true)}
+            />
+            <CardButton
+              title="Wallet Widget Inventory"
+              description="Open the wallet widget with a specific collection"
+              onClick={() =>
+                setOpenWalletModal(true, {
+                  defaultNavigation: {
+                    location: 'search-collectibles',
+                    params: {
+                      selectedCollection: {
+                        chainId: 137,
+                        contractAddress: '0x92473261F2c26F2264429C451F70b0192f858795'
+                      }
+                    }
+                  }
+                })
+              }
             />
             {(sponsoredContractAddresses[chainId] || networkForCurrentChainId.testnet) && isWaasConnectionActive && (
               <CardButton
@@ -684,7 +722,8 @@ export const Connected = () => {
                           <Text variant="xsmall">{formatUnits(BigInt(option.value), option.token.decimals || 0)}</Text>
                         </div>
                         <div className="flex flex-row">
-                          <Text>Wallet balance for {option.token.name}: </Text> <Text>{option.balanceFormatted}</Text>
+                          <Text>Wallet balance for {option.token.name}: </Text>{' '}
+                          <Text>{'balanceFormatted' in option ? option.balanceFormatted : null}</Text>
                         </div>
                       </div>
                     ),
@@ -700,7 +739,7 @@ export const Connected = () => {
                     )
 
                     if (selected?.token.contractAddress !== undefined) {
-                      if (!selected.hasEnoughBalanceForFee) {
+                      if (!('hasEnoughBalanceForFee' in selected) || !selected.hasEnoughBalanceForFee) {
                         setFeeOptionAlert({
                           title: 'Insufficient balance',
                           description: `You do not have enough balance to pay the fee with ${selected.token.name}, please make sure you have enough balance in your wallet for the selected fee option.`,

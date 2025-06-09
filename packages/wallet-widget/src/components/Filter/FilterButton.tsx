@@ -1,11 +1,11 @@
 import { useWallets } from '@0xsequence/connect'
-import { FilterIcon, cn, cardVariants, Text } from '@0xsequence/design-system'
+import { cardVariants, cn, FilterIcon, Text } from '@0xsequence/design-system'
 import { AnimatePresence } from 'motion/react'
 import { useMemo, useState } from 'react'
 
-import { useSettings } from '../../hooks'
+import { useSettings } from '../../hooks/index.js'
 
-import { FilterMenu } from './FilterMenu'
+import { FilterMenu } from './FilterMenu.js'
 
 export const FilterButton = ({ label, type }: { label: string; type: 'tokens' | 'collectibles' | 'transactions' }) => {
   const { wallets } = useWallets()

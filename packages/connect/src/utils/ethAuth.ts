@@ -1,13 +1,13 @@
-import { ETHAuthProof } from '@0xsequence/auth'
+import type { ETHAuthProof } from '@0xsequence/auth'
 import { ETHAuth, Proof } from '@0xsequence/ethauth'
 import { isValidTypedDataSignature } from '@0xsequence/provider'
-import { UsePublicClientReturnType, Storage } from 'wagmi'
-import { GetWalletClientData } from 'wagmi/query'
+import type { Storage, UsePublicClientReturnType } from 'wagmi'
+import type { GetWalletClientData } from 'wagmi/query'
 
-import { LocalStorageKey, DEFAULT_SESSION_EXPIRATION } from '../constants'
-import { StorageItem } from '../types'
+import { DEFAULT_SESSION_EXPIRATION, LocalStorageKey } from '../constants/index.js'
+import type { StorageItem } from '../types.js'
 
-import { publicClientToProvider, walletClientToSigner } from './adapters'
+import { publicClientToProvider, walletClientToSigner } from './adapters.js'
 
 export const signEthAuthProof = async (
   walletClient: GetWalletClientData<any, any>,
@@ -64,7 +64,7 @@ export const validateEthProof = async (
   const decodedProof = await ethAuth.decodeProof(proof.proofString, true)
   const provider = publicClientToProvider(publicClient)
 
-  const isValid = await isValidTypedDataSignature(walletAddress, proof.typedData, decodedProof.signature, provider)
+  const isValid = await isValidTypedDataSignature(walletAddress, proof.typedData, decodedProof.signature, provider as any)
 
   return isValid
 }

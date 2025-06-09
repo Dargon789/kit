@@ -1,10 +1,10 @@
-import { IndexerGateway, Page, SequenceIndexerGateway } from '@0xsequence/indexer'
+import { SequenceIndexerGateway, type IndexerGateway, type Page } from '@0xsequence/indexer'
 import { useInfiniteQuery } from '@tanstack/react-query'
 
-import { QUERY_KEYS, time } from '../../constants'
-import { HooksOptions } from '../../types'
+import { QUERY_KEYS, time } from '../../constants.js'
+import type { HooksOptions } from '../../types/hooks.js'
 
-import { useIndexerGatewayClient } from './useIndexerGatewayClient'
+import { useIndexerGatewayClient } from './useIndexerGatewayClient.js'
 
 const getTokenBalancesByContract = async (
   indexerGatewayClient: SequenceIndexerGateway,
@@ -84,7 +84,7 @@ export const useGetTokenBalancesByContract = (args: IndexerGateway.GetTokenBalan
       return page?.more ? page : undefined
     },
     initialPageParam: { pageSize: args.page?.pageSize } as Page,
-    retry: options?.retry ?? true,
+    retry: options?.retry ?? false,
     staleTime: time.oneSecond * 30,
     enabled: args.filter.contractAddresses.length > 0 && !options?.disabled
   })

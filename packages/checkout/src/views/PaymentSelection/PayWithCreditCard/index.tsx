@@ -4,9 +4,9 @@ import { findSupportedNetwork } from '@0xsequence/network'
 import { useEffect, useState } from 'react'
 import { useAccount } from 'wagmi'
 
-import { SelectPaymentSettings } from '../../../contexts'
-import { CheckoutSettings } from '../../../contexts/CheckoutModal'
-import { useCheckoutModal, useSelectPaymentModal } from '../../../hooks'
+import type { CheckoutSettings } from '../../../contexts/CheckoutModal.js'
+import type { SelectPaymentSettings } from '../../../contexts/SelectPaymentModal.js'
+import { useCheckoutModal, useSelectPaymentModal } from '../../../hooks/index.js'
 
 interface PayWithCreditCardProps {
   settings: SelectPaymentSettings
@@ -100,7 +100,7 @@ export const PayWithCreditCard = ({ settings, disableButtons, skipOnCloseCallbac
         currencySymbol: currencyInfoData.symbol,
         currencyAddress,
         currencyDecimals: String(currencyInfoData?.decimals || 0),
-        nftId: collectible.tokenId,
+        nftId: collectible.tokenId ?? '',
         nftAddress: collectionAddress,
         nftQuantity: collectible.quantity,
         nftDecimals: collectible.decimals === undefined ? undefined : String(collectible.decimals),

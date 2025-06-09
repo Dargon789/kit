@@ -1,10 +1,10 @@
-import { LinkedWallet } from '@0xsequence/api'
-import { motion, AnimatePresence } from 'motion/react'
-import React, { useMemo, useEffect, useRef, JSX } from 'react'
+import type { LinkedWallet } from '@0xsequence/api'
+import { AnimatePresence, motion } from 'motion/react'
+import { useEffect, useMemo, useRef, type JSX } from 'react'
 
-import { ConnectedWallet } from '../../hooks/useWallets'
+import type { ConnectedWallet } from '../../hooks/useWallets.js'
 
-import { WalletListItem, WalletListItemProps } from './WalletListItem'
+import { WalletListItem, type WalletListItemProps } from './WalletListItem.js'
 
 interface ConnectedWalletsProps {
   wallets: ConnectedWallet[]

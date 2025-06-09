@@ -29,6 +29,12 @@ export const connectConfig: ConnectConfig = {
     projectName: 'Sequence Web SDK Demo',
     useMock: isDebugMode
   },
+  // Custom css injected into shadow dom
+  // customCSS: `
+  //   span {
+  //     color: red !important;
+  //   }
+  // `,
   displayedAssets: [
     // Native token
     {
@@ -90,7 +96,9 @@ export const config =
           ChainId.ARBITRUM_SEPOLIA,
           ChainId.POLYGON,
           ChainId.IMMUTABLE_ZKEVM,
-          ChainId.IMMUTABLE_ZKEVM_TESTNET
+          ChainId.IMMUTABLE_ZKEVM_TESTNET,
+          ChainId.BASE_SEPOLIA,
+          ChainId.BASE
         ],
         defaultChainId: ChainId.ARBITRUM_NOVA,
         waasConfigKey: isDebugMode
@@ -126,7 +134,9 @@ export const config =
           ChainId.ARBITRUM_SEPOLIA,
           ChainId.POLYGON,
           ChainId.IMMUTABLE_ZKEVM,
-          ChainId.IMMUTABLE_ZKEVM_TESTNET
+          ChainId.IMMUTABLE_ZKEVM_TESTNET,
+          ChainId.BASE_SEPOLIA,
+          ChainId.BASE
         ],
         defaultChainId: ChainId.ARBITRUM_NOVA,
 

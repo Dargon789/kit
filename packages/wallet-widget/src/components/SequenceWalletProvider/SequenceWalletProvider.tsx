@@ -1,23 +1,29 @@
 'use client'
 
 import { SequenceCheckoutProvider, useAddFundsModal } from '@0xsequence/checkout'
-import { getModalPositionCss, useTheme, ShadowRoot, useOpenConnectModal } from '@0xsequence/connect'
+import { getModalPositionCss, ShadowRoot, useConnectConfigContext, useOpenConnectModal, useTheme } from '@0xsequence/connect'
 import { Modal, Scroll, ToastProvider } from '@0xsequence/design-system'
 import { AnimatePresence } from 'motion/react'
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState, type ReactNode } from 'react'
 import { useAccount } from 'wagmi'
 
-import { HEADER_HEIGHT, HEADER_HEIGHT_WITH_LABEL } from '../../constants'
-import { WALLET_WIDTH, WALLET_HEIGHT } from '../../constants'
-import { History, Navigation, NavigationContextProvider, WalletModalContextProvider, WalletOptions } from '../../contexts'
-import { WalletContentRefProvider, WalletContentRefContext } from '../../contexts/WalletContentRef'
+import { HEADER_HEIGHT, HEADER_HEIGHT_WITH_LABEL } from '../../constants/index.js'
+import { WALLET_HEIGHT, WALLET_WIDTH } from '../../constants/index.js'
+import {
+  NavigationContextProvider,
+  WalletModalContextProvider,
+  type History,
+  type Navigation,
+  type WalletOptions
+} from '../../contexts/index.js'
+import { WalletContentRefContext, WalletContentRefProvider } from '../../contexts/WalletContentRef.js'
 
-import { FiatWalletsMapProvider } from './ProviderComponents/FiatWalletsMapProvider'
-import { SwapProvider } from './ProviderComponents/SwapProvider'
-import { getHeader, getContent } from './utils'
+import { FiatWalletsMapProvider } from './ProviderComponents/FiatWalletsMapProvider.js'
+import { SwapProvider } from './ProviderComponents/SwapProvider.js'
+import { getContent, getHeader } from './utils/index.js'
 
 export type SequenceWalletProviderProps = {
-  children: React.ReactNode
+  children: ReactNode
 }
 
 const DEFAULT_LOCATION: Navigation = {
@@ -39,6 +45,7 @@ export const WalletContent = ({ children }: SequenceWalletProviderProps) => {
   const { isAddFundsModalOpen } = useAddFundsModal()
   const { isConnectModalOpen } = useOpenConnectModal()
   const { address } = useAccount()
+  const { customCSS } = useConnectConfigContext()
 
   useEffect(() => {
     if (!address) {
@@ -94,7 +101,7 @@ export const WalletContent = ({ children }: SequenceWalletProviderProps) => {
         <FiatWalletsMapProvider>
           <ToastProvider>
             <SwapProvider>
-              <ShadowRoot theme={theme}>
+              <ShadowRoot theme={theme} customCSS={customCSS}>
                 <AnimatePresence>
                   {openWalletModal && !isAddFundsModalOpen && !isConnectModalOpen && (
                     <Modal

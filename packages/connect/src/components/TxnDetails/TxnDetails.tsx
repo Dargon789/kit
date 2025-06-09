@@ -6,10 +6,10 @@ import { useEffect, useState } from 'react'
 import { formatUnits, zeroAddress } from 'viem'
 import { useConfig } from 'wagmi'
 
-import { compareAddress, capitalize, truncateAtMiddle } from '../../utils/helpers'
-import { getNativeTokenInfoByChainId } from '../../utils/tokens'
-import { DecodingType, TransferProps, AwardItemProps, decodeTransactions } from '../../utils/txnDecoding'
-import { CollectibleTileImage } from '../CollectibleTileImage'
+import { capitalize, compareAddress, truncateAtMiddle } from '../../utils/helpers.js'
+import { getNativeTokenInfoByChainId } from '../../utils/tokens.js'
+import { decodeTransactions, DecodingType, type AwardItemProps, type TransferProps } from '../../utils/txnDecoding.js'
+import { CollectibleTileImage } from '../CollectibleTileImage/index.js'
 
 interface TxnDetailsProps {
   address: string
@@ -44,6 +44,7 @@ export const TxnDetails = ({ address, txs, chainId }: TxnDetailsProps) => {
   const [awardItemProps, setAwardItemProps] = useState<AwardItemProps[]>([])
 
   const getTxnProps = async () => {
+    // @ts-ignore
     const decodedTxnDatas = await decodeTransactions(apiClient, address, txs)
     const type = decodedTxnDatas[0]?.type
 

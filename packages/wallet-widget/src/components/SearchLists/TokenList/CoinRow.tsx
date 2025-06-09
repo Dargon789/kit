@@ -1,13 +1,13 @@
 import { formatAddress } from '@0xsequence/connect'
-import { Text, GradientAvatar } from '@0xsequence/design-system'
+import { GradientAvatar, Text } from '@0xsequence/design-system'
 import { getAddress } from 'viem'
 import { useChains } from 'wagmi'
 
-import { useSettings } from '../../../hooks'
-import { formatTokenInfo } from '../../../utils/formatBalance'
-import { TokenBalanceWithPrice } from '../../../utils/tokens'
-import { TokenImageCustom } from '../../Filter/TokenImageCustom'
-import { ListCardNav } from '../../ListCard/ListCardNav'
+import { useSettings } from '../../../hooks/index.js'
+import { formatTokenInfo } from '../../../utils/formatBalance.js'
+import type { TokenBalanceWithPrice } from '../../../utils/tokens.js'
+import { TokenImageCustom } from '../../Filter/TokenImageCustom.js'
+import { ListCardNav } from '../../ListCard/ListCardNav.js'
 
 interface BalanceItemProps {
   balance: TokenBalanceWithPrice

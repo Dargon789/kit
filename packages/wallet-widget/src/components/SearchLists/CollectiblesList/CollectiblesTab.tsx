@@ -1,10 +1,10 @@
-import { Spinner, Skeleton, Text } from '@0xsequence/design-system'
-import React from 'react'
+import { Skeleton, Spinner, Text } from '@0xsequence/design-system'
+import type { FC } from 'react'
 
-import { TokenBalanceWithPrice } from '../../../utils'
-import { InfiniteScroll } from '../../InfiniteScroll'
+import type { TokenBalanceWithPrice } from '../../../utils/index.js'
+import { InfiniteScroll } from '../../InfiniteScroll.js'
 
-import { CollectibleTile } from './CollectibleTile'
+import { CollectibleTile } from './CollectibleTile.js'
 
 interface CollectiblesTabProps {
   displayedCollectibleBalances: TokenBalanceWithPrice[] | undefined
@@ -16,7 +16,7 @@ interface CollectiblesTabProps {
   gridColumns?: number
 }
 
-export const CollectiblesTab: React.FC<CollectiblesTabProps> = ({
+export const CollectiblesTab: FC<CollectiblesTabProps> = ({
   displayedCollectibleBalances,
   fetchMoreCollectibleBalances,
   hasMoreCollectibleBalances,

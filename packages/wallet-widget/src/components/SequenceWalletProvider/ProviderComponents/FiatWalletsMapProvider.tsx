@@ -1,11 +1,11 @@
 import { compareAddress, useWallets } from '@0xsequence/connect'
-import { useGetExchangeRate, useGetCoinPrices } from '@0xsequence/hooks'
-import { useState, ReactNode, useEffect } from 'react'
-import { zeroAddress, getAddress } from 'viem'
+import { useGetCoinPrices, useGetExchangeRate } from '@0xsequence/hooks'
+import { useEffect, useState, type ReactNode } from 'react'
+import { getAddress, zeroAddress } from 'viem'
 
-import { FiatWalletPair, FiatWalletsMapContextProvider } from '../../../contexts'
-import { useGetAllTokensDetails, useSettings } from '../../../hooks'
-import { computeBalanceFiat } from '../../../utils'
+import { FiatWalletsMapContextProvider, type FiatWalletPair } from '../../../contexts/index.js'
+import { useGetAllTokensDetails, useSettings } from '../../../hooks/index.js'
+import { computeBalanceFiat } from '../../../utils/index.js'
 
 // Define the provider component
 export const FiatWalletsMapProvider = ({ children }: { children: ReactNode }) => {
