@@ -77,7 +77,10 @@ export function SocialLink() {
     }
   }
 
-  const appleRedirectUri = 'https://' + window.location.host
+  const appleRedirectUri =
+    typeof window !== 'undefined' && window.location && window.location.host
+      ? 'https://' + window.location.host
+      : '';
   const handleAppleLogin = async (response: { authorization: { id_token: string } }) => {
     const challenge = await sequenceWaaS.initAuth({ idToken: response.authorization.id_token })
     try {
