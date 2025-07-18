@@ -27,6 +27,10 @@ export function SocialLink() {
   const [showEmailWarning, setEmailWarning] = useState(false)
   const [code, setCode] = useState<string[]>([])
 
+  useEffect(() => {
+    setCode([])
+  }, [email])
+
   const sequenceWaaS = useSequenceWaaS()
   const { data: googleClientId } = useStorageItem(LocalStorageKey.WaasGoogleClientID)
   const { data: appleClientId } = useStorageItem(LocalStorageKey.WaasAppleClientID)
