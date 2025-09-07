@@ -68,7 +68,8 @@ export const connectConfig: ConnectConfig = {
         indexerGatewayUrl: 'https://dev-indexer.sequence.app',
         metadataUrl: 'https://dev-metadata.sequence.app',
         apiUrl: 'https://dev-api.sequence.app',
-        indexerUrl: 'https://dev-indexer.sequence.app'
+        indexerUrl: 'https://dev-indexer.sequence.app',
+        builderUrl: 'https://dev-api.sequence.build'
       }
     : undefined
 }
@@ -116,6 +117,10 @@ export const config =
         apple: {
           clientId: 'com.horizon.sequence.waas',
           redirectURI: window.location.origin + window.location.pathname
+        },
+        X: {
+          clientId: 'MVZ6aHMyNmMtSF9mNHVldFR6TV86MTpjaQ',
+          redirectURI: window.location.origin + '/auth-callback-X'
         },
         walletConnect: {
           projectId: walletConnectProjectId

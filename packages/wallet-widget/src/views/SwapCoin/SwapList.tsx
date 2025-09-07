@@ -9,6 +9,7 @@ import {
 } from '@0xsequence/connect'
 import { Button, Spinner, Text } from '@0xsequence/design-system'
 import {
+  DEFAULT_SLIPPAGE_BPS,
   useClearCachedBalances,
   useGetContractInfo,
   useGetSwapQuote,
@@ -41,7 +42,9 @@ export const SwapList = ({ chainId, contractAddress, amount, slippageBps }: Swap
   const { data: walletClient } = useWalletClient({ chainId })
   const { switchChainAsync } = useSwitchChain()
 
-  const isConnectorSequenceBased = !!(connector as ExtendedConnector)?._wallet?.isSequenceBased
+  const isConnectorSequenceBased = (connector as ExtendedConnector).type?.includes('sequence')
+  // the isSequenceBased flag is not set on the connector. We need to fix this
+  // const isConnectorSequenceBased = !!(connector as ExtendedConnector)?._wallet?.isSequenceBased
   const { analytics } = useAnalyticsContext()
   const connectedChainId = useChainId()
   const isCorrectChainId = connectedChainId === chainId
@@ -81,7 +84,7 @@ export const SwapList = ({ chainId, contractAddress, amount, slippageBps }: Swap
         fromTokenAddress: sellCurrencyAddress,
         chainId: chainId,
         includeApprove: true,
-        slippageBps: slippageBps || 100
+        slippageBps: slippageBps || DEFAULT_SLIPPAGE_BPS
       }
     },
     {

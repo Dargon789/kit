@@ -1,5 +1,5 @@
 export const styles = String.raw`
-/*! tailwindcss v4.1.8 | MIT License | https://tailwindcss.com */
+/*! tailwindcss v4.1.11 | MIT License | https://tailwindcss.com */
 @layer properties;
 @layer theme, base, components, utilities;
 @layer theme {
@@ -313,9 +313,6 @@ export const styles = String.raw`
   .my-4 {
     margin-block: calc(var(--spacing) * 4);
   }
-  .mt-0 {
-    margin-top: calc(var(--spacing) * 0);
-  }
   .mt-1 {
     margin-top: calc(var(--spacing) * 1);
   }
@@ -351,9 +348,6 @@ export const styles = String.raw`
   }
   .mb-2 {
     margin-bottom: calc(var(--spacing) * 2);
-  }
-  .mb-3 {
-    margin-bottom: calc(var(--spacing) * 3);
   }
   .mb-4 {
     margin-bottom: calc(var(--spacing) * 4);
@@ -466,9 +460,6 @@ export const styles = String.raw`
   .h-\[64px\] {
     height: 64px;
   }
-  .h-\[128px\] {
-    height: 128px;
-  }
   .h-\[206px\] {
     height: 206px;
   }
@@ -504,6 +495,9 @@ export const styles = String.raw`
   }
   .min-h-\[100px\] {
     min-height: 100px;
+  }
+  .min-h-\[128px\] {
+    min-height: 128px;
   }
   .min-h-full {
     min-height: 100%;
@@ -876,12 +870,6 @@ export const styles = String.raw`
   .border-border-normal {
     border-color: var(--seq-color-border-normal);
   }
-  .border-primary {
-    border-color: var(--seq-color-primary);
-  }
-  .border-red-500 {
-    border-color: var(--color-red-500);
-  }
   .border-transparent {
     border-color: transparent;
   }
@@ -948,10 +936,6 @@ export const styles = String.raw`
   .bg-white {
     background-color: var(--color-white);
   }
-  .bg-gradient-to-r {
-    --tw-gradient-position: to right in oklab;
-    background-image: linear-gradient(var(--tw-gradient-stops));
-  }
   .bg-gradient-primary {
     background-image: var(--seq-color-gradient-primary);
   }
@@ -972,9 +956,6 @@ export const styles = String.raw`
   }
   .fill-background-raised {
     fill: var(--seq-color-background-raised);
-  }
-  .object-contain {
-    object-fit: contain;
   }
   .object-cover {
     object-fit: cover;
@@ -1039,9 +1020,6 @@ export const styles = String.raw`
   .py-4 {
     padding-block: calc(var(--spacing) * 4);
   }
-  .py-5 {
-    padding-block: calc(var(--spacing) * 5);
-  }
   .py-6 {
     padding-block: calc(var(--spacing) * 6);
   }
@@ -1074,9 +1052,6 @@ export const styles = String.raw`
   }
   .pr-4 {
     padding-right: calc(var(--spacing) * 4);
-  }
-  .pb-0 {
-    padding-bottom: calc(var(--spacing) * 0);
   }
   .pb-2 {
     padding-bottom: calc(var(--spacing) * 2);
@@ -2483,4 +2458,6 @@ export const styles = String.raw`
       --tw-gradient-to-position: 100%;
     }
   }
-}`
+}
+
+`

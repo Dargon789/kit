@@ -2,6 +2,7 @@ import {
   TransactionOnRampProvider,
   useAddFundsModal,
   useCheckoutModal,
+  useERC1155SaleContractCheckout,
   useSelectPaymentModal,
   useSwapModal
 } from '@0xsequence/checkout'
@@ -16,13 +17,14 @@ import {
   useWallets,
   validateEthProof
 } from '@0xsequence/connect'
-import { Button, Card, cn, Modal, Scroll, Select, Switch, Text, TextInput } from '@0xsequence/design-system'
+import { Button, Card, cn, Modal, Scroll, Switch, Text, TextInput } from '@0xsequence/design-system'
 import { allNetworks, ChainId } from '@0xsequence/network'
 import { useOpenWalletModal } from '@0xsequence/wallet-widget'
 import { CardButton, Header, WalletListItem } from 'example-shared-components'
 import { AnimatePresence } from 'motion/react'
 import React, { useEffect, type ComponentProps } from 'react'
 import { encodeFunctionData, formatUnits, parseAbi, toHex, zeroAddress } from 'viem'
+import { createSiweMessage, generateSiweNonce } from 'viem/siwe'
 import { useAccount, useChainId, usePublicClient, useSendTransaction, useWalletClient, useWriteContract } from 'wagmi'
 
 import { sponsoredContractAddresses } from '../config'
@@ -33,6 +35,7 @@ import { abi } from '../constants/nft-abi'
 import { delay, getCheckoutSettings, getOrderbookCalldata } from '../utils'
 
 import { CustomCheckout } from './CustomCheckout'
+import { Select } from './Select'
 
 // append ?debug to url to enable debug mode
 const searchParams = new URLSearchParams(location.search)
@@ -78,9 +81,23 @@ export const Connected = () => {
     reset: resetSendUnsponsoredTransaction
   } = useSendTransaction()
 
+  const { openCheckoutModal, isLoading: erc1155CheckoutLoading } = useERC1155SaleContractCheckout({
+    chain: 137,
+    contractAddress: '0xf0056139095224f4eec53c578ab4de1e227b9597',
+    wallet: address || '',
+    collectionAddress: '0x92473261f2c26f2264429c451f70b0192f858795',
+    items: [{ tokenId: '1', quantity: '1' }],
+    onSuccess: txnHash => {
+      console.log('txnHash', txnHash)
+    }
+  })
+
   const [isSigningMessage, setIsSigningMessage] = React.useState(false)
   const [isMessageValid, setIsMessageValid] = React.useState<boolean | undefined>()
   const [messageSig, setMessageSig] = React.useState<string | undefined>()
+  const [isSigningSIWE, setIsSigningSIWE] = React.useState(false)
+  const [siweSig, setSiweSig] = React.useState<string | undefined>()
+  const [isSIWEValid, setIsSIWEValid] = React.useState<boolean | undefined>()
   const [isSigningTypedData, setIsSigningTypedData] = React.useState(false)
   const [typedDataSig, setTypedDataSig] = React.useState<string | undefined>()
   const [isTypedDataValid, setIsTypedDataValid] = React.useState<boolean | undefined>()
@@ -181,6 +198,92 @@ export const Connected = () => {
     wallet: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC'
   } as const
 
+  const signMessage = async () => {
+    if (!walletClient || !publicClient) {
+      return
+    }
+
+    setIsSigningMessage(true)
+
+    try {
+      const message = messageToSign
+
+      // sign
+      const sig = await walletClient.signMessage({
+        account: address || ('' as `0x${string}`),
+        message
+      })
+      console.log('address', address)
+      console.log('signature:', sig)
+      console.log('chainId in homepage', chainId)
+
+      const [account] = await walletClient.getAddresses()
+
+      const isValid = await publicClient.verifyMessage({
+        address: account,
+        message,
+        signature: sig
+      })
+
+      setIsSigningMessage(false)
+      setIsMessageValid(isValid)
+      setMessageSig(sig)
+
+      console.log('isValid?', isValid)
+    } catch (e) {
+      setIsSigningMessage(false)
+      if (e instanceof Error) {
+        console.error(e.cause)
+      } else {
+        console.error(e)
+      }
+    }
+  }
+
+  const signSIWE = async () => {
+    if (!walletClient || !publicClient) {
+      return
+    }
+
+    setIsSigningSIWE(true)
+
+    try {
+      const message = createSiweMessage({
+        address: address || ('' as `0x${string}`),
+        chainId: chainId,
+        domain: window.location.hostname,
+        nonce: generateSiweNonce(),
+        statement: messageToSign,
+        uri: window.location.origin,
+        version: '1'
+      })
+
+      const sig = await walletClient.signMessage({
+        account: address || ('' as `0x${string}`),
+        message
+      })
+
+      console.log('address', address)
+      console.log('signature', sig)
+      console.log('chainId in homepage', chainId)
+
+      const isValid = await publicClient.verifyMessage({
+        address: address || ('' as `0x${string}`),
+        message,
+        signature: sig
+      })
+
+      setSiweSig(sig)
+      setIsSIWEValid(isValid)
+      setIsSigningSIWE(false)
+    } catch (e) {
+      setIsSigningSIWE(false)
+      if (e instanceof Error) {
+        console.error(e.cause)
+      }
+    }
+  }
+
   const signTypedData = async () => {
     if (!walletClient || !address || !publicClient) {
       return
@@ -217,48 +320,6 @@ export const Connected = () => {
       setIsSigningTypedData(false)
     } catch (e) {
       setIsSigningTypedData(false)
-      if (e instanceof Error) {
-        console.error(e.cause)
-      } else {
-        console.error(e)
-      }
-    }
-  }
-
-  const signMessage = async () => {
-    if (!walletClient || !publicClient) {
-      return
-    }
-
-    setIsSigningMessage(true)
-
-    try {
-      const message = messageToSign
-
-      // sign
-      const sig = await walletClient.signMessage({
-        account: address || ('' as `0x${string}`),
-        message
-      })
-      console.log('address', address)
-      console.log('signature:', sig)
-      console.log('chainId in homepage', chainId)
-
-      const [account] = await walletClient.getAddresses()
-
-      const isValid = await publicClient.verifyMessage({
-        address: account,
-        message,
-        signature: sig
-      })
-
-      setIsSigningMessage(false)
-      setIsMessageValid(isValid)
-      setMessageSig(sig)
-
-      console.log('isValid?', isValid)
-    } catch (e) {
-      setIsSigningMessage(false)
       if (e instanceof Error) {
         console.error(e.cause)
       } else {
@@ -499,7 +560,7 @@ export const Connected = () => {
         <div className="flex flex-col gap-4 max-w-[480px]">
           <div className="flex flex-col gap-2">
             <div className="flex my-3 flex-col gap-2">
-              <Text fontWeight="semibold" variant="small" color="muted">
+              <Text variant="medium" color="muted">
                 Connected Wallets
               </Text>
               <div className="flex flex-col gap-2 p-2">
@@ -533,31 +594,36 @@ export const Connected = () => {
               <Button shape="square" onClick={onClickConnect} variant="feature" size="sm" label="Connect another wallet" />
             </div>
 
-            <Text className="mt-6" variant="small" color="muted" fontWeight="medium">
+            <Text className="align-self-center mt-4" variant="medium" color="muted">
               Demos
             </Text>
+
+            <Text variant="small-bold" color="muted">
+              Wallet Widget
+            </Text>
+
             <CardButton
               title="Wallet widget"
               description="View your integrated wallet"
               onClick={() => setOpenWalletModal(true)}
             />
+
             <CardButton
               title="Wallet Widget Inventory"
-              description="Open the wallet widget with a specific collection"
+              description="Open the wallet widget with a specific collection (location: search for this demo)"
               onClick={() =>
                 setOpenWalletModal(true, {
                   defaultNavigation: {
-                    location: 'search-collectibles',
-                    params: {
-                      selectedCollection: {
-                        chainId: 137,
-                        contractAddress: '0x92473261F2c26F2264429C451F70b0192f858795'
-                      }
-                    }
+                    location: 'search'
                   }
                 })
               }
             />
+
+            <Text className="mt-4" variant="small-bold" color="muted">
+              Send Transactions
+            </Text>
+
             {(sponsoredContractAddresses[chainId] || networkForCurrentChainId.testnet) && isWaasConnectionActive && (
               <CardButton
                 title="Send sponsored transaction"
@@ -599,6 +665,79 @@ export const Connected = () => {
                   </a>
                 </Text>
               )}
+            {pendingFeeOptionConfirmation && (
+              <div className="my-3">
+                <Select
+                  name="feeOption"
+                  label="Pick a fee option"
+                  onValueChange={val => {
+                    const selected = pendingFeeOptionConfirmation?.options?.find(option => option.token.name === val)
+                    if (selected) {
+                      setSelectedFeeOptionTokenName(selected.token.name)
+                      setFeeOptionAlert(undefined)
+                    }
+                  }}
+                  value={selectedFeeOptionTokenName || ''}
+                  options={[
+                    ...pendingFeeOptionConfirmation.options.map(option => ({
+                      label: (
+                        <div className="flex items-start flex-col">
+                          <div className="flex flex-row">
+                            <Text variant="xsmall">Fee (in {option.token.name}): </Text>{' '}
+                            <Text variant="xsmall">{formatUnits(BigInt(option.value), option.token.decimals || 0)}</Text>
+                          </div>
+                          <div className="flex flex-row">
+                            <Text>Wallet balance for {option.token.name}: </Text>{' '}
+                            <Text>{'balanceFormatted' in option ? option.balanceFormatted : null}</Text>
+                          </div>
+                        </div>
+                      ),
+                      value: option.token.name
+                    }))
+                  ]}
+                />
+                <div className="flex my-2 items-center justify-center flex-col">
+                  <Button
+                    onClick={() => {
+                      const selected = pendingFeeOptionConfirmation?.options?.find(
+                        option => option.token.name === selectedFeeOptionTokenName
+                      )
+
+                      if (selected?.token.contractAddress !== undefined) {
+                        if (!('hasEnoughBalanceForFee' in selected) || !selected.hasEnoughBalanceForFee) {
+                          setFeeOptionAlert({
+                            title: 'Insufficient balance',
+                            description: `You do not have enough balance to pay the fee with ${selected.token.name}, please make sure you have enough balance in your wallet for the selected fee option.`,
+                            secondaryDescription:
+                              'You can also switch network to Arbitrum Sepolia to test a gasless transaction.',
+                            variant: 'warning'
+                          })
+                          return
+                        }
+
+                        confirmPendingFeeOption(pendingFeeOptionConfirmation?.id, selected.token.contractAddress)
+                      }
+                    }}
+                    label="Confirm fee option"
+                  />
+                  {feeOptionAlert && (
+                    <div className="mt-3" style={{ maxWidth: '332px' }}>
+                      <Alert
+                        title={feeOptionAlert.title}
+                        description={feeOptionAlert.description}
+                        secondaryDescription={feeOptionAlert.secondaryDescription}
+                        variant={feeOptionAlert.variant}
+                        buttonProps={feeOptionAlert.buttonProps}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            <Text className="mt-4" variant="small-bold" color="muted">
+              Sign Messages
+            </Text>
 
             <CardButton
               title="Sign message"
@@ -619,6 +758,27 @@ export const Connected = () => {
                 </Text>
               </Card>
             )}
+
+            <CardButton
+              title="Sign SIWE Message"
+              description="Sign a SIWE message with your wallet"
+              onClick={signSIWE}
+              isPending={isSigningSIWE}
+            />
+            {isSIWEValid && (
+              <Card className="flex text-primary flex-col gap-2" style={{ width: '332px' }}>
+                <Text variant="medium">Signed SIWE message:</Text>
+                <Text>{messageToSign}</Text>
+                <Text variant="medium">Signature:</Text>
+                <Text variant="code" ellipsis asChild>
+                  <p>{siweSig}</p>
+                </Text>
+                <Text variant="medium">
+                  isValid: <Text variant="code">{isSIWEValid.toString()}</Text>
+                </Text>
+              </Card>
+            )}
+
             <CardButton
               title="Sign typed data"
               description="Sign typed data with your wallet"
@@ -651,7 +811,55 @@ export const Connected = () => {
                 </Text>
               </Card>
             )}
+
+            <Text className="mt-4" variant="small-bold" color="muted">
+              Web SDK Checkout
+            </Text>
+
             <CardButton title="Add Funds" description="Buy Cryptocurrency with a Credit Card" onClick={() => onClickAddFunds()} />
+
+            {isDebugMode && (
+              <>
+                <CardButton title="Generate EthAuth proof" description="Generate EthAuth proof" onClick={generateEthAuthProof} />
+
+                <CardButton
+                  title="NFT Checkout"
+                  description="Set orderbook order id, token contract address and token id to test checkout (on Polygon)"
+                  onClick={onClickCheckout}
+                />
+                <CardButton
+                  title="Custom Checkout"
+                  description="Hook for creating custom checkout UIs"
+                  onClick={() => setIsOpenCustomCheckout(true)}
+                />
+
+                <CardButton
+                  title="ERC1155 Checkout"
+                  description="Purchase with useERC1155SaleContractCheckout hook"
+                  onClick={openCheckoutModal}
+                  isPending={erc1155CheckoutLoading}
+                />
+              </>
+            )}
+
+            <CardButton
+              title="Swap"
+              description="Seamlessly swap eligible currencies in your wallet to a target currency"
+              onClick={onClickSwap}
+            />
+
+            <CardButton
+              title="Checkout"
+              description="Purchase an NFT through various purchase methods"
+              onClick={onClickSelectPayment}
+            />
+
+            {(chainId === ChainId.ARBITRUM_NOVA || chainId === ChainId.ARBITRUM_SEPOLIA || isWaasConnectionActive) && (
+              <Text className="mt-4" variant="small-bold" color="muted">
+                Misc
+              </Text>
+            )}
+
             {(chainId === ChainId.ARBITRUM_NOVA || chainId === ChainId.ARBITRUM_SEPOLIA) && (
               <CardButton
                 title="Mint an NFT"
@@ -674,106 +882,10 @@ export const Connected = () => {
                 </Text>
               )}
 
-            {isDebugMode && (
-              <>
-                <CardButton title="Generate EthAuth proof" description="Generate EthAuth proof" onClick={generateEthAuthProof} />
-
-                <CardButton
-                  title="NFT Checkout"
-                  description="Set orderbook order id, token contract address and token id to test checkout (on Polygon)"
-                  onClick={onClickCheckout}
-                />
-                <CardButton
-                  title="Custom Checkout"
-                  description="Hook for creating custom checkout UIs"
-                  onClick={() => setIsOpenCustomCheckout(true)}
-                />
-              </>
+            {isWaasConnectionActive && (
+              <CardButton title="Social Link" description="Open the social link modal" onClick={() => onClickSocialLink()} />
             )}
-            <CardButton
-              title="Swap with Sequence Pay"
-              description="Seamlessly swap eligible currencies in your wallet to a target currency"
-              onClick={onClickSwap}
-            />
-
-            <CardButton
-              title="Checkout with Sequence Pay"
-              description="Purchase an NFT through various purchase methods"
-              onClick={onClickSelectPayment}
-            />
-
-            <CardButton title="Social Link" description="Open the social link modal" onClick={() => onClickSocialLink()} />
           </div>
-
-          {pendingFeeOptionConfirmation && (
-            <div className="my-3">
-              <Select
-                name="feeOption"
-                labelLocation="top"
-                label="Pick a fee option"
-                onValueChange={val => {
-                  const selected = pendingFeeOptionConfirmation?.options?.find(option => option.token.name === val)
-                  if (selected) {
-                    setSelectedFeeOptionTokenName(selected.token.name)
-                    setFeeOptionAlert(undefined)
-                  }
-                }}
-                value={selectedFeeOptionTokenName}
-                options={[
-                  ...pendingFeeOptionConfirmation.options.map(option => ({
-                    label: (
-                      <div className="flex items-start flex-col">
-                        <div className="flex flex-row">
-                          <Text variant="xsmall">Fee (in {option.token.name}): </Text>{' '}
-                          <Text variant="xsmall">{formatUnits(BigInt(option.value), option.token.decimals || 0)}</Text>
-                        </div>
-                        <div className="flex flex-row">
-                          <Text>Wallet balance for {option.token.name}: </Text>{' '}
-                          <Text>{'balanceFormatted' in option ? option.balanceFormatted : null}</Text>
-                        </div>
-                      </div>
-                    ),
-                    value: option.token.name
-                  }))
-                ]}
-              />
-              <div className="flex my-2 items-center justify-center flex-col">
-                <Button
-                  onClick={() => {
-                    const selected = pendingFeeOptionConfirmation?.options?.find(
-                      option => option.token.name === selectedFeeOptionTokenName
-                    )
-
-                    if (selected?.token.contractAddress !== undefined) {
-                      if (!('hasEnoughBalanceForFee' in selected) || !selected.hasEnoughBalanceForFee) {
-                        setFeeOptionAlert({
-                          title: 'Insufficient balance',
-                          description: `You do not have enough balance to pay the fee with ${selected.token.name}, please make sure you have enough balance in your wallet for the selected fee option.`,
-                          secondaryDescription: 'You can also switch network to Arbitrum Sepolia to test a gasless transaction.',
-                          variant: 'warning'
-                        })
-                        return
-                      }
-
-                      confirmPendingFeeOption(pendingFeeOptionConfirmation?.id, selected.token.contractAddress)
-                    }
-                  }}
-                  label="Confirm fee option"
-                />
-                {feeOptionAlert && (
-                  <div className="mt-3" style={{ maxWidth: '332px' }}>
-                    <Alert
-                      title={feeOptionAlert.title}
-                      description={feeOptionAlert.description}
-                      secondaryDescription={feeOptionAlert.secondaryDescription}
-                      variant={feeOptionAlert.variant}
-                      buttonProps={feeOptionAlert.buttonProps}
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
 
           {isWaasConnectionActive && (
             <div className="my-3">
