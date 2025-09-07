@@ -1,5 +1,59 @@
 # @0xsequence/hooks
 
+## 5.3.14
+
+### Patch Changes
+
+- Customization class in checkout
+
+## 5.3.13
+
+### Patch Changes
+
+- Minor fixes
+
+## 5.3.12
+
+### Patch Changes
+
+- Checkout SDK fixes and improvements
+
+## 5.3.11
+
+### Patch Changes
+
+- Fix for waas connector modal
+
+## 5.3.10
+
+### Patch Changes
+
+- - fixed typing problem with erc1155SaleContract hook
+  - remove builder dependy on hooks package
+  - fix confirmation modal issue
+  - show success action buttons
+  - allow cursor pagination for the useGetTokenDetails hook intial params
+  - removed toast errors and replace them by in-modal error messages
+
+## 5.3.9
+
+### Patch Changes
+
+- - erc1155SaleContract fix
+  - X auth support for Embedded Wallet
+
+## 5.3.8
+
+### Patch Changes
+
+- erc1155SaleContract fix
+
+## 5.3.7
+
+### Patch Changes
+
+- Exported the useTransactionStatusModal
+
 ## 5.3.6
 
 ### Patch Changes

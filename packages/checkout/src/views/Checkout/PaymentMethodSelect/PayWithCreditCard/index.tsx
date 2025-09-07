@@ -1,14 +1,18 @@
-import { Button, Spinner } from '@0xsequence/design-system'
+import { Button, Spinner, Text } from '@0xsequence/design-system'
 import { useClearCachedBalances, useGetContractInfo } from '@0xsequence/hooks'
 import { findSupportedNetwork } from '@0xsequence/network'
 import { useAccount } from 'wagmi'
 
 import type { CheckoutSettings } from '../../../../contexts/CheckoutModal.js'
-import { useCheckoutModal, useSelectPaymentModal, useSkipOnCloseCallback } from '../../../../hooks/index.js'
+import { useCheckoutModal, useSelectPaymentModal } from '../../../../hooks/index.js'
 
 type BasePaymentProviderOptions = 'sardine' | 'transak'
 
-export const PayWithCreditCardTab = () => {
+interface PayWithCreditCardTabProps {
+  skipOnCloseCallback: () => void
+}
+
+export const PayWithCreditCardTab = ({ skipOnCloseCallback }: PayWithCreditCardTabProps) => {
   const { closeSelectPaymentModal, selectPaymentSettings } = useSelectPaymentModal()
   const {
     chain,
@@ -32,7 +36,6 @@ export const PayWithCreditCardTab = () => {
   const { triggerCheckout } = useCheckoutModal()
   const network = findSupportedNetwork(chain)
   const chainId = network?.chainId || 137
-  const { skipOnCloseCallback } = useSkipOnCloseCallback(onClose)
   const selectedPaymentProvider = creditCardProviders?.[0]
 
   const { data: currencyInfoData, isLoading: isLoadingContractInfo } = useGetContractInfo({
@@ -95,7 +98,8 @@ export const PayWithCreditCardTab = () => {
         calldata: txData,
         transakConfig,
         approvedSpenderAddress: sardineConfig?.approvedSpenderAddress || targetContractAddress,
-        supplementaryAnalyticsInfo
+        supplementaryAnalyticsInfo,
+        onSuccessChecker: selectPaymentSettings?.onSuccessChecker
       }
     }
 
@@ -111,9 +115,27 @@ export const PayWithCreditCardTab = () => {
       </div>
     )
   }
+
+  const getProviderName = () => {
+    switch (selectedPaymentProvider) {
+      case 'sardine':
+        return 'Sardine'
+      case 'transak':
+        return 'Transak'
+      case 'forte':
+        return 'Forte'
+      default:
+        return null
+    }
+  }
   return (
-    <div className="flex flex-col justify-center items-center gap-2 w-full h-full">
-      <Button className="w-full" shape="square" onClick={payWithSelectedProvider} label="Continue" variant="primary" />
+    <div className="flex flex-col gap-2 justify-between h-full">
+      <Text color="text50" variant="small">
+        Buy directly with your debit or credit card {getProviderName() ? `through ${getProviderName()}` : ''}
+      </Text>
+      <div className="flex flex-col justify-center items-center gap-2 w-full h-full">
+        <Button className="w-full" shape="square" onClick={payWithSelectedProvider} label="Continue" variant="primary" />
+      </div>
     </div>
   )
 }

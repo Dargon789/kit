@@ -8,6 +8,7 @@ import {
 } from '@0xsequence/connect'
 import { AddIcon, Button, ChevronDownIcon, Spinner, Text, TokenImage, WarningIcon } from '@0xsequence/design-system'
 import {
+  DEFAULT_SLIPPAGE_BPS,
   useClearCachedBalances,
   useGetCoinPrices,
   useGetContractInfo,
@@ -25,10 +26,14 @@ import { ERC_20_CONTRACT_ABI } from '../../../../constants/abi.js'
 import { EVENT_SOURCE } from '../../../../constants/index.js'
 import type { SelectPaymentSettings } from '../../../../contexts/SelectPaymentModal.js'
 import { useAddFundsModal } from '../../../../hooks/index.js'
-import { useSelectPaymentModal, useSkipOnCloseCallback, useTransactionStatusModal } from '../../../../hooks/index.js'
+import { useSelectPaymentModal, useTransactionStatusModal } from '../../../../hooks/index.js'
 import { useNavigationCheckout } from '../../../../hooks/useNavigationCheckout.js'
 
-export const PayWithCryptoTab = () => {
+interface PayWithCryptoTabProps {
+  skipOnCloseCallback: () => void
+}
+
+export const PayWithCryptoTab = ({ skipOnCloseCallback }: PayWithCryptoTabProps) => {
   const { triggerAddFunds } = useAddFundsModal()
   const { clearCachedBalances } = useClearCachedBalances()
   const [isPurchasing, setIsPurchasing] = useState<boolean>(false)
@@ -53,10 +58,13 @@ export const PayWithCryptoTab = () => {
     onError = () => {},
     onClose = () => {},
     supplementaryAnalyticsInfo,
-    slippageBps
+    slippageBps,
+    successActionButtons,
+    onSuccessChecker
   } = selectPaymentSettings
 
-  const { skipOnCloseCallback } = useSkipOnCloseCallback(onClose)
+  const isFree = Number(price) == 0
+
   const network = findSupportedNetwork(chain)
   const chainId = network?.chainId || 137
 
@@ -115,7 +123,12 @@ export const PayWithCryptoTab = () => {
 
   const buyCurrencyAddress = currencyAddress
 
-  const { data: swapQuote, isLoading: isLoadingSwapQuote } = useGetSwapQuote(
+  const {
+    data: swapQuote,
+    isLoading: isLoadingSwapQuote,
+    isError: isErrorSwapQuote,
+    error: swapQuoteError
+  } = useGetSwapQuote(
     {
       params: {
         walletAddress: userAddress ?? '',
@@ -124,13 +137,16 @@ export const PayWithCryptoTab = () => {
         toTokenAmount: price,
         chainId: chainId,
         includeApprove: true,
-        slippageBps: slippageBps || 100
+        slippageBps: slippageBps || DEFAULT_SLIPPAGE_BPS
       }
     },
     {
       disabled: !isSwapTransaction
     }
   )
+
+  const isNotEnoughBalanceError =
+    typeof swapQuoteError?.cause === 'string' && swapQuoteError?.cause?.includes('not enough balance for swap')
 
   const selectedCurrencyPrice = isSwapTransaction ? swapQuote?.maxPrice || 0 : price || 0
 
@@ -268,7 +284,9 @@ export const PayWithCryptoTab = () => {
           clearCachedBalances()
           onSuccess(txHash)
         },
-        onClose
+        onClose,
+        successActionButtons,
+        onSuccessChecker
       })
     } catch (e) {
       console.error('Failed to purchase...', e)
@@ -401,7 +419,9 @@ export const PayWithCryptoTab = () => {
           clearCachedBalances()
           onSuccess(txHash)
         },
-        onClose
+        onClose,
+        successActionButtons,
+        onSuccessChecker
       })
     } catch (e) {
       console.error('Failed to purchase...', e)
@@ -471,7 +491,7 @@ export const PayWithCryptoTab = () => {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col gap-3 justify-center items-center h-full">
+      <div className="flex flex-col gap-3 justify-center items-center h-full pt-5">
         <Spinner />
         <Text color="text50" fontWeight="medium" variant="xsmall">
           Fetching best crypto price for this purchase
@@ -530,9 +550,45 @@ export const PayWithCryptoTab = () => {
     )
   }
 
-  return (
-    <div className="flex flex-col justify-center items-center h-full w-full gap-3">
-      <div className="flex flex-row justify-between items-center w-full">
+  const PriceSection = () => {
+    if (isFree) {
+      return (
+        <div className="flex flex-col mt-2 mb-1 w-full">
+          <Text color="text100" variant="small" fontWeight="bold">
+            This item is free, click Confirm to mint to your wallet
+          </Text>
+        </div>
+      )
+    }
+
+    if (isNotEnoughBalanceError) {
+      return (
+        <div className="flex flex-row justify-between items-center w-full gap-2">
+          <Text color="negative" variant="small" fontWeight="bold">
+            Insufficient funds for this purchase
+          </Text>
+          <div>
+            <TokenSelector />
+          </div>
+        </div>
+      )
+    }
+
+    if (isErrorSwapQuote) {
+      return (
+        <div className="flex flex-row justify-between items-center w-full gap-2">
+          <Text color="negative" variant="small" fontWeight="bold">
+            Couldn't get a valid quote for swap, please pick another token
+          </Text>
+          <div>
+            <TokenSelector />
+          </div>
+        </div>
+      )
+    }
+
+    return (
+      <div className="flex flex-row justify-between items-center w-full gap-2">
         <div className="flex flex-col gap-0">
           <Text
             variant="xsmall"
@@ -563,6 +619,24 @@ export const PayWithCryptoTab = () => {
           <TokenSelector />
         </div>
       </div>
+    )
+  }
+
+  const getConfirmButtonText = () => {
+    if (isPurchasing) {
+      return 'Confirmation in progress...'
+    }
+
+    if (isFree) {
+      return 'Confirm'
+    }
+
+    return 'Confirm payment'
+  }
+
+  return (
+    <div className="flex flex-col gap-4">
+      <PriceSection />
 
       <div className="flex flex-col justify-start items-center w-full gap-1">
         {isError && (
@@ -574,8 +648,8 @@ export const PayWithCryptoTab = () => {
         )}
 
         <Button
-          disabled={isPurchasing}
-          label="Confirm payment"
+          disabled={isPurchasing || isErrorSwapQuote}
+          label={getConfirmButtonText()}
           className="w-full"
           shape="square"
           variant="primary"

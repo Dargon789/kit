@@ -2,6 +2,7 @@ import {
   TransactionOnRampProvider,
   useAddFundsModal,
   useCheckoutModal,
+  useERC1155SaleContractCheckout,
   useSelectPaymentModal,
   useSwapModal
 } from '@0xsequence/checkout'
@@ -16,7 +17,7 @@ import {
   useWallets,
   validateEthProof
 } from '@0xsequence/connect'
-import { Button, Card, cn, Modal, Scroll, Select, Switch, Text, TextInput } from '@0xsequence/design-system'
+import { Button, Card, cn, Modal, Scroll, Switch, Text, TextInput } from '@0xsequence/design-system'
 import { allNetworks, ChainId } from '@0xsequence/network'
 import { useOpenWalletModal } from '@0xsequence/wallet-widget'
 import { CardButton, Header, WalletListItem } from 'example-shared-components'
@@ -34,6 +35,7 @@ import { abi } from '../constants/nft-abi'
 import { delay, getCheckoutSettings, getOrderbookCalldata } from '../utils'
 
 import { CustomCheckout } from './CustomCheckout'
+import { Select } from './Select'
 
 // append ?debug to url to enable debug mode
 const searchParams = new URLSearchParams(location.search)
@@ -78,6 +80,17 @@ export const Connected = () => {
     error: sendUnsponsoredTransactionError,
     reset: resetSendUnsponsoredTransaction
   } = useSendTransaction()
+
+  const { openCheckoutModal, isLoading: erc1155CheckoutLoading } = useERC1155SaleContractCheckout({
+    chain: 137,
+    contractAddress: '0xf0056139095224f4eec53c578ab4de1e227b9597',
+    wallet: address || '',
+    collectionAddress: '0x92473261f2c26f2264429c451f70b0192f858795',
+    items: [{ tokenId: '1', quantity: '1' }],
+    onSuccess: txnHash => {
+      console.log('txnHash', txnHash)
+    }
+  })
 
   const [isSigningMessage, setIsSigningMessage] = React.useState(false)
   const [isMessageValid, setIsMessageValid] = React.useState<boolean | undefined>()
@@ -656,7 +669,6 @@ export const Connected = () => {
               <div className="my-3">
                 <Select
                   name="feeOption"
-                  labelLocation="top"
                   label="Pick a fee option"
                   onValueChange={val => {
                     const selected = pendingFeeOptionConfirmation?.options?.find(option => option.token.name === val)
@@ -665,7 +677,7 @@ export const Connected = () => {
                       setFeeOptionAlert(undefined)
                     }
                   }}
-                  value={selectedFeeOptionTokenName}
+                  value={selectedFeeOptionTokenName || ''}
                   options={[
                     ...pendingFeeOptionConfirmation.options.map(option => ({
                       label: (
@@ -820,17 +832,24 @@ export const Connected = () => {
                   description="Hook for creating custom checkout UIs"
                   onClick={() => setIsOpenCustomCheckout(true)}
                 />
+
+                <CardButton
+                  title="ERC1155 Checkout"
+                  description="Purchase with useERC1155SaleContractCheckout hook"
+                  onClick={openCheckoutModal}
+                  isPending={erc1155CheckoutLoading}
+                />
               </>
             )}
 
             <CardButton
-              title="Swap with Sequence Pay"
+              title="Swap"
               description="Seamlessly swap eligible currencies in your wallet to a target currency"
               onClick={onClickSwap}
             />
 
             <CardButton
-              title="Checkout with Sequence Pay"
+              title="Checkout"
               description="Purchase an NFT through various purchase methods"
               onClick={onClickSelectPayment}
             />

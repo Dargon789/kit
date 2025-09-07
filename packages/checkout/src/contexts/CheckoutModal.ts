@@ -1,9 +1,10 @@
 'use client'
 
 import type { Theme } from '@0xsequence/design-system'
+import { type SequenceIndexer, type TransactionReceipt } from '@0xsequence/indexer'
 
 import { createGenericContext } from './genericContext.js'
-import type { SupplementaryAnalyticsInfo } from './SelectPaymentModal.js'
+import type { SupplementaryAnalyticsInfo, ActionButtons } from './SelectPaymentModal.js'
 
 interface CoinQuantity {
   contractAddress: string
@@ -43,6 +44,8 @@ export interface CreditCardCheckout {
   onClose?: () => void
   approvedSpenderAddress?: string
   supplementaryAnalyticsInfo?: SupplementaryAnalyticsInfo
+  successActionButtons?: ActionButtons[]
+  onSuccessChecker?: (receipt: TransactionReceipt, indexerClient?: SequenceIndexer) => Promise<void>
 }
 
 export interface CheckoutSettings {
