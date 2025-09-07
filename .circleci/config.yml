@@ -18,7 +18,8 @@ jobs:
     steps:
       - checkout
       - run: |
-          # echo Hello, World!
+          # This is a placeholder step for future commands.
+          echo "Placeholder step"
 
 workflows:
   my-custom-workflow:
