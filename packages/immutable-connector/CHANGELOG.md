@@ -1,5 +1,41 @@
 # @0xsequence/immutable-connector
 
+## 5.3.19
+
+### Patch Changes
+
+- Fix for ERC20: insufficient allowance bug during swap and pay
+
+- Updated dependencies []:
+  - @0xsequence/connect@5.3.19
+
+## 5.3.18
+
+### Patch Changes
+
+- Bug fixes
+
+- Updated dependencies []:
+  - @0xsequence/connect@5.3.18
+
+## 5.3.17
+
+### Patch Changes
+
+- fixes related to undefined walletClient
+
+- Updated dependencies []:
+  - @0xsequence/connect@5.3.17
+
+## 5.3.16
+
+### Patch Changes
+
+- Improve connect sdk preview, add custom embedded wallet title option
+
+- Updated dependencies []:
+  - @0xsequence/connect@5.3.16
+
 ## 5.3.15
 
 ### Patch Changes
